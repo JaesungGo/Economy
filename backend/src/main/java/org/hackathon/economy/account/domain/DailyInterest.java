@@ -12,18 +12,21 @@ import java.util.Date;
 public class DailyInterest {
 
     @Id @GeneratedValue
-    @Column(name = "daily_interest_no")
     private Long dailyInterestNo;
-    @Column(name = "today_interest", nullable = false)
+    @Column(nullable = false)
     private Double todayInterest;
-    @Column(name = "rank_interest", nullable = false)
+    @Column(nullable = false)
     private Double rankInterest;
-    @Column(name = "current_daily", nullable = false)
+    @Column(nullable = false)
     private Boolean currentDaily;
-    @Column(name = "current_weekly", nullable = false)
+    @Column(nullable = false)
     private Boolean currentWeekly;
-    @Column(name = "current_monthly", nullable = false)
+    @Column(nullable = false)
     private Boolean currentMonthly;
-    @Column(name = "today_date", nullable = false)
+    @Column(nullable = false)
     private Date todayDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_no")
+    private Account account;
 }

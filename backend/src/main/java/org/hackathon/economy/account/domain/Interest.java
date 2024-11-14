@@ -12,20 +12,23 @@ import java.util.Date;
 public class Interest {
 
     @Id @GeneratedValue
-    @Column(name = "interest_no")
     private Long interestNo;
-    @Column(name = "daily_quest", nullable = false)
+    @Column(nullable = false)
     private Boolean dailyQuest;
-    @Column(name = "weekly_quest", nullable = false)
+    @Column(nullable = false)
     private Boolean weeklyQuest;
-    @Column(name = "monthly_quest", nullable = false)
+    @Column(nullable = false)
     private Boolean monthlyQuest;
-    @Column(name = "current_daily", nullable = false)
+    @Column(nullable = false)
     private Boolean currentDaily;
-    @Column(name = "current_weekly", nullable = false)
+    @Column(nullable = false)
     private Boolean currentWeekly;
-    @Column(name = "current_monthly", nullable = false)
+    @Column(nullable = false)
     private Boolean currentMonthly;
-    @Column(name = "create_table_datetime", nullable = false)
+    @Column(nullable = false)
     private Date createTableDatetime;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_no")
+    private Account account;
 }

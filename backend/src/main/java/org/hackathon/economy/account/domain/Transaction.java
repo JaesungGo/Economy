@@ -12,14 +12,17 @@ import java.util.Date;
 public class Transaction {
 
     @Id @GeneratedValue
-    @Column(name = "transaction_no")
     private Long transactionNo;
-    @Column(name = "transaction_price", nullable = false)
+    @Column(nullable = false)
     private Long transactionPrice;
-    @Column(name = "transaction_date", nullable = false)
+    @Column(nullable = false)
     private Date transactionDate;
-    @Column(name = "transaction_type", nullable = false)
+    @Column(nullable = false)
     private Integer transactionType;
-    @Column(name = "transaction_balance", nullable = false)
+    @Column(nullable = false)
     private Long transactionBalance;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_no")
+    private Account account;
 }
