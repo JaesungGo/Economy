@@ -1,14 +1,13 @@
-import './assets/main.css'
+import { createApp } from "vue";
+import App from "./App.vue";
+import store from "./store";
+import router from "./router";
+import "./assets/css/nucleo-icons.css";
+import "./assets/css/nucleo-svg.css";
+import ArgonDashboard from "./argon-dashboard";
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
-import App from './App.vue'
-import router from './router'
-
-const app = createApp(App)
-
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+const appInstance = createApp(App);
+appInstance.use(store);
+appInstance.use(router);
+appInstance.use(ArgonDashboard);
+appInstance.mount("#app");
