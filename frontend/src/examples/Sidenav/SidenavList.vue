@@ -66,15 +66,6 @@ const getRoute = () => {
                 </sidenav-item>
             </li>
 
-            <!-- Community -->
-            <li class="nav-item">
-                <sidenav-item to="/community" :class="getRoute() === 'community' ? 'active' : ''" navText="커뮤니티">
-                    <template v-slot:icon>
-                        <i class="ni ni-world-2 text-dark text-sm opacity-10"></i>
-                    </template>
-                </sidenav-item>
-            </li>
-
             <li class="nav-item">
                 <sidenav-item to="/tables" :class="getRoute() === 'tables' ? 'active' : ''" navText="Tables(예시)">
                     <template v-slot:icon>
