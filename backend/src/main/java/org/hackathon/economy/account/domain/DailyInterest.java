@@ -14,9 +14,15 @@ public class DailyInterest {
     @Id @GeneratedValue
     private Long dailyInterestNo;
     @Column(nullable = false)
-    private Double todayInterest;
+    private Long todayBalance;
     @Column(nullable = false)
-    private Double rankInterest;
+    private Double todayRate;
+    @Column(nullable = false)
+    private Long todayInterest;
+    @Column(nullable = false)
+    private Long totalInterest;
+    @Column(nullable = false)
+    private Integer todayGrade;
     @Column(nullable = false)
     private Boolean currentDaily;
     @Column(nullable = false)
