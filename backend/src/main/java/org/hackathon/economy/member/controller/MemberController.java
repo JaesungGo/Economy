@@ -67,6 +67,14 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
+    //로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        // 세션을 무효화하여 모든 정보를 삭제
+        session.invalidate();
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
     //회원탈퇴
     @DeleteMapping("/{no}")
     public ResponseEntity<Void> delete(@PathVariable Long no) {
