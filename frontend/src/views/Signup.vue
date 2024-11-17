@@ -1,13 +1,13 @@
 <script setup>
-import { onBeforeUnmount, onBeforeMount } from "vue";
-import { useStore } from "vuex";
+import { onBeforeUnmount, onBeforeMount } from 'vue';
+import { useStore } from 'vuex';
 
-import Navbar from "@/examples/PageLayout/Navbar.vue";
-import AppFooter from "@/examples/PageLayout/Footer.vue";
-import ArgonInput from "@/components/ArgonInput.vue";
-import ArgonCheckbox from "@/components/ArgonCheckbox.vue";
-import ArgonButton from "@/components/ArgonButton.vue";
-const body = document.getElementsByTagName("body")[0];
+import Navbar from '@/examples/PageLayout/Navbar.vue';
+import AppFooter from '@/examples/PageLayout/Footer.vue';
+import ArgonInput from '@/components/ArgonInput.vue';
+import ArgonCheckbox from '@/components/ArgonCheckbox.vue';
+import ArgonButton from '@/components/ArgonButton.vue';
+const body = document.getElementsByTagName('body')[0];
 
 const store = useStore();
 onBeforeMount(() => {
@@ -15,14 +15,14 @@ onBeforeMount(() => {
   store.state.showNavbar = false;
   store.state.showSidenav = false;
   store.state.showFooter = false;
-  body.classList.remove("bg-gray-100");
+  body.classList.remove('bg-gray-100');
 });
 onBeforeUnmount(() => {
   store.state.hideConfigButton = false;
   store.state.showNavbar = true;
   store.state.showSidenav = true;
   store.state.showFooter = true;
-  body.classList.add("bg-gray-100");
+  body.classList.add('bg-gray-100');
 });
 </script>
 <template>
@@ -36,10 +36,10 @@ onBeforeUnmount(() => {
   <main class="main-content mt-0">
     <div
       class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"
-      style="
-        background-image: url(&quot;https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signup-cover.jpg&quot;);
-        background-position: top;
-      "
+      :style="{
+        backgroundImage: `url(${require('@/assets/img/login-background.png')})`,
+        backgroundPosition: 'top',
+      }"
     >
       <span class="mask bg-gradient-dark opacity-6"></span>
       <div class="container">
@@ -47,8 +47,9 @@ onBeforeUnmount(() => {
           <div class="col-lg-5 text-center mx-auto">
             <h1 class="text-white mb-2 mt-5">Welcome!</h1>
             <p class="text-lead text-white">
-              Use these awesome forms to login or create new account in your
-              project for free.
+              탄소 발자국을 줄이고 환경을 지키는 여정을 함께하세요.<br />
+              탄소 리포트 제공, 녹색 소비 보상, 퀘스트와 챌린지로<br />
+              작은 실천이 큰 변화를 만듭니다.
             </p>
           </div>
         </div>

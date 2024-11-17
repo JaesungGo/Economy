@@ -1,0 +1,206 @@
+<template>
+  <div class="interest-history">
+    <!-- 상단 이자 정보 -->
+    <div class="highlight-section text-center">
+      <p class="subtitle">오늘까지 받은 이자 <span class="emoji">🌟</span></p>
+      <h1 class="total-amount">{{ totalInterest }}원</h1>
+    </div>
+
+    <!-- 연도 선택 캘린더 -->
+    <div class="year-selector text-center">
+      <label for="year-select">연도 선택:</label>
+      <input
+        id="year-select"
+        type="number"
+        v-model="selectedYear"
+        @change="filterInterestData"
+        min="2000"
+        max="2024"
+        placeholder="연도를 입력하세요"
+      />
+    </div>
+
+    <!-- 테이블 영역 -->
+    <div class="interest-table-container">
+      <h3 class="year-title">{{ selectedYear }}년</h3>
+      <table class="interest-table" v-if="filteredData.length > 0">
+        <thead>
+          <tr>
+            <th>월</th>
+            <th>이자 금액</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(entry, index) in filteredData" :key="index">
+            <td>{{ entry.month }}월</td>
+            <td>{{ entry.amount }}원</td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-else class="empty-message">이자 내역이 없습니다.</p>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'InterestHistory',
+  data() {
+    return {
+      totalInterest: 0, // 오늘까지 받은 총 이자
+      selectedYear: new Date().getFullYear(), // 기본값: 현재 연도
+      interestHistory: {
+        // 연도별 이자 데이터
+        2024: [
+          { month: 11, amount: '24,085' },
+          { month: 10, amount: '24,085' },
+          { month: 9, amount: '8,235' },
+          { month: 8, amount: '12,083' },
+          { month: 7, amount: '14,035' },
+          { month: 6, amount: '4,085' },
+          { month: 5, amount: '14,085' },
+          { month: 4, amount: '24,085' },
+        ],
+        2023: [
+          { month: 12, amount: '20,000' },
+          { month: 11, amount: '22,000' },
+          { month: 10, amount: '25,000' },
+        ],
+        2022: [],
+      },
+      filteredData: [], // 선택된 연도의 필터링된 데이터
+    };
+  },
+  methods: {
+    async fetchInterestData() {
+      try {
+        // API 호출
+        const response = await fetch('');
+        const data = await response.json();
+
+        // 데이터 매핑
+        this.totalInterest = data.totalInterest; // 총 이자
+        this.interestHistory = data.yearlyData; // 연도별 데이터
+
+        // 초기 필터링
+        this.filterInterestData();
+      } catch (error) {
+        console.error('Error fetching interest data:', error);
+      }
+    },
+    filterInterestData() {
+      // 선택된 연도의 이자 내역 필터링
+      this.filteredData = this.interestHistory[this.selectedYear] || [];
+    },
+  },
+  mounted() {
+    this.filterInterestData(); // 컴포넌트 로드시 데이터 가져오기
+  },
+};
+</script>
+
+<style scoped>
+/* 전체 컨테이너 */
+.interest-history {
+  font-family: 'Arial', sans-serif;
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 20px;
+}
+
+/* 상단 이자 정보 */
+.highlight-section {
+  color: #333; /* 텍스트 색상 */
+  margin-bottom: 30px;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.emoji {
+  font-size: 1.5rem;
+}
+.total-amount {
+  font-size: 2.8rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* 연도 선택 캘린더 */
+.year-selector {
+  margin-bottom: 20px;
+}
+.year-selector label {
+  font-size: 1rem;
+  margin-right: 10px;
+}
+.year-selector input {
+  font-size: 1rem;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* 테이블 컨테이너 */
+.interest-table-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 연도 제목 */
+.year-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 테이블 스타일 */
+.interest-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.interest-table thead {
+  background-color: #4caf50; /* 헤더 배경색 */
+  color: white;
+}
+
+.interest-table th,
+.interest-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.interest-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* 짝수 행 색상 */
+}
+
+.interest-table tr:hover {
+  background-color: #f1f1f1; /* 행 Hover 효과 */
+}
+
+/* 비어있는 메시지 스타일 */
+.empty-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #999;
+  margin: 20px 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .total-amount {
+    font-size: 2rem;
+  }
+  .interest-table th,
+  .interest-table td {
+    font-size: 0.9rem;
+  }
+}
+</style>

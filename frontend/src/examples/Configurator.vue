@@ -1,32 +1,32 @@
 <script setup>
-import { computed } from "vue";
-import { useStore } from "vuex";
-import { activateDarkMode, deactivateDarkMode } from "@/assets/js/dark-mode";
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { activateDarkMode, deactivateDarkMode } from '@/assets/js/dark-mode';
 
 const store = useStore();
 // state
 const isRTL = computed(() => store.state.isRTL);
 const isNavFixed = computed(() => store.state.isNavFixed);
 const sidebarType = computed(() => store.state.sidebarType);
-const toggleConfigurator = () => store.commit("toggleConfigurator");
+const toggleConfigurator = () => store.commit('toggleConfigurator');
 
 // mutations
-const navbarFixed = () => store.commit("navbarFixed");
-const setSidebarType = (type) => store.commit("sidebarType", type);
+const navbarFixed = () => store.commit('navbarFixed');
+const setSidebarType = (type) => store.commit('sidebarType', type);
 
-const sidebarColor = (color = "success") => {
-  document.querySelector("#sidenav-main").setAttribute("data-color", color);
+const sidebarColor = (color = 'success') => {
+  document.querySelector('#sidenav-main').setAttribute('data-color', color);
 };
 
 const darkMode = () => {
   if (store.state.darkMode) {
     store.state.darkMode = false;
-    setSidebarType("bg-white");
+    setSidebarType('bg-white');
     deactivateDarkMode();
     return;
   } else {
     store.state.darkMode = true;
-    setSidebarType("bg-default");
+    setSidebarType('bg-default');
     activateDarkMode();
   }
 };
@@ -161,11 +161,6 @@ const darkMode = () => {
             />
           </div>
         </div>
-        <a
-          class="btn bg-gradient-dark w-100"
-          href="https://www.creative-tim.com/product/vue-argon-dashboard"
-          >Free Download</a
-        >
         <a
           class="btn btn-outline-dark w-100"
           href="https://www.creative-tim.com/learning-lab/vue/overview/argon-dashboard/"
