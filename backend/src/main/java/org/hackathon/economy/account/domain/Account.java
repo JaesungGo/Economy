@@ -1,5 +1,6 @@
 package org.hackathon.economy.account.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,6 @@ public class Account {
     @Column(nullable = false)
     private Date createDate;
     @Column(nullable = false)
-    private Date updateDate;
     private Date closedDate;
     @Column(nullable = false)
     private Boolean accountStatus;
@@ -39,5 +39,6 @@ public class Account {
     private List<DailyInterest> dailyInterests = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "interest_no")
     private Interest interest;
 }
