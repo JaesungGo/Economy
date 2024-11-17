@@ -1,2 +1,6 @@
-<script setup></script>
-<template>This is Interest.vue page</template>
+<script setup>
+import InterestHistory from './components/InterestHistory.vue';
+</script>
+<template>
+  <InterestHistory />
+</template>
