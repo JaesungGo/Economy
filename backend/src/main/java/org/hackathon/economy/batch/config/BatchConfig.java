@@ -1,5 +1,6 @@
 package org.hackathon.economy.batch.config;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+@Log4j2
 @Configuration
 @EnableBatchProcessing
 public class BatchConfig {
@@ -35,6 +37,13 @@ public class BatchConfig {
         JobBuilder jobBuilder = new JobBuilder("dailyUpdateInterestJob", jobRepository);
         return jobBuilder.incrementer(new RunIdIncrementer())
                 .start(dailyUpdateInterestStep)
+                .build();
+    }
+    @Bean
+    public Job dailyInsertInterestJob(Step dailyInsertInterestStep) {
+        JobBuilder jobBuilder = new JobBuilder("dailyInsertInterestJob", jobRepository);
+        return jobBuilder.incrementer(new RunIdIncrementer())
+                .start(dailyInsertInterestStep)
                 .build();
     }
 
@@ -61,6 +70,11 @@ public class BatchConfig {
     public Step dailyUpdateInterestStep(@Qualifier("dailyTasklet") Tasklet dailyUpdateInterestTasklet) {
         StepBuilder stepBuilder = new StepBuilder("dailyUpdateInterestStep", jobRepository);
         return stepBuilder.tasklet(dailyUpdateInterestTasklet, transactionManager).build();
+    }
+    @Bean
+    public Step dailyInsertInterestStep(@Qualifier("dailyInterestTasklet") Tasklet dailyInsertInterestTasklet) {
+        StepBuilder stepBuilder = new StepBuilder("dailyInsertInterestStep", jobRepository);
+        return stepBuilder.tasklet(dailyInsertInterestTasklet, transactionManager).build();
     }
 
     // Weekly Step

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -26,7 +27,7 @@ public class Interest {
     @Column(nullable = false)
     private Boolean currentMonthly;
     @Column(nullable = false)
-    private Date createTableDatetime;
+    private LocalDateTime createTableDatetime;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_no")

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -30,7 +31,7 @@ public class DailyInterest {
     @Column(nullable = false)
     private Boolean currentMonthly;
     @Column(nullable = false)
-    private Date todayDate;
+    private LocalDate todayDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_no")

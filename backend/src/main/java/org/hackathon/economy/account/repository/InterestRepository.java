@@ -1,5 +1,6 @@
-package org.hackathon.economy.batch.domain;
+package org.hackathon.economy.account.repository;
 
+import org.hackathon.economy.account.domain.Interest ;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 // UserRepositry는 JpaRepository 인터페이스를 상속방아 기본 CRUD 작업을 지원

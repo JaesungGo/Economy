@@ -1,6 +1,6 @@
 package org.hackathon.economy.batch.tasklet;
 
-import org.hackathon.economy.batch.domain.InterestRepository;
+import org.hackathon.economy.account.repository.InterestRepository;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
