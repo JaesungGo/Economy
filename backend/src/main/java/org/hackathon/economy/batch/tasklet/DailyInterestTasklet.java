@@ -5,8 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.hackathon.economy.account.domain.Account;
 import org.hackathon.economy.account.domain.DailyInterest ;
 import org.hackathon.economy.account.repository.AccountRepositoryInterface;
-import org.hackathon.economy.account.repository.DailyInterestRepository;
-import org.hackathon.economy.account.repository.InterestRepository;
+import org.hackathon.economy.account.repository.DailyInterestRepositoryInterface;
+import org.hackathon.economy.account.repository.InterestRepositoryInterface;
 import org.hackathon.economy.member.domain.Member;
 import org.hackathon.economy.member.repository.MemberRepository;
 import org.springframework.batch.core.StepContribution;
@@ -24,15 +24,15 @@ import java.util.Optional;
 @Component("dailyInterestTasklet")
 public class DailyInterestTasklet implements Tasklet {
 
-    private final InterestRepository interestRepository;
-    private final DailyInterestRepository dailyInterestRepository;
+    private final InterestRepositoryInterface interestRepositoryInterface;
+    private final DailyInterestRepositoryInterface dailyInterestRepositoryInterface;
     private final AccountRepositoryInterface accountRepositoryInterface;
     private final MemberRepository memberRepository;
 
     @Autowired
-    public DailyInterestTasklet(InterestRepository interestRepository, DailyInterestRepository dailyInterestRepository, AccountRepositoryInterface accountRepositoryInterface, MemberRepository memberRepository) {
-        this.interestRepository = interestRepository;
-        this.dailyInterestRepository = dailyInterestRepository;
+    public DailyInterestTasklet(InterestRepositoryInterface interestRepositoryInterface, DailyInterestRepositoryInterface dailyInterestRepositoryInterface, AccountRepositoryInterface accountRepositoryInterface, MemberRepository memberRepository) {
+        this.interestRepositoryInterface = interestRepositoryInterface;
+        this.dailyInterestRepositoryInterface = dailyInterestRepositoryInterface;
         this.accountRepositoryInterface = accountRepositoryInterface;
         this.memberRepository = memberRepository;
     }
@@ -42,7 +42,7 @@ public class DailyInterestTasklet implements Tasklet {
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         log.info("-------------------DailyInterestTasklet started-------------------");
 
-        interestRepository.findAll().forEach(interest -> {
+        interestRepositoryInterface.findAll().forEach(interest -> {
 
             Account account = accountRepositoryInterface.findAccountByAccountNo(interest.getAccount().getAccountNo());
             Member member = account.getMember();
@@ -80,7 +80,7 @@ public class DailyInterestTasklet implements Tasklet {
 
             // 결과가 있으면 Optional<DailyInterest>, 없으면 Optional.empty() 반환
             LocalDate yesterday = LocalDate.now().minusDays(1);
-            Optional<DailyInterest> yesterdayInterest = dailyInterestRepository.findDailyInterestByAccount_AccountNoAndTodayDate(account.getAccountNo(), yesterday);
+            Optional<DailyInterest> yesterdayInterest = dailyInterestRepositoryInterface.findDailyInterestByAccount_AccountNoAndTodayDate(account.getAccountNo(), yesterday);
             yesterdayInterest.ifPresentOrElse(
                     dailyInterestFromYesterday -> {
                         // 어제의 이자 누적량이 있으면, 오늘의 이자와 더해서 누적
@@ -94,7 +94,7 @@ public class DailyInterestTasklet implements Tasklet {
 
             dailyInterest.setTodayDate(LocalDate.now()); // 오늘 날짜
 
-            dailyInterestRepository.save(dailyInterest); // DB에 저장
+            dailyInterestRepositoryInterface.save(dailyInterest); // DB에 저장
             log.info("New Daily_Interest record inserted");
         });
 
