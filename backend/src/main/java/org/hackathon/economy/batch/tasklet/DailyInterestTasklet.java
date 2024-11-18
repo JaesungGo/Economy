@@ -1,16 +1,14 @@
 package org.hackathon.economy.batch.tasklet;
 
 //import org.hackathon.economy.batch.domain.DailyInterest;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.hackathon.economy.account.domain.Account;
 import org.hackathon.economy.account.domain.DailyInterest ;
-import org.hackathon.economy.account.repository.AccountRepository;
+import org.hackathon.economy.account.repository.AccountRepositoryInterface;
 import org.hackathon.economy.account.repository.DailyInterestRepository;
 import org.hackathon.economy.account.repository.InterestRepository;
 import org.hackathon.economy.member.domain.Member;
 import org.hackathon.economy.member.repository.MemberRepository;
-import org.slf4j.Logger;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -28,14 +26,14 @@ public class DailyInterestTasklet implements Tasklet {
 
     private final InterestRepository interestRepository;
     private final DailyInterestRepository dailyInterestRepository;
-    private final AccountRepository accountRepository;
+    private final AccountRepositoryInterface accountRepositoryInterface;
     private final MemberRepository memberRepository;
 
     @Autowired
-    public DailyInterestTasklet(InterestRepository interestRepository, DailyInterestRepository dailyInterestRepository, AccountRepository accountRepository, MemberRepository memberRepository) {
+    public DailyInterestTasklet(InterestRepository interestRepository, DailyInterestRepository dailyInterestRepository, AccountRepositoryInterface accountRepositoryInterface, MemberRepository memberRepository) {
         this.interestRepository = interestRepository;
         this.dailyInterestRepository = dailyInterestRepository;
-        this.accountRepository = accountRepository;
+        this.accountRepositoryInterface = accountRepositoryInterface;
         this.memberRepository = memberRepository;
     }
 
@@ -46,7 +44,7 @@ public class DailyInterestTasklet implements Tasklet {
 
         interestRepository.findAll().forEach(interest -> {
 
-            Account account = accountRepository.findAccountByAccountNo(interest.getAccount().getAccountNo());
+            Account account = accountRepositoryInterface.findAccountByAccountNo(interest.getAccount().getAccountNo());
             Member member = account.getMember();
             //log.info("-------------------Account: {}", account);
             //log.info("-------------------Member: {}", member);
