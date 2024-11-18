@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.hackathon.economy.member.domain.LoginDTO;
 import org.hackathon.economy.member.domain.Member;
+import org.hackathon.economy.member.service.AuthenticationService;
 import org.hackathon.economy.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AuthenticationService authenticationService;
 
     //Email로 멤버 검색
 //    @GetMapping("/email/{email}")
@@ -50,11 +52,12 @@ public class MemberController {
     //로그인 확인
     @GetMapping("/check-login")
     public ResponseEntity<String> checkLogin(HttpSession session) {
-        String memberEmail = (String) session.getAttribute("memberEmail");
-        if(memberEmail != null) {
-          return ResponseEntity.ok("Logged in as : " + memberEmail);
+        try {
+            String memberEmail = authenticationService.checkLogin(session);
+            return ResponseEntity.ok("Logged in as: " + memberEmail);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
     }
 
     //회원정보 조회
