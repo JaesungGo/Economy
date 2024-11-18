@@ -10,7 +10,7 @@ const interest = ref(0);
 const startCount = () => {
   const interval = setInterval(() => {
     if (count.value > 1) {
-      //interest.value += Math.round((count.value * 4 / 100 / (24*60*60)) * 10000) / 10000;
+      interest.value += Math.round((count.value * 4 / 100 / (24*60*60)) * 10000) / 10000;
     } else {
       clearInterval(interval);  // 카운트가 1에 도달하면 타이머 종료
     }
