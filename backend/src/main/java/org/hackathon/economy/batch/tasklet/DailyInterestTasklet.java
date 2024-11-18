@@ -72,10 +72,11 @@ public class DailyInterestTasklet implements Tasklet {
             if(dailyInterest.getCurrentMonthly()) {
                 todayRate += 0.3;
             }
+
             dailyInterest.setTodayRate(todayRate); // 당일 이자율
             account.setAccountRate(todayRate); // Account 테이블의 account_date도 업데이트
 
-            Long todayInterest = (long) (dailyInterest.getTodayBalance() * todayRate / 100);
+            Long todayInterest = (long) (dailyInterest.getTodayBalance() * todayRate / 100 / 365);
             dailyInterest.setTodayInterest(todayInterest); // 당일 이자
             account.setAccountBalance(account.getAccountBalance() + todayInterest); // Account 테이블의 account_balance도 업데이트
 
