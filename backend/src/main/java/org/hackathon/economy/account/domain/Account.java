@@ -43,6 +43,7 @@ public class Account {
     private List<DailyInterest> dailyInterests = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "interest_no") // 외래 키는 Account 테이블에 위치
     private Interest interest;
 
     // 도메인 메서드: 잔액 추가

@@ -29,7 +29,6 @@ public class Interest {
     @Column(nullable = false)
     private LocalDateTime createTableDatetime;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_no")
+    @OneToOne(mappedBy = "interest", fetch = FetchType.LAZY)
     private Account account;
 }

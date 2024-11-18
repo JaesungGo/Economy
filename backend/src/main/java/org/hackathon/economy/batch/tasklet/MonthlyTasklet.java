@@ -1,6 +1,6 @@
 package org.hackathon.economy.batch.tasklet;
 
-import org.hackathon.economy.account.repository.InterestRepository;
+import org.hackathon.economy.account.repository.InterestRepositoryInterface;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -12,21 +12,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Component("monthlyTasklet")
 public class MonthlyTasklet implements Tasklet {
 
-    private final InterestRepository interestRepository;
+    private final InterestRepositoryInterface interestRepositoryInterface;
 
     @Autowired
-    public MonthlyTasklet(InterestRepository interestRepository) {
-        this.interestRepository = interestRepository;
+    public MonthlyTasklet(InterestRepositoryInterface interestRepositoryInterface) {
+        this.interestRepositoryInterface = interestRepositoryInterface;
     }
 
     @Override
     @Transactional // 전체 메서드를 하나의 트랜잭션으로 묶음
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        interestRepository.findAll().forEach(interest -> {
+        interestRepositoryInterface.findAll().forEach(interest -> {
             if (interest.getMonthlyQuest()) { // 먼슬리 퀘스트 달성 확인
                 interest.setCurrentMonthly(true);
                 interest.setMonthlyQuest(false);
-                interestRepository.save(interest);
+                interestRepositoryInterface.save(interest);
             }
         });
 

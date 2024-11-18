@@ -21,6 +21,8 @@ public class DailyInterest {
     @Column(nullable = false)
     private Long todayInterest;
     @Column(nullable = false)
+    private Long monthlyInterest;
+    @Column(nullable = false)
     private Long totalInterest;
     @Column(nullable = false)
     private Integer todayGrade;

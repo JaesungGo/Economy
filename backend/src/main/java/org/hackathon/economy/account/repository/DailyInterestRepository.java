@@ -1,15 +1,64 @@
 package org.hackathon.economy.account.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.hackathon.economy.account.domain.Account;
-import org.hackathon.economy.account.domain.DailyInterest ;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.hackathon.economy.account.domain.DailyInterest;
+import org.hackathon.economy.member.domain.Member;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
-public interface DailyInterestRepository extends JpaRepository<DailyInterest, Long> {
-    Optional<DailyInterest> findDailyInterestByAccount_AccountNoAndTodayDate(Long accountNo, LocalDate date); // 특정 컬럼으로 검색할 수 있는 메서드 정의 (예: Account를 기준으로 검색)
+@Repository
+public class DailyInterestRepository {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    // 전체 내역 조회
+    public List<DailyInterest> getAll(Account account) {
+        try {
+            TypedQuery<DailyInterest> query = em.createQuery("select d from DailyInterest d where d.account = :account", DailyInterest.class);
+            query.setParameter("account", account);
+            return query.getResultList();
+        } catch(NoResultException e) {
+            return null;
+        }
+    }
+
+    // 누적이자 조회
+    public Long getTotal(Account account) {
+        try {
+            TypedQuery<DailyInterest> query = em.createQuery(
+                    "select d from DailyInterest d where d.account = :account order by d.dailyInterestNo desc",
+                    DailyInterest.class
+            );
+            query.setParameter("account", account);
+            query.setMaxResults(1); // 결과를 하나로 제한
+            DailyInterest result = query.getSingleResult();
+            return result.getTotalInterest();
+        } catch(NoResultException e) {
+            return null;
+        }
+    }
+
+    // 매월 말일 월별 누적이자 조회
+    public List<DailyInterest> getMonthly(Account account) {
+        try {
+            TypedQuery<DailyInterest> query = em.createQuery(
+                    "SELECT d FROM DailyInterest d " +
+                            "WHERE d.todayDate IN (" +
+                            "    SELECT MAX(subD.todayDate) " +
+                            "    FROM DailyInterest subD " +
+                            "    GROUP BY FUNCTION('YEAR', subD.todayDate), FUNCTION('MONTH', subD.todayDate)" +
+                            ")",
+                    DailyInterest.class
+            );
+            return query.getResultList();
+        } catch(NoResultException e) {
+            return null;
+        }
+    }
 }
-
