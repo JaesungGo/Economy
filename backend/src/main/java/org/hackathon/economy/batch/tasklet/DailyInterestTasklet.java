@@ -43,13 +43,13 @@ public class DailyInterestTasklet implements Tasklet {
     @Transactional // 전체 메서드를 하나의 트랜잭션으로 묶음
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         log.info("-------------------DailyInterestTasklet started-------------------");
-
+        log.info("-------------------interestRepositoryInterface.findAll(){}", interestRepositoryInterface.findAll());
         interestRepositoryInterface.findAll().forEach(interest -> {
 
             Account account = accountRepositoryInterface.findAccountByAccountNo(interest.getAccount().getAccountNo());
             Member member = account.getMember();
-            //log.info("-------------------Account: {}", account);
-            //log.info("-------------------Member: {}", member);
+            log.info("-------------------Account: {}", account);
+            log.info("-------------------Member: {}", member);
             DailyInterest dailyInterest = new DailyInterest(); // 새로운 DailyInterest 생성 및 저장
 
             dailyInterest.setAccount(account); // 계좌 번호

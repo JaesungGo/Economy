@@ -50,7 +50,7 @@ public class BatchScheduler {
     }
     // 매일 0시 10분에 실행되는 작업
     //@Scheduled(cron = "0 10 0 * * *")
-    @Scheduled(cron = "0 53 21 * * *")
+    @Scheduled(cron = "0 35 0 * * *")
     public void runDailyInsertInterestJob() throws Exception {
         log.info("-------------------runDailyInsertInterestJob-------------------");
         runJob(dailyInsertInterestJob);
