@@ -53,16 +53,15 @@ import TodayQuest from './components/TodayQuest.vue';
                             }"
                         />
                     </div>
+                    <!-- 가장 많이 완료한 퀘스트 알림 -->
                     <div class="col-lg-3 col-md-6 col-12">
                         <mini-statistics-card
-                            title="Sales"
-                            value="$103,430"
-                            description="<span
-                class='text-sm font-weight-bolder text-success'
-                >+5%</span> than last month"
+                            title="김예은 님은"
+                            value="수도세 절약"
+                            description="을(를) 가장 많이 수행하셨습니다!"
                             :icon="{
                                 component: 'ni ni-cart',
-                                background: 'bg-gradient-warning',
+                                background: 'bg-gradient-success',
                                 shape: 'rounded-circle',
                             }"
                         />
