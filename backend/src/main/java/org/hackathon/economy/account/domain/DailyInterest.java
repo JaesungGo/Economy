@@ -31,7 +31,6 @@ public class DailyInterest {
     private Boolean currentMonthly;
     @Column(nullable = false)
     private LocalDate todayDate;
-    // localDate로 변경함
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_no")
