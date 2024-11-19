@@ -23,11 +23,17 @@ public class MonthlyTasklet implements Tasklet {
     @Transactional // 전체 메서드를 하나의 트랜잭션으로 묶음
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         interestRepositoryInterface.findAll().forEach(interest -> {
-            if (interest.getMonthlyQuest()) { // 먼슬리 퀘스트 달성 확인
-                interest.setCurrentMonthly(true);
-                interest.setMonthlyQuest(false);
-                interestRepositoryInterface.save(interest);
-            }
+
+            // 먼슬리 퀘스트 달성 확인
+            interest.setCurrentMonthly(interest.getMonthlyQuest());
+            interest.setMonthlyQuest(false);
+            interestRepositoryInterface.save(interest);
+
+//            if (interest.getMonthlyQuest()) { // 먼슬리 퀘스트 달성 확인
+//                interest.setCurrentMonthly(true);
+//                interest.setMonthlyQuest(false);
+//                interestRepositoryInterface.save(interest);
+//            }
         });
 
         return RepeatStatus.FINISHED; // 모든 작업이 완료되면 RepeatStatus.FINISHED를 반환

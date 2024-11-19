@@ -26,11 +26,18 @@ public class DailyTasklet implements Tasklet {
     @Transactional // 전체 메서드를 하나의 트랜잭션으로 묶음
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         interestRepositoryInterface.findAll().forEach(interest -> {
-            if (interest.getDailyQuest()) { // 데일리 퀘스트 달성 확인
-                interest.setCurrentDaily(true);
-                interest.setDailyQuest(false);
-                interestRepositoryInterface.save(interest);
-            }
+
+            // 데일리 퀘스트 달성 확인
+            interest.setCurrentDaily(interest.getDailyQuest());
+            interest.setDailyQuest(false);
+            interestRepositoryInterface.save(interest);
+
+//            if (interest.getDailyQuest()) { // 데일리 퀘스트 달성 확인
+//                interest.setCurrentDaily(true);
+//                interest.setDailyQuest(false);
+//                interestRepositoryInterface.save(interest);
+//            }
+
         });
 
         return RepeatStatus.FINISHED; // 모든 작업이 완료되면 RepeatStatus.FINISHED를 반환

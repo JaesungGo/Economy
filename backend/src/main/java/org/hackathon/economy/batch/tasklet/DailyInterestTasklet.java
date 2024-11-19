@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @Log4j2
@@ -41,13 +43,13 @@ public class DailyInterestTasklet implements Tasklet {
     @Transactional // 전체 메서드를 하나의 트랜잭션으로 묶음
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
         log.info("-------------------DailyInterestTasklet started-------------------");
-
+        log.info("-------------------interestRepositoryInterface.findAll(){}", interestRepositoryInterface.findAll());
         interestRepositoryInterface.findAll().forEach(interest -> {
 
             Account account = accountRepositoryInterface.findAccountByAccountNo(interest.getAccount().getAccountNo());
             Member member = account.getMember();
-            //log.info("-------------------Account: {}", account);
-            //log.info("-------------------Member: {}", member);
+            log.info("-------------------Account: {}", account);
+            log.info("-------------------Member: {}", member);
             DailyInterest dailyInterest = new DailyInterest(); // 새로운 DailyInterest 생성 및 저장
 
             dailyInterest.setAccount(account); // 계좌 번호
@@ -92,7 +94,26 @@ public class DailyInterestTasklet implements Tasklet {
                     }
             );
 
-            dailyInterest.setTodayDate(LocalDate.now()); // 오늘 날짜
+            LocalDate today = LocalDate.now();
+            if (today.getDayOfMonth() == 1) { // 오늘 날짜가 1일인지 확인
+                // 오늘 날짜가 1일이라면, 새로운 달의 시작이니 월간 누적량을 오늘 이자로 설정
+                dailyInterest.setMonthlyInterest(todayInterest);
+            } else {
+                // 오늘 날짜가 1일이 아니라면, 어제의 이자 누적량의 유무를 판별해 오늘 이자와 함께 누적
+                yesterdayInterest.ifPresentOrElse(
+                        dailyInterestFromYesterday -> {
+                            // 어제의 이자 누적량이 있으면, 오늘의 이자와 더해서 누적
+                            dailyInterest.setMonthlyInterest(dailyInterestFromYesterday.getMonthlyInterest() + todayInterest);
+                        },
+                        () -> {
+                            // 어제의 이자 정보가 없으면, 오늘의 이자만 적용
+                            dailyInterest.setMonthlyInterest(todayInterest);
+                        }
+                );
+            }
+
+            account.setUpdateDate(new Date()); // ACCOUNT의 updateDate도 수정
+            dailyInterest.setTodayDate(today); // 오늘 날짜
 
             dailyInterestRepositoryInterface.save(dailyInterest); // DB에 저장
             log.info("New Daily_Interest record inserted");
