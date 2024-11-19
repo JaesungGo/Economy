@@ -36,26 +36,26 @@ $cyan: #0dcaf0 !default;
 
 // scss-docs-start colors-map
 $colors: (
-  "blue": $blue,
-  "indigo": $indigo,
-  "purple": $purple,
-  "pink": $pink,
-  "red": $red,
-  "orange": $orange,
-  "yellow": $yellow,
-  "green": $green,
-  "teal": $teal,
-  "cyan": $cyan,
-  "white": $white,
-  "gray": $gray-600,
-  "gray-dark": $gray-800,
+    'blue': $blue,
+    'indigo': $indigo,
+    'purple': $purple,
+    'pink': $pink,
+    'red': $red,
+    'orange': $orange,
+    'yellow': $yellow,
+    'green': $green,
+    'teal': $teal,
+    'cyan': $cyan,
+    'white': $white,
+    'gray': $gray-600,
+    'gray-dark': $gray-800,
 ) !default;
 // scss-docs-end colors-map
 
 $primary: #5e72e4 !default;
 $secondary: #8392ab !default;
 $info: #11cdef !default;
-$success: #2dce89 !default;
+$success: #40a578 !default;
 $warning: #fb6340 !default;
 $danger: #f5365c !default;
 $light: $gray-200 !default;
@@ -63,15 +63,15 @@ $dark: $h-color !default;
 
 // scss-docs-start theme-colors-map
 $theme-colors: (
-  "primary": $primary,
-  "secondary": $secondary,
-  "success": $success,
-  "info": $info,
-  "warning": $warning,
-  "danger": $danger,
-  "light": $light,
-  "dark": $dark,
-  "white": $white,
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $success,
+    'info': $info,
+    'warning': $warning,
+    'danger': $danger,
+    'light': $light,
+    'dark': $dark,
+    'white': $white,
 ) !default;
 // scss-docs-end theme-colors-map
 
@@ -103,70 +103,46 @@ $light-gradient-state: #ebeff4 !default;
 $dark-gradient-dark: #323a54 !default;
 $dark-gradient-state-dark: #1a2035 !default;
 
-$text-gradient-bg-primary: linear-gradient(
-  310deg,
-  $primary-gradient,
-  $primary-gradient-state
-) !default;
-$text-gradient-bg-info: linear-gradient(
-  310deg,
-  $info-gradient,
-  $info-gradient-state
-) !default;
-$text-gradient-bg-success: linear-gradient(
-  310deg,
-  $success-gradient,
-  $success-gradient-state
-) !default;
-$text-gradient-bg-warning: linear-gradient(
-  310deg,
-  $warning-gradient,
-  $warning-gradient-state
-) !default;
-$text-gradient-bg-danger: linear-gradient(
-  310deg,
-  $danger-gradient,
-  $danger-gradient-state
-) !default;
-$text-gradient-bg-dark: linear-gradient(
-  310deg,
-  $dark-gradient,
-  $dark-gradient-state
-) !default;
+$text-gradient-bg-primary: linear-gradient(310deg, $primary-gradient, $primary-gradient-state) !default;
+$text-gradient-bg-info: linear-gradient(310deg, $info-gradient, $info-gradient-state) !default;
+$text-gradient-bg-success: linear-gradient(310deg, $success-gradient, $success-gradient-state) !default;
+$text-gradient-bg-warning: linear-gradient(310deg, $warning-gradient, $warning-gradient-state) !default;
+$text-gradient-bg-danger: linear-gradient(310deg, $danger-gradient, $danger-gradient-state) !default;
+$text-gradient-bg-dark: linear-gradient(310deg, $dark-gradient, $dark-gradient-state) !default;
 // Gradient Colors map
 $theme-gradient-colors: (
-  "primary": (
-    $primary-gradient,
-    $primary-gradient-state,
-  ),
-  "secondary": (
-    $secondary-gradient,
-    $secondary-gradient-state,
-  ),
-  "success": (
-    $success-gradient,
-    $success-gradient-state,
-  ),
-  "info": (
-    $info-gradient,
-    $info-gradient-state,
-  ),
-  "warning": (
-    $warning-gradient,
-    $warning-gradient-state,
-  ),
-  "danger": (
-    $danger-gradient,
-    $danger-gradient-state,
-  ),
-  "light": (
-    $light-gradient,
-    $light-gradient-state,
-  ),
-  "dark": (
-    $dark-gradient,
-    $dark-gradient-state,
-  ),
+    'primary': (
+        $primary-gradient,
+        $primary-gradient-state,
+    ),
+    'secondary': (
+        $secondary-gradient,
+        $secondary-gradient-state,
+    ),
+    'success': (
+        $success-gradient,
+        $success-gradient-state,
+    ),
+    'info': (
+        $info-gradient,
+        $info-gradient-state,
+    ),
+    'warning': (
+        $warning-gradient,
+        $warning-gradient-state,
+    ),
+    'danger': (
+        $danger-gradient,
+        $danger-gradient-state,
+    ),
+    'light': (
+        $light-gradient,
+        $light-gradient-state,
+    ),
+    'dark': (
+        $dark-gradient,
+        $dark-gradient-state,
+    ),
 ) !default;
 
 // Set a specific jump point for requesting color jumps
@@ -283,13 +259,7 @@ $cyan-900: shade-color($cyan, 8) !default;
 // fusv-enable
 
 // Characters which are escaped by the escape-svg function
-$escaped-characters: (
-  ("<", "%3c"),
-  (">", "%3e"),
-  ("#", "%23"),
-  ("(", "%28"),
-  (")", "%29")
-) !default;
+$escaped-characters: (('<', '%3c'), ('>', '%3e'), ('#', '%23'), ('(', '%28'), (')', '%29')) !default;
 
 // Options
 //
@@ -313,11 +283,7 @@ $enable-important-utilities: true !default;
 //
 // The gradient which is added to components if `$enable-gradients` is `true`
 // This gradient is also added to elements with `.bg-gradient`
-$gradient: linear-gradient(
-  180deg,
-  rgba($white, 0.15),
-  rgba($white, 0)
-) !default;
+$gradient: linear-gradient(180deg, rgba($white, 0.15), rgba($white, 0)) !default;
 
 // Spacing
 //
@@ -327,45 +293,41 @@ $gradient: linear-gradient(
 
 $spacer: 1rem !default;
 $spacers: (
-  0: 0,
-  1: $spacer * 0.25,
-  2: $spacer * 0.5,
-  3: $spacer,
-  4: $spacer * 1.5,
-  5: $spacer * 3,
-  6: $spacer * 4,
-  7: $spacer * 6,
-  8: $spacer * 8,
-  9: $spacer * 10,
-  10: $spacer * 12,
-  11: $spacer * 14,
-  12: $spacer * 16,
+    0: 0,
+    1: $spacer * 0.25,
+    2: $spacer * 0.5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 3,
+    6: $spacer * 4,
+    7: $spacer * 6,
+    8: $spacer * 8,
+    9: $spacer * 10,
+    10: $spacer * 12,
+    11: $spacer * 14,
+    12: $spacer * 16,
 ) !default;
 
-$negative-spacers: if(
-  $enable-negative-margins,
-  negativify-map($spacers),
-  null
-) !default;
+$negative-spacers: if($enable-negative-margins, negativify-map($spacers), null) !default;
 
 // Position
 //
 // Define the edge positioning anchors of the position utilities.
 
 $position-values: (
-  0: 0,
-  1: 1%,
-  2: 2%,
-  3: 3%,
-  4: 4%,
-  5: 5%,
-  6: 6%,
-  7: 7%,
-  8: 8%,
-  9: 9%,
-  10: 10%,
-  50: 50%,
-  100: 100%,
+    0: 0,
+    1: 1%,
+    2: 2%,
+    3: 3%,
+    4: 4%,
+    5: 5%,
+    6: 6%,
+    7: 7%,
+    8: 8%,
+    9: 9%,
+    10: 10%,
+    50: 50%,
+    100: 100%,
 ) !default;
 
 // Body
@@ -403,17 +365,17 @@ $paragraph-margin-bottom: 1rem !default;
 
 // scss-docs-start grid-breakpoints
 $grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px,
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px,
 ) !default;
 // scss-docs-end grid-breakpoints
 
-@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
-@include _assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
+@include _assert-ascending($grid-breakpoints, '$grid-breakpoints');
+@include _assert-starts-at-zero($grid-breakpoints, '$grid-breakpoints');
 
 // Grid containers
 //
@@ -421,15 +383,15 @@ $grid-breakpoints: (
 
 // scss-docs-start container-max-widths
 $container-max-widths: (
-  sm: 540px,
-  md: 720px,
-  lg: 960px,
-  xl: 1140px,
-  xxl: 1320px,
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1140px,
+    xxl: 1320px,
 ) !default;
 // scss-docs-end container-max-widths
 
-@include _assert-ascending($container-max-widths, "$container-max-widths");
+@include _assert-ascending($container-max-widths, '$container-max-widths');
 
 // Grid columns
 //
@@ -461,12 +423,12 @@ $border-radius-2xl: 1.5rem !default;
 $border-radius-section: 10rem !default;
 
 $border-widths: (
-  0: 0,
-  1: 1px,
-  2: 2px,
-  3: 3px,
-  4: 4px,
-  5: 5px,
+    0: 0,
+    1: 1px,
+    2: 2px,
+    3: 3px,
+    4: 4px,
+    5: 5px,
 ) !default;
 
 $rounded-pill: 50rem !default;
@@ -474,11 +436,11 @@ $rounded-pill: 50rem !default;
 $box-shadow-xs: 0 2px 9px -5px rgba($black, 0.15) !default;
 $box-shadow-sm: 0 0.3125rem 0.625rem 0 rgba(0, 0, 0, 0.12) !default;
 $box-shadow:
-  0 0.25rem 0.375rem -0.0625rem rgba(20, 20, 20, 0.12),
-  0 0.125rem 0.25rem -0.0625rem rgba(20, 20, 20, 0.07) !default;
+    0 0.25rem 0.375rem -0.0625rem rgba(20, 20, 20, 0.12),
+    0 0.125rem 0.25rem -0.0625rem rgba(20, 20, 20, 0.07) !default;
 $box-shadow-lg:
-  0 8px 26px -4px rgba(20, 20, 20, 0.15),
-  0 8px 9px -5px rgba(20, 20, 20, 0.06) !default;
+    0 8px 26px -4px rgba(20, 20, 20, 0.15),
+    0 8px 9px -5px rgba(20, 20, 20, 0.06) !default;
 $box-shadow-xl: 0 23px 45px -11px rgba(20, 20, 20, 0.25) !default;
 $box-shadow-inset: inset 0 1px 2px rgba($black, 0.075) !default;
 
@@ -496,10 +458,10 @@ $transition-collapse: height 0.35s ease !default;
 // stylelint-disable function-disallowed-list
 // scss-docs-start aspect-ratios
 $aspect-ratios: (
-  "1x1": 100%,
-  "4x3": calc(3 / 4 * 100%),
-  "16x9": calc(9 / 16 * 100%),
-  "21x9": calc(9 / 21 * 100%),
+    '1x1': 100%,
+    '4x3': calc(3 / 4 * 100%),
+    '16x9': calc(9 / 16 * 100%),
+    '21x9': calc(9 / 21 * 100%),
 ) !default;
 // scss-docs-end aspect-ratios
 // stylelint-enable function-disallowed-list
@@ -509,9 +471,8 @@ $aspect-ratios: (
 // Font, line-height, and color for body text, headings, and more.
 
 // stylelint-disable value-keyword-case
-$font-family-sans-serif: "Open Sans", sans-serif !default;
-$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
-  "Liberation Mono", "Courier New", monospace !default;
+$font-family-sans-serif: 'Open Sans', sans-serif !default;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !default;
 // stylelint-enable value-keyword-case
 $font-family-base: var(--bs-font-sans-serif) !default;
 $font-family-code: var(--bs-font-monospace) !default;
@@ -591,12 +552,12 @@ $headings-color: #344767 !default;
 
 // scss-docs-start display-headings
 $display-font-sizes: (
-  1: 5rem,
-  2: 4.5rem,
-  3: 4rem,
-  4: 3.5rem,
-  5: 3rem,
-  6: 2.5rem,
+    1: 5rem,
+    2: 4.5rem,
+    3: 4rem,
+    4: 3.5rem,
+    5: 3rem,
+    6: 2.5rem,
 ) !default;
 
 $display-font-weight: 300 !default;
@@ -714,14 +675,14 @@ $table-bg-level: -9 !default;
 $table-bg-scale: -80% !default;
 
 $table-variants: (
-  "primary": shift-color($primary, $table-bg-scale),
-  "secondary": shift-color($secondary, $table-bg-scale),
-  "success": shift-color($success, $table-bg-scale),
-  "info": shift-color($info, $table-bg-scale),
-  "warning": shift-color($warning, $table-bg-scale),
-  "danger": shift-color($danger, $table-bg-scale),
-  "light": $light,
-  "dark": $dark,
+    'primary': shift-color($primary, $table-bg-scale),
+    'secondary': shift-color($secondary, $table-bg-scale),
+    'success': shift-color($success, $table-bg-scale),
+    'info': shift-color($info, $table-bg-scale),
+    'warning': shift-color($warning, $table-bg-scale),
+    'danger': shift-color($danger, $table-bg-scale),
+    'light': $light,
+    'dark': $dark,
 ) !default;
 // scss-docs-end table-variables
 
@@ -737,10 +698,7 @@ $input-btn-line-height: 1.5 !default;
 
 $input-btn-focus-width: 0.2rem !default;
 $input-btn-focus-color-opacity: 0.25 !default;
-$input-btn-focus-color: rgba(
-  $component-active-bg,
-  $input-btn-focus-color-opacity
-) !default;
+$input-btn-focus-color: rgba($component-active-bg, $input-btn-focus-color-opacity) !default;
 $input-btn-focus-box-shadow: 0 0 0 $input-btn-focus-width $input-btn-focus-color !default;
 
 $input-btn-padding-y-sm: 0.25rem !default;
@@ -783,13 +741,13 @@ $btn-border-width: $input-btn-border-width !default;
 
 $btn-font-weight: $font-weight-bolder !default;
 $btn-box-shadow:
-  0 4px 6px rgba(50, 50, 93, 0.1),
-  0 1px 3px rgba(0, 0, 0, 0.08) !default;
+    0 4px 6px rgba(50, 50, 93, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08) !default;
 $btn-box-shadow-values: 0 5px 8px 0 !default;
 $btn-box-shadow-hover-values: 0 8px 10px 0 !default;
 $btn-hover-box-shadow:
-  0 7px 14px rgba(50, 50, 93, 0.1),
-  0 3px 6px rgba(0, 0, 0, 0.08) !default;
+    0 7px 14px rgba(50, 50, 93, 0.1),
+    0 3px 6px rgba(0, 0, 0, 0.08) !default;
 $btn-focus-box-shadow: $btn-hover-box-shadow !default;
 $btn-focus-width: $input-btn-focus-width !default;
 $btn-hover-opacity: 0.85 !default;
@@ -853,17 +811,17 @@ $btn-light-font-color: #3a416f !default;
 $btn-font-colors: () !default;
 
 $btn-font-colors: map-merge(
-  (
-    "primary": $btn-primary-font-color,
-    "secondary": $btn-secondary-font-color,
-    "danger": $btn-danger-font-color,
-    "info": $btn-info-font-color,
-    "success": $btn-success-font-color,
-    "warning": $btn-warning-font-color,
-    "dark": $btn-dark-font-color,
-    "light": $btn-light-font-color,
-  ),
-  $btn-font-colors
+    (
+        'primary': $btn-primary-font-color,
+        'secondary': $btn-secondary-font-color,
+        'danger': $btn-danger-font-color,
+        'info': $btn-info-font-color,
+        'success': $btn-success-font-color,
+        'warning': $btn-warning-font-color,
+        'dark': $btn-dark-font-color,
+        'light': $btn-light-font-color,
+    ),
+    $btn-font-colors
 );
 
 // Forms
@@ -914,8 +872,8 @@ $input-focus-border-color: $primary !default;
 $input-focus-color: $input-color !default;
 $input-focus-width: 2px !default;
 $input-focus-box-shadow:
-  0 3px 9px rgba(50, 50, 9, 0),
-  3px 4px 8px rgba(94, 114, 228, 0.1) !default;
+    0 3px 9px rgba(50, 50, 9, 0),
+    3px 4px 8px rgba(94, 114, 228, 0.1) !default;
 
 $input-placeholder-color: $gray-500 !default;
 $input-plaintext-color: $dark !default;
@@ -931,15 +889,15 @@ $input-height-sm: unset !default;
 $input-height-lg: unset !default;
 
 $input-transition:
-  box-shadow 0.15s ease,
-  border-color 0.15s ease !default;
+    box-shadow 0.15s ease,
+    border-color 0.15s ease !default;
 
 $input-alternative-box-shadow:
-  0 1px 3px rgba(50, 50, 93, 0.15),
-  0 1px 0 rgba(0, 0, 0, 0.02) !default;
+    0 1px 3px rgba(50, 50, 93, 0.15),
+    0 1px 0 rgba(0, 0, 0, 0.02) !default;
 $input-alternative-focus-box-shadow:
-  0 4px 6px rgba(50, 50, 93, 0.11),
-  0 1px 3px rgba(0, 0, 0, 0.08) !default;
+    0 4px 6px rgba(50, 50, 93, 0.11),
+    0 1px 3px rgba(0, 0, 0, 0.08) !default;
 
 $form-check-input-width: 1.23em !default;
 $form-check-min-height: $font-size-base * $line-height-base !default;
@@ -948,11 +906,11 @@ $form-check-margin-bottom: 0.125rem !default;
 $form-check-label-color: null !default;
 $form-check-label-cursor: null !default;
 $form-check-transition:
-  background-color 0.25s ease,
-  border-color 0.25s ease,
-  background-position 0.15s ease-in-out,
-  opacity 0.15s ease-out,
-  box-shadow 0.15s ease-in-out !default;
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    background-position 0.15s ease-in-out,
+    opacity 0.15s ease-out,
+    box-shadow 0.15s ease-in-out !default;
 $form-check-transition-time: 0.25s !default;
 
 $form-check-input-active-filter: brightness(99%) !default;
@@ -967,11 +925,7 @@ $form-check-input-focus-box-shadow: none !default;
 $form-check-input-checked-color: $white !default;
 $form-check-input-checked-bg-color: transparent !default;
 $form-check-input-checked-border-color: $form-check-input-checked-bg-color !default;
-$form-check-input-checked-bg-image: linear-gradient(
-  310deg,
-  $primary-gradient 0%,
-  $primary-gradient-state 100%
-) !default;
+$form-check-input-checked-bg-image: linear-gradient(310deg, $primary-gradient 0%, $primary-gradient-state 100%) !default;
 $form-check-radio-checked-bg-image: $form-check-input-checked-bg-image !default;
 $form-check-radio-after-width: 0.4375rem !default;
 
@@ -1025,15 +979,9 @@ $form-select-bg-size: 16px 12px !default; // In pixels because image dimensions
 $form-select-indicator-color: $gray-800 !default;
 $form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$form-select-indicator-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/></svg>") !default;
 
-$form-select-feedback-icon-padding-right: add(
-  1em * 0.75,
-  (2 * $form-select-padding-y * 0.75) + $form-select-padding-x +
-    $form-select-indicator-padding
-) !default;
-$form-select-feedback-icon-position: center right
-  ($form-select-padding-x + $form-select-indicator-padding) !default;
-$form-select-feedback-icon-size: $input-height-inner-half
-  $input-height-inner-half !default;
+$form-select-feedback-icon-padding-right: add(1em * 0.75, (2 * $form-select-padding-y * 0.75) + $form-select-padding-x + $form-select-indicator-padding) !default;
+$form-select-feedback-icon-position: center right ($form-select-padding-x + $form-select-indicator-padding) !default;
+$form-select-feedback-icon-size: $input-height-inner-half $input-height-inner-half !default;
 
 $form-select-border-width: $input-border-width !default;
 $form-select-border-color: $input-border-color !default;
@@ -1068,15 +1016,15 @@ $form-range-thumb-border: 0 !default;
 $form-range-thumb-border-radius: 1rem !default;
 $form-range-thumb-box-shadow: 0 0.1rem 0.25rem rgba($black, 0.1) !default;
 $form-range-thumb-focus-box-shadow:
-  0 0 0 1px $body-bg,
-  $input-focus-box-shadow !default;
+    0 0 0 1px $body-bg,
+    $input-focus-box-shadow !default;
 $form-range-thumb-focus-box-shadow-width: $input-focus-width !default; // For focus box shadow issue in Edge
 $form-range-thumb-active-bg: lighten($component-active-bg, 35%) !default;
 $form-range-thumb-disabled-bg: $gray-500 !default;
 $form-range-thumb-transition:
-  background-color 0.15s ease-in-out,
-  border-color 0.15s ease-in-out,
-  box-shadow 0.15s ease-in-out !default;
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out !default;
 
 $form-file-height: $input-height !default;
 $form-file-focus-border-color: $input-focus-border-color !default;
@@ -1123,14 +1071,14 @@ $form-feedback-icon-invalid: url("data:image/svg+xml,<svg xmlns='http://www.w3.o
 
 // scss-docs-start form-validation-states
 $form-validation-states: (
-  "valid": (
-    "color": $form-feedback-valid-color,
-    "icon": $form-feedback-icon-valid,
-  ),
-  "invalid": (
-    "color": $form-feedback-invalid-color,
-    "icon": $form-feedback-icon-invalid,
-  ),
+    'valid': (
+        'color': $form-feedback-valid-color,
+        'icon': $form-feedback-icon-valid,
+    ),
+    'invalid': (
+        'color': $form-feedback-invalid-color,
+        'icon': $form-feedback-icon-invalid,
+    ),
 ) !default;
 // scss-docs-end form-validation-states
 
@@ -1158,9 +1106,9 @@ $nav-link-font-weight: null !default;
 $nav-link-color: null !default;
 $nav-link-hover-color: null !default;
 $nav-link-transition:
-  color 0.15s ease-in-out,
-  background-color 0.15s ease-in-out,
-  border-color 0.15s ease-in-out !default;
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out !default;
 $nav-link-disabled-color: $gray-600 !default;
 $nav-link-footer-padding: 0.25rem !default;
 
@@ -1248,10 +1196,7 @@ $dropdown-bg: $white !default;
 $dropdown-border-color: transparent !default;
 $dropdown-border-radius: $border-radius-md !default;
 $dropdown-border-width: 0 !default;
-$dropdown-inner-border-radius: subtract(
-  $dropdown-border-radius,
-  $dropdown-border-width
-) !default;
+$dropdown-inner-border-radius: subtract($dropdown-border-radius, $dropdown-border-width) !default;
 $dropdown-transition-time: 0.3s ease !default;
 $dropdown-divider-bg: $dropdown-border-color !default;
 $dropdown-divider-margin-y: $spacer * 0.5 !default;
@@ -1319,10 +1264,10 @@ $pagination-disabled-bg: $white !default;
 $pagination-disabled-border-color: $gray-300 !default;
 
 $pagination-transition:
-  color 0.15s ease-in-out,
-  background-color 0.15s ease-in-out,
-  border-color 0.15s ease-in-out,
-  box-shadow 0.15s ease-in-out !default;
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out !default;
 
 // Cards
 
@@ -1332,10 +1277,7 @@ $card-title-spacer-y: $spacer * 0.5 !default;
 $card-border-width: 0 !default;
 $card-border-radius: 1rem !default;
 $card-border-color: rgba($black, 0.125) !default;
-$card-inner-border-radius: subtract(
-  $card-border-radius,
-  $card-border-width
-) !default;
+$card-inner-border-radius: subtract($card-border-radius, $card-border-width) !default;
 $card-cap-padding-y: $card-spacer-y * 0.5 !default;
 $card-cap-padding-x: $card-spacer-x !default;
 $card-cap-bg: $white !default;
@@ -1365,8 +1307,8 @@ $accordion-button-padding-x: $accordion-padding-x !default;
 $accordion-button-color: $accordion-color !default;
 $accordion-button-bg: $accordion-bg !default;
 $accordion-transition:
-  $btn-transition,
-  border-radius 0.15s ease !default;
+    $btn-transition,
+    border-radius 0.15s ease !default;
 $accordion-button-active-bg: $accordion-bg !default;
 $accordion-button-active-color: $dark !default;
 
@@ -1414,10 +1356,7 @@ $popover-max-width: 276px !default;
 $popover-border-width: 0px !default;
 $popover-border-color: rgba($black, 0.2) !default;
 $popover-border-radius: $border-radius-lg !default;
-$popover-inner-border-radius: subtract(
-  $popover-border-radius,
-  $popover-border-width
-) !default;
+$popover-inner-border-radius: subtract($popover-border-radius, $popover-border-width) !default;
 $popover-box-shadow: $box-shadow-sm !default;
 
 $popover-header-bg: $gray-200 !default;
@@ -1480,10 +1419,7 @@ $modal-content-bg: $white !default;
 $modal-content-border-color: rgba($black, 0.2) !default;
 $modal-content-border-width: $border-width !default;
 $modal-content-border-radius: $border-radius-lg !default;
-$modal-content-inner-border-radius: subtract(
-  $modal-content-border-radius,
-  $modal-content-border-width
-) !default;
+$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
 $modal-content-box-shadow-xs: $box-shadow-sm !default;
 $modal-content-box-shadow-sm-up: $box-shadow !default;
 
@@ -1591,7 +1527,7 @@ $breadcrumb-margin-bottom: 1rem !default;
 $breadcrumb-bg: $gray-200 !default;
 $breadcrumb-divider-color: $gray-600 !default;
 $breadcrumb-active-color: $gray-600 !default;
-$breadcrumb-divider: quote("/") !default;
+$breadcrumb-divider: quote('/') !default;
 $breadcrumb-border-radius: $border-radius-md !default;
 
 // Carousel
@@ -1674,30 +1610,30 @@ $tilt-transform-up-transition: all 0.5s !default;
 
 // Variables for Core
 
-@import "variables/animations";
-@import "variables/avatars";
-@import "variables/cards";
-@import "variables/dropdowns";
-@import "variables/header";
-@import "variables/info-areas";
-@import "variables/navbar";
-@import "variables/navbar-vertical";
-@import "variables/utilities";
-@import "variables/utilities-extend";
-@import "variables/misc";
-@import "variables/misc-extend";
-@import "variables/form-switch";
-@import "variables/fixed-plugin";
-@import "variables/pagination";
-@import "variables/badge";
-@import "variables/rtl";
-@import "variables/cards-extend";
-@import "variables/choices";
-@import "variables/timeline";
-@import "variables/full-calendar";
-@import "variables/social-buttons";
-@import "variables/virtual-reality";
-@import "variables/dark-version";
+@import 'variables/animations';
+@import 'variables/avatars';
+@import 'variables/cards';
+@import 'variables/dropdowns';
+@import 'variables/header';
+@import 'variables/info-areas';
+@import 'variables/navbar';
+@import 'variables/navbar-vertical';
+@import 'variables/utilities';
+@import 'variables/utilities-extend';
+@import 'variables/misc';
+@import 'variables/misc-extend';
+@import 'variables/form-switch';
+@import 'variables/fixed-plugin';
+@import 'variables/pagination';
+@import 'variables/badge';
+@import 'variables/rtl';
+@import 'variables/cards-extend';
+@import 'variables/choices';
+@import 'variables/timeline';
+@import 'variables/full-calendar';
+@import 'variables/social-buttons';
+@import 'variables/virtual-reality';
+@import 'variables/dark-version';
 
 // Import Utilities
-@import "utilities";
+@import 'utilities';
