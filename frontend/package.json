@@ -1,17 +1,28 @@
 {
   "name": "economy",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
+    "@vueuse/core": "^11.2.0",
     "axios": "^1.7.7",
-    "economy": "file:",
+    "chart.js": "^4.4.6",
+    "date-fns": "^4.1.0",
+    "lucide-vue-next": "^0.460.0",
     "pinia": "^2.2.6",
+    "vue": "^3.5.12",
+    "vue-chartjs": "^5.3.2",
     "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "vite": "^5.4.11"
   }
 }
