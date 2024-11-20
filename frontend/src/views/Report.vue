@@ -296,7 +296,7 @@
 <script>
 import { ref, onMounted, computed, nextTick } from "vue";
 import axios from "axios";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import LineChart from "../components/LineChart.vue";
 import BarChart from "../components/BarChart.vue";
 export default {
@@ -321,6 +321,7 @@ export default {
     const questDetails = ref([]);
     const selectedDate = ref(null);
     const showQuestDetails = ref(false);
+    const accountNo = ref(null);
     let currentRequest = null;
     // 차트 디스플레이 상태
     const displayIndices = ref({
@@ -464,10 +465,10 @@ export default {
         type === "score"
           ? scoreChartData.value
           : type === "interest"
-          ? interestChartData.value
-          : type === "quest"
-          ? questChartData.value
-          : balanceChartData.value;
+            ? interestChartData.value
+            : type === "quest"
+              ? questChartData.value
+              : balanceChartData.value;
       return (
         displayIndices.value[type] + displayCount <
         (chartData?.labels.length || 0)
@@ -479,10 +480,10 @@ export default {
         type === "score"
           ? scoreChartData.value
           : type === "interest"
-          ? interestChartData.value
-          : type === "quest"
-          ? questChartData.value
-          : balanceChartData.value;
+            ? interestChartData.value
+            : type === "quest"
+              ? questChartData.value
+              : balanceChartData.value;
       const maxIndex = (chartData?.labels.length || 0) - displayCount;
       if (direction === "next" && currentIndex < maxIndex) {
         displayIndices.value[type] = Math.min(
@@ -543,7 +544,7 @@ export default {
         const response = await axios.post("http://localhost:8080/api/report", {
           period: selectedPeriod.value,
           page: page - 1,
-          accountNo: 1001,
+          accountNo: accountNo.value,
           ...dateRange,
         });
         // 데이터 초기화
@@ -584,14 +585,14 @@ export default {
       return types[type] || "기타 퀘스트";
     };
     // 날짜 포맷 함수 수정
-    const formatDate = (date) => {
-      try {
-        return format(new Date(date), "yyyy년 MM월 dd일");
-      } catch (error) {
-        console.error("Date formatting error:", error);
-        return date;
-      }
-    };
+    // const formatDate = (date) => {
+    //   try {
+    //     return format(new Date(date), "yyyy년 MM월 dd일");
+    //   } catch (error) {
+    //     console.error("Date formatting error:", error);
+    //     return date;
+    //   }
+    // };
     // 날짜 포맷팅 함수 수정
     // setup() 내부에 날짜 포맷팅 함수 추가
     const formatQuestDateTime = (dateString) => {
@@ -611,7 +612,7 @@ export default {
         const response = await axios.post(
           "http://localhost:8080/api/report/details",
           {
-            accountNo: 1001,
+            accountNo: accountNo.value,
             date: formattedDate,
           }
         );
@@ -736,11 +737,24 @@ export default {
       }
     };
     // 컴포넌트 마운트 시 데이터 로드
-    onMounted(() => {
-      fetchReportData();
+    onMounted(async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/member/report"
+        );
+        if (response.data && typeof response.data.accountNo === "number") {
+          accountNo.value = response.data.accountNo;
+          // 기존의 초기 데이터 로드 함수들을 여기서 호출
+          await fetchReportData();
+          await fetchQuestDetails();
+        }
+      } catch (error) {
+        console.error("Error fetching report data:", error);
+      }
     });
     // 템플릿에서 사용할 메서드 및 데이터 반환
     return {
+      accountNo,
       memberData,
       selectedPeriod,
       periods,
