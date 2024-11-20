@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpSession;
 import org.hackathon.economy.member.domain.Member;
 import org.springframework.stereotype.Service;
 
+import java.util.Enumeration;
+
 @Service
 public class AuthenticationService {
 
@@ -15,6 +17,7 @@ public class AuthenticationService {
 
     public Member getAuthenticatedMember(HttpSession session) {
         String memberEmail = (String) session.getAttribute("memberEmail");
+        System.out.println("memberEmail = " + memberEmail);
         if (memberEmail == null) {
             throw new IllegalStateException("Unauthorized access: Member email is missing");
         }
