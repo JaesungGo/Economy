@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onUnmounted, computed } from 'vue';
+import { ref, onUnmounted, onMounted, computed } from 'vue';
 // import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import jsQR from 'jsqr';
@@ -10,16 +10,37 @@ const streaming = ref(false);
 const currentQuestNo = ref(null);
 
 // 샘플 퀘스트 데이터
-const quests = ref([
-    { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
-    { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
-    { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
-    { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
-    { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
-]);
+// const quests = ref([
+//     { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
+//     { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
+//     { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
+//     { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
+//     { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
+// ]);
+
+const quests = ref([]);
 
 // 선택된 퀘스트 타입 (기본값: null => 모든 퀘스트)
 const selectedQuestType = ref(null);
+
+const fetchQuests = async () => {
+  try {
+    const response = await fetch('/api/quest', {
+      method: 'GET',
+      credentials: 'include'
+    });
+    
+    if (!response.ok) {
+      throw new Error('퀘스트 데이터를 가져오는데 실패했습니다.');
+    }
+    
+    const data = await response.json();
+    quests.value = data;
+  } catch (error) {
+    console.error('퀘스트 데이터 조회 오류:', error);
+    Swal.fire('에러', '퀘스트 목록을 불러오는데 실패했습니다.', 'error');
+  }
+};
 
 // 선택된 타입에 따른 퀘스트 필터링
 const filteredQuests = computed(() => {
@@ -184,6 +205,10 @@ const handleQuestAchieve = async (questContent, questNo, isQr) => {
 const toggleQuestType = (type) => {
     selectedQuestType.value = type;
 };
+
+onMounted(() => {
+  fetchQuests();
+});
 
 onUnmounted(() => {
   stopQrScanner();
