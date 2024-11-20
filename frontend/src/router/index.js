@@ -11,6 +11,7 @@ import Report from '../views/Report.vue';
 import About from '../views/About.vue';
 import Community from '../views/Community.vue';
 import Quiz from '../views/Quiz.vue';
+import Vision from '../views/OurVision.vue';
 
 const routes = [
     {
@@ -78,6 +79,11 @@ const routes = [
         path: '/quiz',
         name: 'quiz',
         component: Quiz,
+    },
+    {
+        path: '/ourvision',
+        name: 'OurVision',
+        component: Vision,
     },
 ];
 

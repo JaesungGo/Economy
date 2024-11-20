@@ -96,3 +96,81 @@ CREATE TABLE BATCH_JOB_SEQ (
 ) ENGINE=InnoDB;
 
 INSERT INTO BATCH_JOB_SEQ (ID, UNIQUE_KEY) select * from (select 0 as ID, '0' as UNIQUE_KEY) as tmp where not exists(select * from BATCH_JOB_SEQ);
+
+# quiz 관련!
+CREATE TABLE IF NOT EXISTS quiz (
+                                    quiz_pk INTEGER NOT NULL AUTO_INCREMENT,
+                                    quiz_title VARCHAR(50) NOT NULL,
+                                    quiz_desc VARCHAR(255) NOT NULL,
+                                    quiz_answer INTEGER NOT NULL,
+                                    quiz_type ENUM('OX', 'MULTIPLE_CHOICE') NOT NULL,
+                                    quiz_cumulated INTEGER DEFAULT 0,
+                                    quiz_created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                                    quiz_updated_at TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+                                    quest_no BIGINT,
+                                    PRIMARY KEY (quiz_pk)
+);
+
+CREATE TABLE IF NOT EXISTS quiz_option (
+                                           option_pk INTEGER NOT NULL AUTO_INCREMENT,
+                                           quiz_pk INTEGER NOT NULL,
+                                           option_id INTEGER NOT NULL,
+                                           option_text VARCHAR(255) NOT NULL,
+                                           is_correct BOOLEAN DEFAULT FALSE,
+                                           PRIMARY KEY (option_pk)
+);
+
+CREATE TABLE IF NOT EXISTS daily_quiz (
+                                          daily_quiz_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                          quiz_pk BIGINT NOT NULL,
+                                          quiz_date_time DATETIME NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS quiz_submission_log (
+                                                   log_id BIGINT NOT NULL AUTO_INCREMENT,
+                                                   member_no BIGINT NOT NULL,
+                                                   quiz_pk INTEGER NOT NULL,
+                                                   is_correct BOOLEAN NOT NULL,
+                                                   user_answer INTEGER,
+                                                   submission_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                                   PRIMARY KEY (log_id)
+);
+
+INSERT INTO quiz (quiz_title, quiz_desc, quiz_answer, quiz_type, quest_no)
+VALUES
+    ('환경 보호', '지구 온난화의 주요 원인은 무엇인가요?', 1, 'MULTIPLE_CHOICE', 1),
+    ('재활용', '플라스틱을 재활용할 수 있는 방법은 무엇인가요?', 2, 'MULTIPLE_CHOICE', 1),
+    ('탄소 배출', '탄소 발자국을 줄이기 위한 가장 좋은 방법은 자전거 이용이다.', 1, 'OX', 1),
+    ('지구의 날', '매년 지구의 날은 언제인가요?', 3, 'MULTIPLE_CHOICE', 1),
+    ('오존층', '오존층을 파괴하는 물질은 프레온 가스다.', 2, 'OX', 1);
+
+
+INSERT INTO quiz_option (quiz_pk, option_id, option_text, is_correct)
+VALUES
+-- 퀴즈 1: '환경 보호'
+(1, 1, '온실가스', TRUE),
+(1, 2, '산성비', FALSE),
+(1, 3, '오존층 파괴', FALSE),
+(1, 4, '태양 복사', FALSE),
+
+-- 퀴즈 2: '재활용'
+(2, 1, '분리배출', TRUE),
+(2, 2, '소각', FALSE),
+(2, 3, '매립', FALSE),
+(2, 4, '압축', FALSE),
+
+-- 퀴즈 3: '탄소 배출'
+(3, 1, 'O', TRUE),
+(3, 2, 'X', FALSE),
+
+-- 퀴즈 4: '지구의 날'
+(4, 1, '4월 22일', TRUE),
+(4, 2, '5월 5일', FALSE),
+(4, 3, '6월 1일', FALSE),
+(4, 4, '12월 25일', FALSE),
+
+-- 퀴즈 5: '오존층'
+(5, 1, 'O', TRUE),
+(5, 2, 'X', FALSE);
+
+SELECT * FROM daily_quiz;

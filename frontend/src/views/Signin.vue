@@ -4,7 +4,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Navbar from '@/examples/PageLayout/Navbar.vue';
 import ArgonInput from '@/components/ArgonInput.vue';
-import ArgonSwitch from '@/components/ArgonSwitch.vue';
+// import ArgonSwitch from '@/components/ArgonSwitch.vue';
 import ArgonButton from '@/components/ArgonButton.vue';
 import auth from '@/store/auth';
 
@@ -67,8 +67,8 @@ const disableSubmit = computed(() => !(email.value && password.value));
                         <div class="mx-auto col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0">
                             <div class="card card-plain">
                                 <div class="pb-0 card-header text-start">
-                                    <h4 class="font-weight-bolder">Sign In</h4>
-                                    <p class="mb-0">Enter your email and password to sign in</p>
+                                    <h4 class="font-weight-bolder">로그인</h4>
+                                    <p class="mb-0">이메일과 비밀번호를 입력하여 로그인하세요.</p>
                                 </div>
                                 <div class="card-body">
                                     <form role="form" @submit.prevent="login">
@@ -79,19 +79,21 @@ const disableSubmit = computed(() => !(email.value && password.value));
                                         <div class="mb-3">
                                             <argon-input id="password" type="password" placeholder="Password" name="password" size="lg" v-model="password" />
                                         </div>
-                                        <argon-switch id="rememberMe" name="remember-me">Remember me</argon-switch>
+                                        <!-- <argon-switch id="rememberMe" name="remember-me"
+                      >Remember me</argon-switch
+                    > -->
                                         <!-- 로그인 버튼 -->
                                         <div class="text-center">
                                             <argon-button class="mt-4" variant="gradient" color="success" fullWidth size="lg" type="submit" :disabled="disableSubmit"
-                                                >Sign in</argon-button
+                                                >로그인</argon-button
                                             >
                                         </div>
                                     </form>
                                 </div>
                                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                                     <p class="mx-auto mb-4 text-sm">
-                                        Don't have an account?
-                                        <a href="javascript:;" class="text-success text-gradient font-weight-bold">Sign up</a>
+                                        계정이 없으신가요?
+                                        <a href="javascript:;" class="text-success text-gradient font-weight-bold">회원가입</a>
                                     </p>
                                 </div>
                             </div>
@@ -99,14 +101,23 @@ const disableSubmit = computed(() => !(email.value && password.value));
                         <div class="top-0 my-auto text-center col-6 d-lg-flex d-none h-100 pe-0 position-absolute end-0 justify-content-center flex-column">
                             <div
                                 class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
-                                style="
-                                    background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg');
-                                    background-size: cover;
-                                "
+                                :style="{
+                                    backgroundImage: `url(${require('@/assets/img/login-background.png')})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat',
+                                }"
                             >
-                                <span class="mask bg-gradient-success opacity-6"></span>
-                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new currency"</h4>
-                                <p class="text-white position-relative">The more effortless the writing looks, the more effort the writer actually put into the process.</p>
+                                <span class="mask" style="background-color: rgba(0, 0, 0, 0.5); position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1"></span>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); z-index: 2">Welcome!</h4>
+                                <p
+                                    class="text-lead text-white position-relative"
+                                    style="font-size: 1rem; line-height: 1.8; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); z-index: 2"
+                                >
+                                    탄소 발자국을 줄이고 환경을 지키는 여정을 함께하세요.<br />
+                                    탄소 리포트 제공, 녹색 소비 보상, 퀘스트와 챌린지로<br />
+                                    작은 실천이 큰 변화를 만듭니다.
+                                </p>
                             </div>
                         </div>
                     </div>

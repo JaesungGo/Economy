@@ -43,44 +43,30 @@
 </template>
 
 <script>
+import dailyInterestApi from '@/api/dailyInterestApi';
+
 export default {
   name: 'InterestHistory',
   data() {
     return {
       totalInterest: 0, // 오늘까지 받은 총 이자
       selectedYear: new Date().getFullYear(), // 기본값: 현재 연도
-      interestHistory: {
-        // 연도별 이자 데이터
-        2024: [
-          { month: 11, amount: '24,085' },
-          { month: 10, amount: '24,085' },
-          { month: 9, amount: '8,235' },
-          { month: 8, amount: '12,083' },
-          { month: 7, amount: '14,035' },
-          { month: 6, amount: '4,085' },
-          { month: 5, amount: '14,085' },
-          { month: 4, amount: '24,085' },
-        ],
-        2023: [
-          { month: 12, amount: '20,000' },
-          { month: 11, amount: '22,000' },
-          { month: 10, amount: '25,000' },
-        ],
-        2022: [],
-      },
+      interestHistory: {}, // 연도별 이자 데이터
       filteredData: [], // 선택된 연도의 필터링된 데이터
     };
   },
   methods: {
     async fetchInterestData() {
       try {
-        // API 호출
-        const response = await fetch('');
-        const data = await response.json();
+        // API 호출: 누적 이자 및 월별 내역
+        const [total, monthlyData] = await Promise.all([
+          dailyInterestApi.getTotal(),
+          dailyInterestApi.getMonthly(),
+        ]);
 
-        // 데이터 매핑
-        this.totalInterest = data.totalInterest; // 총 이자
-        this.interestHistory = data.yearlyData; // 연도별 데이터
+        // 데이터 설정
+        this.totalInterest = total; // 총 이자
+        this.interestHistory = this.formatMonthlyData(monthlyData); // 연도별 데이터 정리
 
         // 초기 필터링
         this.filterInterestData();
@@ -88,13 +74,25 @@ export default {
         console.error('Error fetching interest data:', error);
       }
     },
+    formatMonthlyData(monthlyData) {
+      // 월별 데이터를 연도별로 그룹화
+      return monthlyData.reduce((acc, item) => {
+        const year = new Date(item.date).getFullYear(); // 연도 추출
+        const month = new Date(item.date).getMonth() + 1; // 월 추출 (0부터 시작하므로 +1)
+
+        if (!acc[year]) acc[year] = []; // 해당 연도가 없으면 초기화
+        acc[year].push({ month, amount: item.amount });
+
+        return acc;
+      }, {});
+    },
     filterInterestData() {
       // 선택된 연도의 이자 내역 필터링
       this.filteredData = this.interestHistory[this.selectedYear] || [];
     },
   },
-  mounted() {
-    this.filterInterestData(); // 컴포넌트 로드시 데이터 가져오기
+  async mounted() {
+    await this.fetchInterestData(); // 데이터 가져오기
   },
 };
 </script>
