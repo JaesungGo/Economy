@@ -1,10 +1,10 @@
 <template>
   <div class="report-container">
-        <!-- 필터 섹션 -->
+    <!-- 필터 섹션 -->
     <div class="filter-section">
       <div class="period-buttons">
-        <button 
-          v-for="period in periods" 
+        <button
+          v-for="period in periods"
           :key="period.value"
           :class="['period-btn', { active: selectedPeriod === period.value }]"
           :disabled="isLoading"
@@ -13,14 +13,18 @@
           {{ period.label }}
         </button>
       </div>
-      
+
       <div class="date-range">
         <div class="date-input">
-          <input type="date" v-model="customStartDate" class="custom-date">
+          <input type="date" v-model="customStartDate" class="custom-date" />
           <span class="date-separator">~</span>
-          <input type="date" v-model="customEndDate" class="custom-date">
+          <input type="date" v-model="customEndDate" class="custom-date" />
         </div>
-        <button @click="applyCustomDateRange" class="apply-date-btn" :disabled="isLoading">
+        <button
+          @click="applyCustomDateRange"
+          class="apply-date-btn"
+          :disabled="isLoading"
+        >
           기간 적용
         </button>
       </div>
@@ -32,8 +36,12 @@
         <div class="member-title">
           <h1>{{ memberData[0][0] }}님의 환경 리포트</h1>
           <div class="member-grade">
-            <span class="grade-badge">{{ getGradeText(memberData[0][1]) }}</span>
-            <span class="score-badge">{{ formatCurrency(memberData[0][2]) }}점</span>
+            <span class="grade-badge">{{
+              getGradeText(memberData[0][1])
+            }}</span>
+            <span class="score-badge"
+              >{{ formatCurrency(memberData[0][2]) }}점</span
+            >
           </div>
         </div>
       </div>
@@ -41,27 +49,44 @@
       <div class="environmental-stats">
         <div class="stat-card">
           <div class="stat-icon">🌱</div>
-          <p>{{ environmentalImpact(memberData[0][2]) }}톤의<br>이산화탄소 감소</p>
+          <p>
+            {{ environmentalImpact(memberData[0][2]) }}톤의<br />이산화탄소 감소
+          </p>
         </div>
         <div class="stat-card">
           <div class="stat-icon">🦋</div>
-          <p>{{ environmentalImpact(memberData[0][2], 'wildlife') }}마리의<br>생물 보호</p>
+          <p>
+            {{
+              environmentalImpact(memberData[0][2], "wildlife")
+            }}마리의<br />생물 보호
+          </p>
         </div>
         <div class="stat-card">
           <div class="stat-icon">🌳</div>
-          <p>{{ environmentalImpact(memberData[0][2], 'forest') }}m²의<br>숲 보존</p>
+          <p>
+            {{ environmentalImpact(memberData[0][2], "forest") }}m²의<br />숲
+            보존
+          </p>
         </div>
         <div class="stat-card">
           <div class="stat-icon">🪹</div>
-          <p>{{ environmentalImpact(memberData[0][2], 'nest') }}개의<br>새둥지 보호</p>
+          <p>
+            {{ environmentalImpact(memberData[0][2], "nest") }}개의<br />새둥지
+            보호
+          </p>
         </div>
         <div class="stat-card">
           <div class="stat-icon">💧</div>
-          <p>{{ environmentalImpact(memberData[0][2], 'water') }}L의<br>물 절약</p>
+          <p>
+            {{ environmentalImpact(memberData[0][2], "water") }}L의<br />물 절약
+          </p>
         </div>
         <div class="stat-card">
           <div class="stat-icon">🌊</div>
-          <p>{{ environmentalImpact(memberData[0][2], 'plastic') }}g의<br>해양 플라스틱 제거</p>
+          <p>
+            {{ environmentalImpact(memberData[0][2], "plastic") }}g의<br />해양
+            플라스틱 제거
+          </p>
         </div>
       </div>
     </div>
@@ -71,84 +96,100 @@
       <div class="chart-card">
         <h3>누적 점수 추이</h3>
         <div class="chart-wrapper">
-          <button 
+          <button
             @click="navigateChart('score', 'prev')"
             :disabled="!hasMorePrev('score')"
             class="nav-btn prev"
-          >←</button>
-          <LineChart 
-            v-if="visibleScoreChartData" 
+          >
+            ←
+          </button>
+          <LineChart
+            v-if="visibleScoreChartData"
             :chart-data="visibleScoreChartData"
             :options="scoreChartOptions"
           />
-          <button 
+          <button
             @click="navigateChart('score', 'next')"
             :disabled="!hasMoreNext('score')"
             class="nav-btn next"
-          >→</button>
+          >
+            →
+          </button>
         </div>
       </div>
 
       <div class="chart-card">
         <h3>이자 수익 추이</h3>
         <div class="chart-wrapper">
-          <button 
+          <button
             @click="navigateChart('interest', 'prev')"
             :disabled="!hasMorePrev('interest')"
             class="nav-btn prev"
-          >←</button>
-          <LineChart 
-            v-if="visibleInterestChartData" 
+          >
+            ←
+          </button>
+          <LineChart
+            v-if="visibleInterestChartData"
             :chart-data="visibleInterestChartData"
             :options="interestChartOptions"
           />
-          <button 
+          <button
             @click="navigateChart('interest', 'next')"
             :disabled="!hasMoreNext('interest')"
             class="nav-btn next"
-          >→</button>
+          >
+            →
+          </button>
         </div>
       </div>
 
       <div class="chart-card">
         <h3>퀘스트 달성</h3>
         <div class="chart-wrapper">
-          <button 
+          <button
             @click="navigateChart('quest', 'prev')"
             :disabled="!hasMorePrev('quest')"
             class="nav-btn prev"
-          >←</button>
-          <BarChart 
-            v-if="visibleQuestChartData" 
+          >
+            ←
+          </button>
+          <BarChart
+            v-if="visibleQuestChartData"
             :chart-data="visibleQuestChartData"
             :options="questChartOptions"
           />
-          <button 
+          <button
             @click="navigateChart('quest', 'next')"
             :disabled="!hasMoreNext('quest')"
             class="nav-btn next"
-          >→</button>
+          >
+            →
+          </button>
         </div>
       </div>
 
       <div class="chart-card">
         <h3>계좌 잔액 추이</h3>
         <div class="chart-wrapper">
-          <button 
+          <button
             @click="navigateChart('balance', 'prev')"
             :disabled="!hasMorePrev('balance')"
             class="nav-btn prev"
-          >←</button>
-          <LineChart 
-            v-if="visibleBalanceChartData" 
+          >
+            ←
+          </button>
+          <LineChart
+            v-if="visibleBalanceChartData"
             :chart-data="visibleBalanceChartData"
             :options="balanceChartOptions"
           />
-          <button 
+          <button
             @click="navigateChart('balance', 'next')"
             :disabled="!hasMoreNext('balance')"
             class="nav-btn next"
-          >→</button>
+          >
+            →
+          </button>
         </div>
       </div>
     </div>
@@ -167,8 +208,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr 
-              v-for="item in interestHistory" 
+            <tr
+              v-for="item in interestHistory"
               :key="item.todayDate"
               @click="fetchQuestDetails(item.todayDate)"
               class="table-row"
@@ -183,16 +224,16 @@
       </div>
 
       <div class="pagination">
-        <button 
-          :disabled="currentPage <= 1" 
+        <button
+          :disabled="currentPage <= 1"
           @click="loadPreviousPage"
           class="page-btn"
         >
           이전
         </button>
         <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-        <button 
-          :disabled="currentPage >= totalPages" 
+        <button
+          :disabled="currentPage >= totalPages"
           @click="loadNextPage"
           class="page-btn"
         >
@@ -202,15 +243,24 @@
     </div>
 
     <!-- 퀘스트 상세 모달 -->
-    <div v-if="showQuestDetails" class="modal-overlay" @click.self="closeQuestDetails">
+    <div
+      v-if="showQuestDetails"
+      class="modal-overlay"
+      @click.self="closeQuestDetails"
+    >
       <div class="modal-content">
         <div class="modal-header">
-          <h4>{{ selectedDate ? formatDate(selectedDate) : '' }} 달성 퀘스트</h4>
+          <h4>
+            {{ selectedDate ? formatDate(selectedDate) : "" }} 달성 퀘스트
+          </h4>
           <button @click="closeQuestDetails" class="close-btn">×</button>
         </div>
-        
+
         <div class="modal-body">
-          <div v-if="questDetails && questDetails.length > 0" class="quest-table">
+          <div
+            v-if="questDetails && questDetails.length > 0"
+            class="quest-table"
+          >
             <table>
               <thead>
                 <tr>
@@ -222,10 +272,14 @@
               </thead>
               <tbody>
                 <tr v-for="(quest, index) in questDetails" :key="index">
-                  <td>{{ quest.questName || '정보 없음' }}</td>
+                  <td>{{ quest.questName || "정보 없음" }}</td>
                   <td>{{ quest.questPoint || 0 }}점</td>
                   <td>{{ formatQuestDateTime(quest.achieveDateTime) }}</td>
-                  <td><span class="quest-type">{{ getQuestType(quest.questType) }}</span></td>
+                  <td>
+                    <span class="quest-type">{{
+                      getQuestType(quest.questType)
+                    }}</span>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -240,51 +294,51 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, nextTick } from 'vue'
-import axios from 'axios'
-import { format, parseISO } from 'date-fns'
-import LineChart from '../components/LineChart.vue'
-import BarChart from '../components/BarChart.vue'
+import { ref, onMounted, computed, nextTick } from "vue";
+import axios from "axios";
+import { format, parseISO } from "date-fns";
+import LineChart from "../components/LineChart.vue";
+import BarChart from "../components/BarChart.vue";
 export default {
-  name: 'ReportView',
+  name: "ReportView",
   components: {
     LineChart,
-    BarChart
+    BarChart,
   },
   setup() {
     // 상태 관리
-    const memberData = ref([])
-    const selectedPeriod = ref('daily')
-    const interestChartData = ref(null)
-    const questChartData = ref(null)
-    const balanceChartData = ref(null)
-    const scoreChartData = ref(null)
-    const interestHistory = ref([])
-    const isLoading = ref(false)
-    const currentPage = ref(1)
-    const totalPages = ref(0)
-    const dateRangeCache = ref(null)
-    const questDetails = ref([])
-    const selectedDate = ref(null)
-    const showQuestDetails = ref(false)
-    let currentRequest = null
+    const memberData = ref([]);
+    const selectedPeriod = ref("daily");
+    const interestChartData = ref(null);
+    const questChartData = ref(null);
+    const balanceChartData = ref(null);
+    const scoreChartData = ref(null);
+    const interestHistory = ref([]);
+    const isLoading = ref(false);
+    const currentPage = ref(1);
+    const totalPages = ref(0);
+    const dateRangeCache = ref(null);
+    const questDetails = ref([]);
+    const selectedDate = ref(null);
+    const showQuestDetails = ref(false);
+    let currentRequest = null;
     // 차트 디스플레이 상태
     const displayIndices = ref({
       interest: 0,
       quest: 0,
       balance: 0,
-      score: 0
-    })
-    const displayCount = 7
+      score: 0,
+    });
+    const displayCount = 7;
     // 커스텀 날짜 범위
-    const customStartDate = ref(null)
-    const customEndDate = ref(null)
+    const customStartDate = ref(null);
+    const customEndDate = ref(null);
     // 기간 옵션
     const periods = [
-      { label: '일간', value: 'daily' },
-      { label: '주간', value: 'weekly' },
-      { label: '월간', value: 'monthly' }
-    ]
+      { label: "일간", value: "daily" },
+      { label: "주간", value: "weekly" },
+      { label: "월간", value: "monthly" },
+    ];
     // 차트 옵션
     const scoreChartOptions = {
       responsive: true,
@@ -293,18 +347,22 @@ export default {
       scales: {
         y: {
           ticks: {
-            callback: (value) => `${new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 }).format(value)}점`
-          }
-        }
+            callback: (value) =>
+              `${new Intl.NumberFormat("ko-KR", {
+                maximumFractionDigits: 0,
+              }).format(value)}점`,
+          },
+        },
       },
       plugins: {
         tooltip: {
           callbacks: {
-            label: (context) => `${new Intl.NumberFormat('ko-KR').format(context.raw)}점`
-          }
-        }
-      }
-    }
+            label: (context) =>
+              `${new Intl.NumberFormat("ko-KR").format(context.raw)}점`,
+          },
+        },
+      },
+    };
     const interestChartOptions = {
       responsive: true,
       maintainAspectRatio: false,
@@ -312,18 +370,22 @@ export default {
       scales: {
         y: {
           ticks: {
-            callback: (value) => `${new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 }).format(value)}원`
-          }
-        }
+            callback: (value) =>
+              `${new Intl.NumberFormat("ko-KR", {
+                maximumFractionDigits: 0,
+              }).format(value)}원`,
+          },
+        },
       },
       plugins: {
         tooltip: {
           callbacks: {
-            label: (context) => `${new Intl.NumberFormat('ko-KR').format(context.raw)}원`
-          }
-        }
-      }
-    }
+            label: (context) =>
+              `${new Intl.NumberFormat("ko-KR").format(context.raw)}원`,
+          },
+        },
+      },
+    };
     const questChartOptions = {
       responsive: true,
       maintainAspectRatio: false,
@@ -333,18 +395,18 @@ export default {
           min: 0,
           ticks: {
             stepSize: 1,
-            callback: (value) => `${Math.floor(value)}건`
-          }
-        }
+            callback: (value) => `${Math.floor(value)}건`,
+          },
+        },
       },
       plugins: {
         tooltip: {
           callbacks: {
-            label: (context) => `${Math.floor(context.raw)}건`
-          }
-        }
-      }
-    }
+            label: (context) => `${Math.floor(context.raw)}건`,
+          },
+        },
+      },
+    };
     const balanceChartOptions = {
       responsive: true,
       maintainAspectRatio: false,
@@ -352,18 +414,22 @@ export default {
       scales: {
         y: {
           ticks: {
-            callback: (value) => `${new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 }).format(value)}원`
-          }
-        }
+            callback: (value) =>
+              `${new Intl.NumberFormat("ko-KR", {
+                maximumFractionDigits: 0,
+              }).format(value)}원`,
+          },
+        },
       },
       plugins: {
         tooltip: {
           callbacks: {
-            label: (context) => `${new Intl.NumberFormat('ko-KR').format(context.raw)}원`
-          }
-        }
-      }
-    }
+            label: (context) =>
+              `${new Intl.NumberFormat("ko-KR").format(context.raw)}원`,
+          },
+        },
+      },
+    };
     // 차트 데이터 처리
     const createVisibleChartData = (chartData, type) => {
       if (!chartData) return null;
@@ -371,275 +437,308 @@ export default {
       const end = start + displayCount;
       return {
         labels: chartData.labels.slice(start, end),
-        datasets: [{
-          ...chartData.datasets[0],
-          data: chartData.datasets[0].data.slice(start, end)
-        }]
-      }
-    }
-    const visibleScoreChartData = computed(() => createVisibleChartData(scoreChartData.value, 'score'))
-    const visibleInterestChartData = computed(() => createVisibleChartData(interestChartData.value, 'interest'))
-    const visibleQuestChartData = computed(() => createVisibleChartData(questChartData.value, 'quest'))
-    const visibleBalanceChartData = computed(() => createVisibleChartData(balanceChartData.value, 'balance'))
+        datasets: [
+          {
+            ...chartData.datasets[0],
+            data: chartData.datasets[0].data.slice(start, end),
+          },
+        ],
+      };
+    };
+    const visibleScoreChartData = computed(() =>
+      createVisibleChartData(scoreChartData.value, "score")
+    );
+    const visibleInterestChartData = computed(() =>
+      createVisibleChartData(interestChartData.value, "interest")
+    );
+    const visibleQuestChartData = computed(() =>
+      createVisibleChartData(questChartData.value, "quest")
+    );
+    const visibleBalanceChartData = computed(() =>
+      createVisibleChartData(balanceChartData.value, "balance")
+    );
     // 차트 네비게이션
-    const hasMorePrev = (type) => displayIndices.value[type] > 0
+    const hasMorePrev = (type) => displayIndices.value[type] > 0;
     const hasMoreNext = (type) => {
-      const chartData = type === 'score' ? scoreChartData.value :
-                       type === 'interest' ? interestChartData.value :
-                       type === 'quest' ? questChartData.value :
-                       balanceChartData.value
-      return displayIndices.value[type] + displayCount < (chartData?.labels.length || 0)
-    }
+      const chartData =
+        type === "score"
+          ? scoreChartData.value
+          : type === "interest"
+          ? interestChartData.value
+          : type === "quest"
+          ? questChartData.value
+          : balanceChartData.value;
+      return (
+        displayIndices.value[type] + displayCount <
+        (chartData?.labels.length || 0)
+      );
+    };
     const navigateChart = (type, direction) => {
-      const currentIndex = displayIndices.value[type]
-      const chartData = type === 'score' ? scoreChartData.value :
-                       type === 'interest' ? interestChartData.value :
-                       type === 'quest' ? questChartData.value :
-                       balanceChartData.value
-      const maxIndex = (chartData?.labels.length || 0) - displayCount
-      if (direction === 'next' && currentIndex < maxIndex) {
-        displayIndices.value[type] = Math.min(currentIndex + displayCount, maxIndex)
-      } else if (direction === 'prev' && currentIndex > 0) {
-        displayIndices.value[type] = Math.max(currentIndex - displayCount, 0)
+      const currentIndex = displayIndices.value[type];
+      const chartData =
+        type === "score"
+          ? scoreChartData.value
+          : type === "interest"
+          ? interestChartData.value
+          : type === "quest"
+          ? questChartData.value
+          : balanceChartData.value;
+      const maxIndex = (chartData?.labels.length || 0) - displayCount;
+      if (direction === "next" && currentIndex < maxIndex) {
+        displayIndices.value[type] = Math.min(
+          currentIndex + displayCount,
+          maxIndex
+        );
+      } else if (direction === "prev" && currentIndex > 0) {
+        displayIndices.value[type] = Math.max(currentIndex - displayCount, 0);
       }
-    }
+    };
     // 데이터 포맷팅
     const formatChartData = (data) => {
       const formatLabel = (date) => {
-        if (selectedPeriod.value === 'monthly') {
-          return format(new Date(date), 'M월')
-        } else if (selectedPeriod.value === 'weekly') {
-          const weekDate = new Date(date)
-          const month = format(weekDate, 'M')
-          const weekOfMonth = Math.ceil(weekDate.getDate() / 7)
-          return `${month}월 ${weekOfMonth}주`
+        if (selectedPeriod.value === "monthly") {
+          return format(new Date(date), "M월");
+        } else if (selectedPeriod.value === "weekly") {
+          const weekDate = new Date(date);
+          const month = format(weekDate, "M");
+          const weekOfMonth = Math.ceil(weekDate.getDate() / 7);
+          return `${month}월 ${weekOfMonth}주`;
         }
-        return format(new Date(date), 'MM/dd')
-      }
+        return format(new Date(date), "MM/dd");
+      };
       return {
-        labels: data.map(item => formatLabel(item.date)),
-        datasets: [{
-          label: '',
-          data: data.map(item => item.value),
-          borderColor: '#2196F3',
-          backgroundColor: 'rgba(33, 150, 243, 0.5)',
-          borderWidth: 2,
-          pointRadius: 4,
-          tension: 0.4,
-          fill: false
-        }]
-      }
-    }
+        labels: data.map((item) => formatLabel(item.date)),
+        datasets: [
+          {
+            label: "",
+            data: data.map((item) => item.value),
+            borderColor: "#2196F3",
+            backgroundColor: "rgba(33, 150, 243, 0.5)",
+            borderWidth: 2,
+            pointRadius: 4,
+            tension: 0.4,
+            fill: false,
+          },
+        ],
+      };
+    };
     // API 호출
     const fetchReportData = async (page = 1) => {
-      isLoading.value = true
+      isLoading.value = true;
       if (currentRequest) {
-        currentRequest.cancel('Operation canceled due to new request.')
+        currentRequest.cancel("Operation canceled due to new request.");
       }
-      const CancelToken = axios.CancelToken
-      const source = CancelToken.source()
-      currentRequest = source
-      const dateRange = dateRangeCache.value || 
-        (customStartDate.value && customEndDate.value 
-          ? { 
-              startDate: format(new Date(customStartDate.value), 'yyyy-MM-dd'),
-              endDate: format(new Date(customEndDate.value), 'yyyy-MM-dd')
+      const CancelToken = axios.CancelToken;
+      const source = CancelToken.source();
+      currentRequest = source;
+      const dateRange =
+        dateRangeCache.value ||
+        (customStartDate.value && customEndDate.value
+          ? {
+              startDate: format(new Date(customStartDate.value), "yyyy-MM-dd"),
+              endDate: format(new Date(customEndDate.value), "yyyy-MM-dd"),
             }
-          : getDateRange(selectedPeriod.value))
+          : getDateRange(selectedPeriod.value));
       try {
-        const response = await axios.post('http://localhost:8080/api/report', {
+        const response = await axios.post("http://localhost:8080/api/report", {
           period: selectedPeriod.value,
           page: page - 1,
           accountNo: 1001,
-          ...dateRange
-        })
+          ...dateRange,
+        });
         // 데이터 초기화
-        scoreChartData.value = null
-        interestChartData.value = null
-        questChartData.value = null
-        balanceChartData.value = null
-        memberData.value = null
-        await nextTick()
+        scoreChartData.value = null;
+        interestChartData.value = null;
+        questChartData.value = null;
+        balanceChartData.value = null;
+        memberData.value = null;
+        await nextTick();
         // 데이터 업데이트
-        memberData.value = response.data.memberData
-        scoreChartData.value = formatChartData(response.data.scoreData)
-        interestChartData.value = formatChartData(response.data.interestData)
-        questChartData.value = formatChartData(response.data.questData)
-        balanceChartData.value = formatChartData(response.data.balanceData)
-        interestHistory.value = response.data.interestHistory
+        memberData.value = response.data.memberData;
+        scoreChartData.value = formatChartData(response.data.scoreData);
+        interestChartData.value = formatChartData(response.data.interestData);
+        questChartData.value = formatChartData(response.data.questData);
+        balanceChartData.value = formatChartData(response.data.balanceData);
+        interestHistory.value = response.data.interestHistory;
         // 디스플레이 인덱스 초기화
-        Object.keys(displayIndices.value).forEach(key => {
-          displayIndices.value[key] = 0
-        })
+        Object.keys(displayIndices.value).forEach((key) => {
+          displayIndices.value[key] = 0;
+        });
         // 페이지네이션 업데이트
-        currentPage.value = response.data.currentPage + 1
-        totalPages.value = response.data.totalPages
+        currentPage.value = response.data.currentPage + 1;
+        totalPages.value = response.data.totalPages;
       } catch (error) {
-        console.error('Failed to fetch report data:', error)
+        console.error("Failed to fetch report data:", error);
       } finally {
-        isLoading.value = false
-        currentRequest = null
+        isLoading.value = false;
+        currentRequest = null;
       }
-    }
+    };
     // 퀘스트 유형 변환 함수 추가
     const getQuestType = (type) => {
       const types = {
-        1: '일일 퀘스트',
-        2: '주간 퀘스트',
-        3: '월간 퀘스트'
-      }
-      return types[type] || '기타 퀘스트'
-    }
+        1: "일일 퀘스트",
+        2: "주간 퀘스트",
+        3: "월간 퀘스트",
+      };
+      return types[type] || "기타 퀘스트";
+    };
     // 날짜 포맷 함수 수정
     const formatDate = (date) => {
       try {
-        return format(new Date(date), 'yyyy년 MM월 dd일')
+        return format(new Date(date), "yyyy년 MM월 dd일");
       } catch (error) {
-        console.error('Date formatting error:', error)
-        return date
+        console.error("Date formatting error:", error);
+        return date;
       }
-    }
+    };
     // 날짜 포맷팅 함수 수정
     // setup() 내부에 날짜 포맷팅 함수 추가
     const formatQuestDateTime = (dateString) => {
-      if (!dateString) return '-'
+      if (!dateString) return "-";
       try {
-        const date = new Date(dateString)
-        return format(date, 'yyyy-MM-dd HH:mm:ss')
+        const date = new Date(dateString);
+        return format(date, "yyyy-MM-dd HH:mm:ss");
       } catch (error) {
-        console.error('Date formatting error:', error)
-        return dateString || '-'
+        console.error("Date formatting error:", error);
+        return dateString || "-";
       }
-    }
+    };
     const fetchQuestDetails = async (date) => {
-  try {
-    const formattedDate = format(new Date(date), 'yyyy-MM-dd')
-    console.log('Fetching quest details for date:', formattedDate)
-    const response = await axios.post('http://localhost:8080/api/report/details', {
-      accountNo: 1001,
-      date: formattedDate
-    })
-    // response.data가 바로 questDetails 배열인 경우를 처리
-    if (response.data && Array.isArray(response.data)) {
-      questDetails.value = response.data
-      selectedDate.value = date
-      showQuestDetails.value = true
-      console.log('Received quest details:', questDetails.value)
-      return
-    }
-    // questDetails 필드 안에 있는 경우를 처리
-    if (response.data?.questDetails && Array.isArray(response.data.questDetails)) {
-      questDetails.value = response.data.questDetails
-      selectedDate.value = date
-      showQuestDetails.value = true
-      console.log('Received quest details from field:', questDetails.value)
-      return
-    }
-    // 단일 객체인 경우를 배열로 변환
-    if (response.data && !Array.isArray(response.data)) {
-      questDetails.value = [response.data]
-      selectedDate.value = date
-      showQuestDetails.value = true
-      console.log('Converted single object to array:', questDetails.value)
-      return
-    }
-    // 데이터가 없는 경우
-    questDetails.value = []
-    console.warn('No valid quest details data received')
-  } catch (error) {
-    console.error('Failed to fetch quest details:', error)
-    questDetails.value = []
-    alert('퀘스트 정보를 불러오는데 실패했습니다.')
-  }
-}
+      try {
+        const formattedDate = format(new Date(date), "yyyy-MM-dd");
+        console.log("Fetching quest details for date:", formattedDate);
+        const response = await axios.post(
+          "http://localhost:8080/api/report/details",
+          {
+            accountNo: 1001,
+            date: formattedDate,
+          }
+        );
+        // response.data가 바로 questDetails 배열인 경우를 처리
+        if (response.data && Array.isArray(response.data)) {
+          questDetails.value = response.data;
+          selectedDate.value = date;
+          showQuestDetails.value = true;
+          console.log("Received quest details:", questDetails.value);
+          return;
+        }
+        // questDetails 필드 안에 있는 경우를 처리
+        if (
+          response.data?.questDetails &&
+          Array.isArray(response.data.questDetails)
+        ) {
+          questDetails.value = response.data.questDetails;
+          selectedDate.value = date;
+          showQuestDetails.value = true;
+          console.log("Received quest details from field:", questDetails.value);
+          return;
+        }
+        // 단일 객체인 경우를 배열로 변환
+        if (response.data && !Array.isArray(response.data)) {
+          questDetails.value = [response.data];
+          selectedDate.value = date;
+          showQuestDetails.value = true;
+          console.log("Converted single object to array:", questDetails.value);
+          return;
+        }
+        // 데이터가 없는 경우
+        questDetails.value = [];
+        console.warn("No valid quest details data received");
+      } catch (error) {
+        console.error("Failed to fetch quest details:", error);
+        questDetails.value = [];
+        alert("퀘스트 정보를 불러오는데 실패했습니다.");
+      }
+    };
     const closeQuestDetails = () => {
-      showQuestDetails.value = false
-      questDetails.value = []
-      selectedDate.value = null
-    }
+      showQuestDetails.value = false;
+      questDetails.value = [];
+      selectedDate.value = null;
+    };
     // 날짜 범위 계산
     const getDateRange = (period) => {
-      const end = new Date()
-      let start = new Date()
+      const end = new Date();
+      let start = new Date();
       switch (period) {
-        case 'daily':
-          start.setDate(end.getDate() - 7)
-          break
-        case 'weekly':
-          start.setDate(end.getDate() - 30)
-          break
-        case 'monthly':
-          start.setDate(end.getDate() - 180)
-          break
+        case "daily":
+          start.setDate(end.getDate() - 7);
+          break;
+        case "weekly":
+          start.setDate(end.getDate() - 30);
+          break;
+        case "monthly":
+          start.setDate(end.getDate() - 180);
+          break;
       }
       return {
-        startDate: format(start, 'yyyy-MM-dd'),
-        endDate: format(end, 'yyyy-MM-dd')
-      }
-    }
+        startDate: format(start, "yyyy-MM-dd"),
+        endDate: format(end, "yyyy-MM-dd"),
+      };
+    };
     // 기간 변경
     const changePeriod = (period) => {
-      selectedPeriod.value = period
+      selectedPeriod.value = period;
       if (!dateRangeCache.value) {
-        customStartDate.value = null
-        customEndDate.value = null
+        customStartDate.value = null;
+        customEndDate.value = null;
       }
-      fetchReportData(1)
-    }
+      fetchReportData(1);
+    };
     // 커스텀 날짜 범위 적용
     const applyCustomDateRange = () => {
       if (customStartDate.value && customEndDate.value) {
         dateRangeCache.value = {
           startDate: customStartDate.value,
-          endDate: customEndDate.value
-        }
-        fetchReportData(1)
+          endDate: customEndDate.value,
+        };
+        fetchReportData(1);
       }
-    }
+    };
     // 페이지 이동
     const loadNextPage = () => {
       if (currentPage.value < totalPages.value) {
-        fetchReportData(currentPage.value + 1)
+        fetchReportData(currentPage.value + 1);
       }
-    }
+    };
     const loadPreviousPage = () => {
       if (currentPage.value > 1) {
-        fetchReportData(currentPage.value - 1)
+        fetchReportData(currentPage.value - 1);
       }
-    }
+    };
     // 환경 영향 계산
     const environmentalImpact = (score, type) => {
       const impactPer5Points = {
-        co2: 0.01, 
-        wildlife: 0.002, 
-        forest: 0.01, 
+        co2: 0.01,
+        wildlife: 0.002,
+        forest: 0.01,
         nest: 0.1,
-        water: 0.5, 
-        plastic: 1, 
-        recycling: 1 
-      }
+        water: 0.5,
+        plastic: 1,
+        recycling: 1,
+      };
       const baseImpact = score / 5;
       switch (type) {
-        case 'wildlife':
+        case "wildlife":
           return (impactPer5Points.wildlife * baseImpact).toFixed(2);
-        case 'forest':
+        case "forest":
           return (impactPer5Points.forest * baseImpact).toFixed(2);
-        case 'nest':
+        case "nest":
           return (impactPer5Points.nest * baseImpact).toFixed(2);
-        case 'water':
+        case "water":
           return (impactPer5Points.water * baseImpact).toFixed(2);
-        case 'plastic':
+        case "plastic":
           return (impactPer5Points.plastic * baseImpact).toFixed(2);
-        case 'recycling':
+        case "recycling":
           return (impactPer5Points.recycling * baseImpact).toFixed(2);
         default:
           return (impactPer5Points.co2 * baseImpact).toFixed(2);
       }
-    }
+    };
     // 컴포넌트 마운트 시 데이터 로드
     onMounted(() => {
-      fetchReportData()
-    })
+      fetchReportData();
+    });
     // 템플릿에서 사용할 메서드 및 데이터 반환
     return {
       memberData,
@@ -676,21 +775,21 @@ export default {
       environmentalImpact,
       getGradeText: (grade) => {
         const gradeMap = {
-          1: '새싹', 
-          2: '어린 나무', 
-          3: '작은 숲', 
-          4: '울창한 숲', 
-          5: '열대우림'
-        }
-        return gradeMap[grade] || '알 수 없음'
+          1: "새싹",
+          2: "어린 나무",
+          3: "작은 숲",
+          4: "울창한 숲",
+          5: "열대우림",
+        };
+        return gradeMap[grade] || "알 수 없음";
       },
-      formatDate: (date) => format(new Date(date), 'yyyy-MM-dd'),
-      formatDateTime: (date) => format(new Date(date), 'yyyy-MM-dd HH:mm:ss'),
-      formatCurrency: (value) => new Intl.NumberFormat('ko-KR').format(value),
-      formatRate: (value) => value.toFixed(2)
-    }
-  }
-}
+      formatDate: (date) => format(new Date(date), "yyyy-MM-dd"),
+      formatDateTime: (date) => format(new Date(date), "yyyy-MM-dd HH:mm:ss"),
+      formatCurrency: (value) => new Intl.NumberFormat("ko-KR").format(value),
+      formatRate: (value) => value.toFixed(2),
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -734,7 +833,8 @@ export default {
   gap: 0.75rem;
 }
 
-.grade-badge, .score-badge {
+.grade-badge,
+.score-badge {
   padding: 0.5rem 1rem;
   border-radius: 9999px;
   font-weight: 600;
@@ -1133,7 +1233,9 @@ td {
   }
 }
 
-.chart-card, .member-info, .history-section {
+.chart-card,
+.member-info,
+.history-section {
   animation: slideIn 0.3s ease-out;
 }
 
