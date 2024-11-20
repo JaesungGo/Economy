@@ -38,22 +38,22 @@ public class AccountController {
     // 회원 계좌 정보 조회(없으면 생성)
     @GetMapping("/find")
     public ResponseEntity<Account> findAccount(HttpSession session) {
-//        try {
-//            Member member = authenticationService.getAuthenticatedMember(session);
-//            Account account = accountService.findByMember(member);
-//            return ResponseEntity.ok(account);
-//        } catch (IllegalStateException e) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//        }
-        Account account = Account.builder()
-                .accountBalance(100000L)
-                .accountRate(4.5)
-                .createDate(new Date())
-                .updateDate(new Date())
-                .accountStatus(true)
-                .build();
-
-        return ResponseEntity.ok(account);
+        try {
+            Member member = authenticationService.getAuthenticatedMember(session);
+            Account account = accountService.findByMember(member);
+            return ResponseEntity.ok(account);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+//        Account account = Account.builder()
+//                .accountBalance(100000L)
+//                .accountRate(4.5)
+//                .createDate(new Date())
+//                .updateDate(new Date())
+//                .accountStatus(true)
+//                .build();
+//
+//        return ResponseEntity.ok(account);
 
     }
 
