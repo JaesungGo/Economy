@@ -7,6 +7,7 @@ import org.hackathon.economy.member.domain.Member;
 import org.hackathon.economy.member.service.AuthenticationService;
 import org.hackathon.economy.qrsession.service.SessionService;
 import org.hackathon.economy.quest.domain.Quest;
+import org.hackathon.economy.quest.repository.QuestRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
