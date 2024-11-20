@@ -1,6 +1,7 @@
 package org.hackathon.economy.account.service;
 
 import lombok.RequiredArgsConstructor;
+import org.hackathon.economy.account.domain.DailyInterestUtil;
 import org.hackathon.economy.account.domain.Account;
 import org.hackathon.economy.account.domain.DailyInterest;
 import org.hackathon.economy.account.repository.AccountRepository;
@@ -29,7 +30,7 @@ public class DailyInterestService {
         return dailyInterestRepository.getTotal(account);
     }
 
-    public List<DailyInterest> getMonthly(Member member) {
+    public List<DailyInterestUtil> getMonthly(Member member) {
         Account account = accountRepository.findByMember(member);
         return dailyInterestRepository.getMonthly(account);
     }

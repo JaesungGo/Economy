@@ -27,7 +27,7 @@ public class Account {
     private Double accountRate;
     @Column(nullable = false)
     private Date createDate;
-    @Column(nullable = false)
+
     private Date closedDate;
     @Column(nullable = false)
     private Date updateDate;
