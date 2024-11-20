@@ -21,38 +21,90 @@
 
       <!-- 현재 이율 정보 -->
       <h5 class="card-title mt-3">
-        000님의 현재 이율은 <strong>+2.5%</strong>입니다.
+        {{ userName }}님의 현재 이율은
+        <strong>+{{ interestRate }}%</strong>입니다.
       </h5>
-      <h2 class="display-4">10,000,000원</h2>
-      <p class="text-muted">+124.23922434원 (금일 벌어들인 이자)</p>
+      <h2 class="display-4">{{ accountBalance.toLocaleString() }}원</h2>
+      <p class="text-muted">
+        {{
+          typeof dailyInterest === 'number'
+            ? dailyInterest.toFixed(4)
+            : '0.0000'
+        }}원 (금일 벌어들인 이자)
+      </p>
 
       <!-- 입금 및 출금 버튼 -->
       <div class="d-flex justify-content-center mt-4">
-        <button class="btn btn-primary mx-2" @click="deposit">입금</button>
-        <button class="btn btn-danger mx-2" @click="withdraw">출금</button>
+        <button class="btn btn-primary mx-2" @click="handleDeposit">
+          입금
+        </button>
+        <button class="btn btn-danger mx-2" @click="handleWithdraw">
+          출금
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import accountApi from '@/api/accountApi';
+
 export default {
   name: 'InterestInfoCard',
   data() {
     return {
       showModal: false, // 모달 표시 여부
+      userName: '000', // 사용자 이름
+      interestRate: '2.5', // 현재 이율
+      accountBalance: 0, // 계좌 잔액
+      dailyInterest: 0, // 금일 이자
     };
   },
   methods: {
     toggleModal() {
       this.showModal = !this.showModal; // 모달 표시 상태 토글
     },
-    deposit() {
-      alert('입금 기능이 호출되었습니다.');
+    async handleDeposit() {
+      const amount = prompt('입금할 금액을 입력하세요:');
+      if (!amount || isNaN(amount) || Number(amount) <= 0) {
+        alert('유효한 금액을 입력하세요.');
+        return;
+      }
+      try {
+        const response = await accountApi.deposit(Number(amount));
+        alert(response); // 성공 메시지
+        this.updateAccountInfo();
+      } catch (error) {
+        alert('입금에 실패했습니다: ' + error.response?.data || error.message);
+      }
     },
-    withdraw() {
-      alert('출금 기능이 호출되었습니다.');
+    async handleWithdraw() {
+      const amount = prompt('출금할 금액을 입력하세요:');
+      if (!amount || isNaN(amount) || Number(amount) <= 0) {
+        alert('유효한 금액을 입력하세요.');
+        return;
+      }
+      try {
+        const response = await accountApi.withdraw(Number(amount));
+        alert(response); // 성공 메시지
+        this.updateAccountInfo();
+      } catch (error) {
+        alert('출금에 실패했습니다: ' + error.response?.data || error.message);
+      }
     },
+    async updateAccountInfo() {
+      try {
+        const account = await accountApi.findAccount();
+        this.accountBalance = account.accountBalance; // 계좌 잔액 업데이트
+        this.dailyInterest = parseFloat(account.dailyInterest) || 0; // 숫자로 변환
+      } catch (error) {
+        alert('계좌 정보를 불러오지 못했습니다.');
+      }
+    },
+  },
+  async mounted() {
+    // 컴포넌트가 로드되면 계좌 정보 로드
+    await this.updateAccountInfo();
   },
 };
 </script>

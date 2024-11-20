@@ -58,44 +58,44 @@ import api from '@/api';
 const BASE_URL = '/member';
 
 export default {
-    // 회원가입
-    async create(member) {
-        const { data } = await api.post(`${BASE_URL}/join`, member);
-        return data;
-    },
+  // 회원가입
+  async create(member) {
+    const { data } = await api.post(`${BASE_URL}/join`, member);
+    return data;
+  },
 
-    // 로그인
-    async login(loginDTO) {
-        const { data } = await api.post(`${BASE_URL}/login`, loginDTO);
-        console.log('POST MemberLogin:', data);
-        return data;
-    },
+  // 로그인
+  async login(loginDTO) {
+    const { data } = await api.post(`${BASE_URL}/login`, loginDTO);
+    console.log('POST MemberLogin:', data);
+    return data;
+  },
 
-    // 로그아웃
-    async logout() {
-        const { data } = await api.post(`${BASE_URL}/logout`);
-        console.log('POST Logout:', data);
-        return data;
-    },
+  // 로그아웃
+  async logout() {
+    const { data } = await api.post(`${BASE_URL}/logout`);
+    console.log('POST Logout:', data);
+    return data;
+  },
 
-    // 로그인 상태 확인
-    async checkLogin() {
-        const { data } = await api.get(`${BASE_URL}/check-login`);
-        console.log('GET CheckLogin:', data);
-        return data; // 현재 로그인 상태 반환
-    },
+  // 로그인 상태 확인
+  async checkLogin() {
+    const { data } = await api.get(`${BASE_URL}/check-login`);
+    console.log('GET CheckLogin:', data);
+    return data; // 현재 로그인 상태 반환
+  },
 
-    // 회원 정보 조회
-    async getMember() {
-        const { data } = await api.get(`${BASE_URL}/`);
-        console.log('GET Member:', data);
-        return data; // 회원 정보 반환
-    },
+  // 회원 정보 조회
+  async getMember() {
+    const { data } = await api.get(`${BASE_URL}/`);
+    console.log('GET Member:', data);
+    return data; // 회원 정보 반환
+  },
 
-    // 회원탈퇴
-    async deleteMember(memberNo) {
-        const { data } = await api.delete(`${BASE_URL}/${memberNo}`);
-        console.log('DELETE Member:', data);
-        return data; // 회원탈퇴 성공 여부 반환
-    },
+  // 회원탈퇴
+  async deleteMember(memberNo) {
+    const { data } = await api.delete(`${BASE_URL}/${memberNo}`);
+    console.log('DELETE Member:', data);
+    return data; // 회원탈퇴 성공 여부 반환
+  },
 };
