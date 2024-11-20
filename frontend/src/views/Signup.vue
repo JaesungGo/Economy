@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onBeforeMount, onBeforeUnmount } from 'vue';
+import { ref, onBeforeMount, onBeforeUnmount, reactive } from 'vue';
 import { useStore } from 'vuex';
-import axios from 'axios'; // Axios 임포트
+// import axios from 'axios'; // Axios 임포트'
+import memberApi from '@/api/memberApi';
 
 import Navbar from '@/examples/PageLayout/Navbar.vue';
 import AppFooter from '@/examples/PageLayout/Footer.vue';
@@ -12,17 +13,20 @@ import ArgonButton from '@/components/ArgonButton.vue';
 const body = document.getElementsByTagName('body')[0];
 const store = useStore();
 
-const email = ref(''); // 이메일 입력값
-const password = ref(''); // 비밀번호 입력값
+// const name = ref(''); //
+// const email = ref(''); // 이메일 입력값
+// const password = ref(''); // 비밀번호 입력값
 const message = ref(''); // 결과 메시지
+const member = reactive({
+  name: '',
+  email: '',
+  password: '',
+});
 
 // API 요청 함수
 const register = async () => {
   try {
-    const response = await axios.post('/api/member/join', {
-      memberEmail: email.value,
-      memberPassword: password.value,
-    });
+    const response = await memberApi.create(member);
     message.value = `회원가입 성공! ID: ${response.data}`;
   } catch (error) {
     console.error(error);
@@ -82,21 +86,28 @@ onBeforeUnmount(() => {
         <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
           <div class="card z-index-0">
             <div class="card-header text-center pt-4">
-              <h5>Register</h5>
+              <h5>회원가입</h5>
             </div>
             <div class="card-body">
               <form @submit.prevent="register" role="form">
                 <!-- API 요청 -->
                 <argon-input
+                  id="name"
+                  v-model="member.name"
+                  type="text"
+                  placeholder="Name"
+                  aria-label="Name"
+                />
+                <argon-input
                   id="email"
-                  v-model="email"
+                  v-model="member.email"
                   type="email"
                   placeholder="Email"
                   aria-label="Email"
                 />
                 <argon-input
                   id="password"
-                  v-model="password"
+                  v-model="member.password"
                   type="password"
                   placeholder="Password"
                   aria-label="Password"
@@ -108,13 +119,13 @@ onBeforeUnmount(() => {
                     variant="gradient"
                     class="my-4 mb-2"
                     type="submit"
-                    >Sign up</argon-button
+                    >회원가입</argon-button
                   >
                 </div>
                 <p class="text-sm mt-3 mb-0">
-                  Already have an account?
+                  이미 계정이 있으신가요?
                   <a href="javascript:;" class="text-dark font-weight-bolder"
-                    >Sign in</a
+                    >로그인</a
                   >
                 </p>
               </form>

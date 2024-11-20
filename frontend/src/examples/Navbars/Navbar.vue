@@ -1,13 +1,13 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Breadcrumbs from '../Breadcrumbs.vue';
+import auth from '@/store/auth';
 
 const showMenu = ref(false);
 const store = useStore();
-const isRTL = computed(() => store.state.isRTL);
-
+const router = useRouter();
 const route = useRoute();
 
 const currentRouteName = computed(() => {
@@ -18,6 +18,8 @@ const currentDirectory = computed(() => {
     return dir.charAt(0).toUpperCase() + dir.slice(1);
 });
 
+const isLoggedIn = ref(false); //로그인 여부
+const userInfo = ref(null); //사용자 정보
 const minimizeSidebar = () => store.commit('sidebarMinimize');
 const toggleConfigurator = () => store.commit('toggleConfigurator');
 
@@ -26,6 +28,32 @@ const closeMenu = () => {
         showMenu.value = false;
     }, 100);
 };
+
+const logout = async () => {
+    try {
+        await auth.logout(); // auth.js의 logout 메서드 호출
+        store.commit('setLoggedIn', false); // Vuex 상태 업데이트
+        router.push('/signin'); // 로그아웃 후 로그인 페이지로 이동
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+};
+
+// 로그인 상태 확인
+const fetchLoginStatus = async () => {
+    try {
+        const status = await auth.checkLogin(); // auth.js의 checkLogin 호출
+        isLoggedIn.value = true;
+        userInfo.value = { email: status.split(' ')[2] }; // "Logged in as: email@example.com"에서 이메일 추출
+    } catch (error) {
+        isLoggedIn.value = false;
+        userInfo.value = null;
+        console.error('로그인 상태 확인 실패:', error.message);
+    }
+};
+
+// 컴포넌트 로드 시 로그인 상태 확인
+onMounted(fetchLoginStatus);
 </script>
 <template>
     <nav
@@ -38,23 +66,29 @@ const closeMenu = () => {
         <div class="px-3 py-1 container-fluid">
             <breadcrumbs :current-page="currentRouteName" :current-directory="currentDirectory" />
 
-            <div class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4" :class="isRTL ? 'px-0' : 'me-sm-4'" id="navbar">
-                <div class="pe-md-3 d-flex align-items-center" :class="isRTL ? 'me-md-auto' : 'ms-md-auto'">
-                    <div class="input-group">
-                        <span class="input-group-text text-body">
-                            <i class="fas fa-search" aria-hidden="true"></i>
-                        </span>
-                        <input type="text" class="form-control" :placeholder="isRTL ? 'أكتب هنا...' : 'Type here...'" />
-                    </div>
-                </div>
-                <ul class="navbar-nav justify-content-end">
+            <!-- Navbar -->
+            <div class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4" id="navbar">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <!-- ms-auto로 오른쪽 정렬 -->
+                    <!-- Sign In -->
                     <li class="nav-item d-flex align-items-center">
-                        <router-link :to="{ name: 'Signin' }" class="px-0 nav-link font-weight-bold text-white" target="_blank">
-                            <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-2'"></i>
-                            <span v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</span>
-                            <span v-else class="d-sm-inline d-none">Sign In</span>
+                        <!-- 로그인 여부에 따라 버튼 변경 -->
+                        <router-link v-if="!isLoggedIn" :to="{ name: 'Signin' }" class="px-0 nav-link font-weight-bold text-white" target="_blank">
+                            <i class="fa fa-user me-sm-2"></i>
+                            <span class="d-sm-inline d-none">Sign In</span>
                         </router-link>
+
+                        <button
+                            v-else
+                            @click="logout"
+                            class="nav-link font-weight-bold text-white d-flex align-items-center px-0"
+                            style="height: 100%; padding: 0; border: none; background: none"
+                        >
+                            <i class="fa fa-sign-out-alt me-sm-2"></i>
+                            <span class="d-sm-inline d-none">Logout</span>
+                        </button>
                     </li>
+                    <!-- Sidebar Minimize -->
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                         <a href="#" @click="minimizeSidebar" class="p-0 nav-link text-white" id="iconNavbarSidenav">
                             <div class="sidenav-toggler-inner">
@@ -64,12 +98,16 @@ const closeMenu = () => {
                             </div>
                         </a>
                     </li>
+
+                    <!-- Configurator -->
                     <li class="px-3 nav-item d-flex align-items-center">
                         <a class="p-0 nav-link text-white" @click="toggleConfigurator">
                             <i class="cursor-pointer fa fa-cog fixed-plugin-button-nav"></i>
                         </a>
                     </li>
-                    <li class="nav-item dropdown d-flex align-items-center" :class="isRTL ? 'ps-2' : 'pe-2'">
+
+                    <!-- Notifications -->
+                    <li class="nav-item dropdown d-flex align-items-center pe-2">
                         <a
                             href="#"
                             class="p-0 nav-link text-white"

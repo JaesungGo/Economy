@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '../views/Dashboard.vue';
 import Tables from '../views/Tables.vue';
 import Billing from '../views/Billing.vue';
-import Profile from '../views/Profile.vue';
 import Signup from '../views/Signup.vue';
 import Signin from '../views/Signin.vue';
 import Mypage from '../views/Mypage.vue';
@@ -11,6 +10,8 @@ import Interest from '../views/Interest.vue';
 import Report from '../views/Report.vue';
 import About from '../views/About.vue';
 import Community from '../views/Community.vue';
+import Quiz from '../views/Quiz.vue';
+import Vision from '../views/OurVision.vue';
 
 const routes = [
     {
@@ -34,11 +35,6 @@ const routes = [
         component: Billing,
     },
 
-    {
-        path: '/profile',
-        name: 'Profile',
-        component: Profile,
-    },
     {
         path: '/signin',
         name: 'Signin',
@@ -78,6 +74,16 @@ const routes = [
         path: '/community',
         name: 'Community',
         component: Community,
+    },
+    {
+        path: '/quiz',
+        name: 'quiz',
+        component: Quiz,
+    },
+    {
+        path: '/ourvision',
+        name: 'OurVision',
+        component: Vision,
     },
 ];
 

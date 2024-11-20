@@ -1,7 +1,8 @@
-<script setup>
+<!-- <script setup>
 import accountApi from '@/api/accountApi';
 import memberApi from '@/api/memberApi';
 import { ref, computed, onMounted  } from 'vue';
+
 
 const now = new Date(); // 현재 시각
 const hours = now.getHours(); // 시 (0 ~ 23)
@@ -9,7 +10,7 @@ const minutes = now.getMinutes(); // 분 (0 ~ 59)
 
 const accountObject = ref({
   accountBalance: 0, // 기본값
-  accountRate: 0,    // 기본값
+  accountRate: 0, // 기본값
 });
 const myAccount = computed(() => accountObject.value);
 const myBalance = computed(() => myAccount.value.accountBalance);
@@ -19,14 +20,20 @@ const memberObject = ref({});
 const myMember = computed(() => memberObject.value);
 
 // 이자 초기값 설정
-const myTotalInterest = computed(() => 
-  (myAccount.value.accountBalance * (myAccount.value.accountRate / 100 / 365))
+const myTotalInterest = computed(
+  () =>
+    myAccount.value.accountBalance * (myAccount.value.accountRate / 100 / 365)
 );
-const myCurrentInterest = computed(() => 
-  (myAccount.value.accountBalance * (myAccount.value.accountRate / 100 / 365 / (24 * 60 * 60))) * (((hours * 60) + minutes) * 60)
+const myCurrentInterest = computed(
+  () =>
+    myAccount.value.accountBalance *
+    (myAccount.value.accountRate / 100 / 365 / (24 * 60 * 60)) *
+    ((hours * 60 + minutes) * 60)
 );
-const myInterest = computed(() => 
-  (myAccount.value.accountBalance * (myAccount.value.accountRate / 100 / 365 / (24 * 60 * 60)))
+const myInterest = computed(
+  () =>
+    myAccount.value.accountBalance *
+    (myAccount.value.accountRate / 100 / 365 / (24 * 60 * 60))
 );
 const countInterest = ref(0);
 
@@ -37,11 +44,10 @@ const startInterestCount = () => {
     if (countInterest.value < myTotalInterest.value) {
       countInterest.value += myInterest.value;
     } else {
-      clearInterval(interval);  // 카운트가 myTotalInterest에 도달하면 타이머 종료
+      clearInterval(interval); // 카운트가 myTotalInterest에 도달하면 타이머 종료
     }
-  }, 1000);  // 1000ms(1초)마다 실행
+  }, 1000); // 1000ms(1초)마다 실행
 };
-
 
 const load = async () => {
   try {
@@ -57,7 +63,6 @@ const load = async () => {
 
     // 데이터 로드 후 countInterest를 초기화
     countInterest.value = myCurrentInterest.value;
-
   } catch (error) {
     console.error('Error finding account: ', error);
   }
@@ -69,8 +74,6 @@ onMounted(() => {
 
   startInterestCount();
 });
-
-
 
 </script>
 
@@ -99,42 +102,88 @@ onMounted(() => {
       <!-- 현재 이율 정보 -->
       <h5 class="card-title mt-3">
         {{ myMember.memberName }}님의 현재 이율은 <strong>{{ myRate }}%</strong>입니다.<br>
-        
       </h5>
-      <h2 class="display-4">{{ myBalance ? myBalance.toLocaleString() : 'N/A' }}원</h2>
-      <!--<p class="text-muted">+124.23922434원 (금일 벌어들인 이자)</p>-->
-      <div >
-        <h3 class="text-color">+{{ countInterest.toFixed(4) }}원</h3>
-        <p class="text-muted inline-container">(금일 벌어들인 이자)</p>
-      </div>
+      <h2 class="display-4">{{ accountBalance.toLocaleString() }}원</h2>
+      <p class="text-muted">
+        {{
+          typeof dailyInterest === 'number'
+            ? dailyInterest.toFixed(4)
+            : '0.0000'
+        }}원 (금일 벌어들인 이자)
+      </p>
 
       <!-- 입금 및 출금 버튼 -->
       <div class="d-flex justify-content-center mt-4">
-        <button class="btn btn-primary mx-2" @click="deposit">입금</button>
-        <button class="btn btn-danger mx-2" @click="withdraw">출금</button>
+        <button class="btn btn-primary mx-2" @click="handleDeposit">
+          입금
+        </button>
+        <button class="btn btn-danger mx-2" @click="handleWithdraw">
+          출금
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import accountApi from '@/api/accountApi';
+
 export default {
   name: 'InterestInfoCard',
   data() {
     return {
       showModal: false, // 모달 표시 여부
+      userName: '000', // 사용자 이름
+      interestRate: '2.5', // 현재 이율
+      accountBalance: 0, // 계좌 잔액
+      dailyInterest: 0, // 금일 이자
     };
   },
   methods: {
     toggleModal() {
       this.showModal = !this.showModal; // 모달 표시 상태 토글
     },
-    deposit() {
-      alert('입금 기능이 호출되었습니다.');
+    async handleDeposit() {
+      const amount = prompt('입금할 금액을 입력하세요:');
+      if (!amount || isNaN(amount) || Number(amount) <= 0) {
+        alert('유효한 금액을 입력하세요.');
+        return;
+      }
+      try {
+        const response = await accountApi.deposit(Number(amount));
+        alert(response); // 성공 메시지
+        this.updateAccountInfo();
+      } catch (error) {
+        alert('입금에 실패했습니다: ' + error.response?.data || error.message);
+      }
     },
-    withdraw() {
-      alert('출금 기능이 호출되었습니다.');
+    async handleWithdraw() {
+      const amount = prompt('출금할 금액을 입력하세요:');
+      if (!amount || isNaN(amount) || Number(amount) <= 0) {
+        alert('유효한 금액을 입력하세요.');
+        return;
+      }
+      try {
+        const response = await accountApi.withdraw(Number(amount));
+        alert(response); // 성공 메시지
+        this.updateAccountInfo();
+      } catch (error) {
+        alert('출금에 실패했습니다: ' + error.response?.data || error.message);
+      }
     },
+    async updateAccountInfo() {
+      try {
+        const account = await accountApi.findAccount();
+        this.accountBalance = account.accountBalance; // 계좌 잔액 업데이트
+        this.dailyInterest = parseFloat(account.dailyInterest) || 0; // 숫자로 변환
+      } catch (error) {
+        alert('계좌 정보를 불러오지 못했습니다.');
+      }
+    },
+  },
+  async mounted() {
+    // 컴포넌트가 로드되면 계좌 정보 로드
+    await this.updateAccountInfo();
   },
 };
 </script>
@@ -153,15 +202,15 @@ export default {
 }
 
 .container {
-    display: flex;
-    justify-content: center; /* 중앙 정렬 */
-    align-items: center; /* 세로 정렬 */
-    gap: 8px; /* <h3>와 <p> 사이의 간격 */
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 세로 정렬 */
+  gap: 8px; /* <h3>와 <p> 사이의 간격 */
 }
 .text-color {
-    /*margin-top: 20px;*/ /* 위쪽 간격을 늘림 */
-    /*font-size: 16px;*/ /* 글씨 크기 조정 (필요시 변경) */
-    color: #088A68; /* 글씨 색상 유지 */
+  /*margin-top: 20px;*/ /* 위쪽 간격을 늘림 */
+  /*font-size: 16px;*/ /* 글씨 크기 조정 (필요시 변경) */
+  color: #088a68; /* 글씨 색상 유지 */
 }
 
 /* 이율 정보 스타일 */
