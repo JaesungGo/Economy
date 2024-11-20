@@ -43,14 +43,14 @@ public class BatchScheduler {
     // cron 표현식: [초] [분] [시간] [일] [월] [요일]
     // 매일 자정에 실행되는 작업
     //@Scheduled(cron = "0 0 0 * * *")
-    @Scheduled(cron = "0 58 23 * * *")
+    @Scheduled(cron = "0 23 21 * * *")
     public void runDailyUpdateInterestJob() throws Exception {
         log.info("-------------------runDailyUpdateInterestJob-------------------");
         runJob(dailyUpdateInterestJob);
     }
     // 매일 0시 10분에 실행되는 작업
     //@Scheduled(cron = "0 10 0 * * *")
-    @Scheduled(cron = "0 35 0 * * *")
+    @Scheduled(cron = "0 23 23 * * *")
     public void runDailyInsertInterestJob() throws Exception {
         log.info("-------------------runDailyInsertInterestJob-------------------");
         runJob(dailyInsertInterestJob);

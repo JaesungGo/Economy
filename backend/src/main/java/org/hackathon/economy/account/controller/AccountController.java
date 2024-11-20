@@ -1,6 +1,11 @@
 package org.hackathon.economy.account.controller;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.servlet.http.HttpSession;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hackathon.economy.account.domain.Account;
@@ -37,11 +42,16 @@ public class AccountController {
 
     // 회원 계좌 정보 조회(없으면 생성)
     @GetMapping("/find")
-    public ResponseEntity<Account> findAccount(HttpSession session) {
+    public ResponseEntity<AccountUtil> findAccount(HttpSession session) {
         try {
             Member member = authenticationService.getAuthenticatedMember(session);
             Account account = accountService.findByMember(member);
-            return ResponseEntity.ok(account);
+            AccountUtil accountUtil = AccountUtil.builder()
+                    .accountBalance(account.getAccountBalance())
+                    .accountRate(account.getAccountRate())
+                    .build();
+
+            return ResponseEntity.ok(accountUtil);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -110,5 +120,11 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
         }
     }
+}
 
+@Data
+@Builder
+class AccountUtil {
+    private Long accountBalance;
+    private Double accountRate;
 }
