@@ -18,27 +18,28 @@ public class Quiz {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="quiz_pk")
     private Long quizPk;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_title")
     private String quizTitle;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_desc")
     private String quizDesc;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_answer")
     private Integer quizAnswer;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_type")
     private String quizType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_cumulated")
     private Integer quizCumulated = 0;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_createdat")
     private Timestamp quizCreatedAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_updatedat")
     private Timestamp quizUpdatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
