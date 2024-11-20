@@ -14,13 +14,14 @@ import java.time.LocalDateTime;
 public class DailyQuiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="daily_quizid")
     private Long dailyQuizId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_pk", nullable = false)
     private Quiz quiz;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="quiz_date_time")
 //    private LocalDate quizDate;
     private LocalDateTime quizDateTime;
 

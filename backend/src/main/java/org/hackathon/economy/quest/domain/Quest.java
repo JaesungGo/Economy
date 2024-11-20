@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hackathon.economy.member.domain.Member;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +29,7 @@ public class Quest {
     @Column(nullable = false)
     private Date createTableDatetime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "questAchieve_no")
     private QuestAchieve questAchieve;
 }
