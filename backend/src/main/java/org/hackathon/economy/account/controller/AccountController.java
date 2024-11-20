@@ -1,6 +1,11 @@
 package org.hackathon.economy.account.controller;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.servlet.http.HttpSession;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hackathon.economy.account.domain.Account;
@@ -11,6 +16,8 @@ import org.hackathon.economy.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,14 +42,29 @@ public class AccountController {
 
     // 회원 계좌 정보 조회(없으면 생성)
     @GetMapping("/find")
-    public ResponseEntity<Account> findAccount(HttpSession session) {
+    public ResponseEntity<AccountUtil> findAccount(HttpSession session) {
         try {
             Member member = authenticationService.getAuthenticatedMember(session);
             Account account = accountService.findByMember(member);
-            return ResponseEntity.ok(account);
+            AccountUtil accountUtil = AccountUtil.builder()
+                    .accountBalance(account.getAccountBalance())
+                    .accountRate(account.getAccountRate())
+                    .build();
+
+            return ResponseEntity.ok(accountUtil);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+//        Account account = Account.builder()
+//                .accountBalance(100000L)
+//                .accountRate(4.5)
+//                .createDate(new Date())
+//                .updateDate(new Date())
+//                .accountStatus(true)
+//                .build();
+//
+//        return ResponseEntity.ok(account);
+
     }
 
     // 계좌에 입금
@@ -98,5 +120,11 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
         }
     }
+}
 
+@Data
+@Builder
+class AccountUtil {
+    private Long accountBalance;
+    private Double accountRate;
 }

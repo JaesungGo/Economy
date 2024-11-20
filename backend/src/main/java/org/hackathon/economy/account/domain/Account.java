@@ -26,8 +26,9 @@ public class Account {
     @Column(nullable = false)
     private Date createDate;
     @Column(nullable = false)
-    private Date updateDate;
     private Date closedDate;
+    @Column(nullable = false)
+    private Date updateDate;
     @Column(nullable = false)
     private Boolean accountStatus;
 
@@ -45,8 +46,7 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "interest_no") // 외래 키는 Account 테이블에 위치
     private Interest interest;
-
-    // 도메인 메서드: 잔액 추가
+        // 도메인 메서드: 잔액 추가
     public Long deposit(Long amount) {
         this.accountBalance += amount;
         this.updateDate = new Date();

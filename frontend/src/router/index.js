@@ -1,23 +1,108 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Dashboard from '../views/Dashboard.vue';
+import Tables from '../views/Tables.vue';
+import Billing from '../views/Billing.vue';
+import Signup from '../views/Signup.vue';
+import Signin from '../views/Signin.vue';
+import Mypage from '../views/Mypage.vue';
+import Quest from '../views/Quest.vue';
+import Interest from '../views/Interest.vue';
+import Report from '../views/Report.vue';
+import About from '../views/About.vue';
+import Community from '../views/Community.vue';
+import Quiz from '../views/Quiz.vue';
+import Vision from '../views/OurVision.vue';
+import QrCode from '../views/QrCode.vue';
+import QrSession from '../views/QrSession.vue';
+
+const routes = [
+  {
+    path: '/',
+    name: '/',
+    redirect: '/dashboard-default',
+  },
+  {
+    path: '/dashboard-default',
+    name: 'Dashboard',
+    component: Dashboard,
+  },
+  {
+    path: '/tables',
+    name: 'Tables',
+    component: Tables,
+  },
+  {
+    path: '/billing',
+    name: 'Billing',
+    component: Billing,
+  },
+
+  {
+    path: '/signin',
+    name: 'Signin',
+    component: Signin,
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup,
+  },
+  {
+    path: '/mypage',
+    name: 'Mypage',
+    component: Mypage,
+  },
+  {
+    path: '/quest',
+    name: 'Quest',
+    component: Quest,
+  },
+  {
+    path: '/interest',
+    name: 'Interest',
+    component: Interest,
+  },
+  {
+    path: '/report',
+    name: 'Report',
+    component: Report,
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About,
+  },
+  {
+    path: '/community',
+    name: 'Community',
+    component: Community,
+  },
+  {
+    path: '/quiz',
+    name: 'quiz',
+    component: Quiz,
+  },
+  {
+    path: '/ourvision',
+    name: 'OurVision',
+    component: Vision,
+  },
+  {
+    path: '/qrcode',
+    name: 'qrcode',
+    component: QrCode, // Vue 컴포넌트로 설정
+  },
+  {
+    path: '/qrsession',
+    name: 'qrsession',
+    component: QrSession, // Vue 컴포넌트로 설정
+  },
+];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
-    },
-  ],
-})
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+  linkActiveClass: 'active',
+});
 
-export default router
+export default router;

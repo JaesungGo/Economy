@@ -1,14 +1,21 @@
 package org.hackathon.economy.member.controller;
 
+import jakarta.persistence.*;
 import jakarta.servlet.http.HttpSession;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hackathon.economy.account.service.AccountService;
 import org.hackathon.economy.member.domain.LoginDTO;
 import org.hackathon.economy.member.domain.Member;
 import org.hackathon.economy.member.service.AuthenticationService;
 import org.hackathon.economy.member.service.MemberService;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AccountService accountService;
     private final AuthenticationService authenticationService;
 
     //Email로 멤버 검색
@@ -33,12 +41,15 @@ public class MemberController {
     //회원가입
     @PostMapping("/join")
     public ResponseEntity<Long> join(@RequestBody Member member) {
-        return ResponseEntity.ok(memberService.join(member));
+        Long memberNo = memberService.join(member);
+        accountService.create(member);
+        return ResponseEntity.ok(memberNo);
     }
 
     //로그인
     @PostMapping("/login")
     public ResponseEntity<Long> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
+        System.out.println("로그인 요청 수신: " + loginDTO);
         Member loginResult = memberService.login(loginDTO);
         if (loginResult != null) {
             //로그인 성공
@@ -62,10 +73,18 @@ public class MemberController {
 
     //회원정보 조회
     @GetMapping("/")
-    public ResponseEntity<Member> getMember(HttpSession session) {
+    public ResponseEntity<MemberUtil> getMember(HttpSession session) {
         String memberEmail = (String) session.getAttribute("memberEmail");
         if(memberEmail != null) {
-            return ResponseEntity.ok(memberService.findByEmail(memberEmail));
+            Member member = memberService.findByEmail(memberEmail);
+            MemberUtil memberUtil = MemberUtil.builder()
+                    .memberName(member.getMemberName())
+                    .memberGrade(member.getMemberGrade())
+                    .memberPoint(member.getMemberPoint())
+                    .memberEmail(member.getMemberEmail())
+                    .memberPassword(member.getMemberPassword())
+                    .build();
+            return ResponseEntity.ok(memberUtil);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
@@ -84,4 +103,14 @@ public class MemberController {
         memberService.delete(no);
         return ResponseEntity.ok().build();
     }
+}
+
+@Data
+@Builder
+class MemberUtil {
+    private String memberName;
+    private Integer memberGrade;
+    private Long memberPoint;
+    private String memberEmail;
+    private String memberPassword;
 }
