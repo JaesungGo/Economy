@@ -10,75 +10,81 @@ import Interest from '../views/Interest.vue';
 import Report from '../views/Report.vue';
 import About from '../views/About.vue';
 import Community from '../views/Community.vue';
+import Quiz from '../views/Quiz.vue';
 
 const routes = [
-    {
-        path: '/',
-        name: '/',
-        redirect: '/dashboard-default',
-    },
-    {
-        path: '/dashboard-default',
-        name: 'Dashboard',
-        component: Dashboard,
-    },
-    {
-        path: '/tables',
-        name: 'Tables',
-        component: Tables,
-    },
-    {
-        path: '/billing',
-        name: 'Billing',
-        component: Billing,
-    },
+  {
+    path: '/',
+    name: '/',
+    redirect: '/dashboard-default',
+  },
+  {
+    path: '/dashboard-default',
+    name: 'Dashboard',
+    component: Dashboard,
+  },
+  {
+    path: '/tables',
+    name: 'Tables',
+    component: Tables,
+  },
+  {
+    path: '/billing',
+    name: 'Billing',
+    component: Billing,
+  },
 
-    {
-        path: '/signin',
-        name: 'Signin',
-        component: Signin,
-    },
-    {
-        path: '/signup',
-        name: 'Signup',
-        component: Signup,
-    },
-    {
-        path: '/mypage',
-        name: 'Mypage',
-        component: Mypage,
-    },
-    {
-        path: '/quest',
-        name: 'Quest',
-        component: Quest,
-    },
-    {
-        path: '/interest',
-        name: 'Interest',
-        component: Interest,
-    },
-    {
-        path: '/report',
-        name: 'Report',
-        component: Report,
-    },
-    {
-        path: '/about',
-        name: 'About',
-        component: About,
-    },
-    {
-        path: '/community',
-        name: 'Community',
-        component: Community,
-    },
+  {
+    path: '/signin',
+    name: 'Signin',
+    component: Signin,
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup,
+  },
+  {
+    path: '/mypage',
+    name: 'Mypage',
+    component: Mypage,
+  },
+  {
+    path: '/quest',
+    name: 'Quest',
+    component: Quest,
+  },
+  {
+    path: '/interest',
+    name: 'Interest',
+    component: Interest,
+  },
+  {
+    path: '/report',
+    name: 'Report',
+    component: Report,
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About,
+  },
+  {
+    path: '/community',
+    name: 'Community',
+    component: Community,
+  },
+  {
+    path: '/quiz',
+    name: 'quiz',
+    component: Quiz,
+  },
 ];
 
 const router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
-    routes,
-    linkActiveClass: 'active',
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+  linkActiveClass: 'active',
 });
 
 export default router;
