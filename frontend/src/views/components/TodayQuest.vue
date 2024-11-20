@@ -152,7 +152,7 @@ const handleQuestAchieve = async (questContent, questId, isQr) => {
   }
 };
 
-// 카메라 테스트 코드
+// 카메라 테스트 시 코드
 // const handleQuestAchieve = async (questContent) => {
 //     try {
 //     const result = await Swal.fire({
