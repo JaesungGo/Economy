@@ -22,20 +22,16 @@ public class Member {
     private Long memberNo;
     @Column(nullable = false)
     private String memberName;
-    @Column(nullable = false)
     @ColumnDefault("0")
     private Integer memberGrade;
-    @Column(nullable = false)
     @ColumnDefault("0")
     private Long memberPoint;
     @Column(nullable = false)
     private String memberEmail;
     @Column(nullable = false)
     private String memberPassword;
-    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
 
@@ -45,4 +41,11 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestAchieve> questAchieves = new ArrayList<>();
+
+    // 날짜 디폴트
+    @PrePersist
+    protected void onCreate() {
+        this.createDate = new Date(); // 현재 시간 자동 설정
+        this.updatedDate = new Date();
+    }
 }

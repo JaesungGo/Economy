@@ -36,6 +36,7 @@ module.exports = {
             '/api': {
                 target: 'http://localhost:8080', // 백엔드 서버 주소
                 changeOrigin: true, // Cross-Origin 문제 해결
+                //pathRewrite: { '^/api': '' }, // '/api' 프리픽스를 제거
             },
         },
     },

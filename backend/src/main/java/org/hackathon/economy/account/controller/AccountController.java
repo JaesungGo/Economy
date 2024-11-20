@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/account")
@@ -43,6 +45,16 @@ public class AccountController {
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+//        Account account = Account.builder()
+//                .accountBalance(100000L)
+//                .accountRate(4.5)
+//                .createDate(new Date())
+//                .updateDate(new Date())
+//                .accountStatus(true)
+//                .build();
+//
+//        return ResponseEntity.ok(account);
+
     }
 
     // 계좌에 입금
