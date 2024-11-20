@@ -1,7 +1,8 @@
-package org.hackathon.economy.auth;
+package org.hackathon.economy.auth.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.hackathon.economy.auth.service.QrAuthService;
 import org.hackathon.economy.member.domain.Member;
 import org.hackathon.economy.member.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
