@@ -1,6 +1,6 @@
 import api from '@/api';
 
-const BASE_URL1 = '/api/account'; // http://localohst:8080/api/account
+const BASE_URL1 = '/account'; // http://localohst:8080/api/account
 
 const jsonHeaders = { 'Content-Type': 'application/json' };
 

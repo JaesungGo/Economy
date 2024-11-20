@@ -2,6 +2,7 @@ package org.hackathon.economy.member.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.hackathon.economy.account.service.AccountService;
 import org.hackathon.economy.member.domain.LoginDTO;
 import org.hackathon.economy.member.domain.Member;
 import org.hackathon.economy.member.service.AuthenticationService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AccountService accountService;
     private final AuthenticationService authenticationService;
 
     //Email로 멤버 검색
@@ -33,7 +35,9 @@ public class MemberController {
     //회원가입
     @PostMapping("/join")
     public ResponseEntity<Long> join(@RequestBody Member member) {
-        return ResponseEntity.ok(memberService.join(member));
+        Long memberNo = memberService.join(member);
+        accountService.create(member);
+        return ResponseEntity.ok(memberNo);
     }
 
     //로그인
