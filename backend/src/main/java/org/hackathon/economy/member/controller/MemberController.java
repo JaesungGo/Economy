@@ -39,6 +39,7 @@ public class MemberController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<Long> login(@RequestBody LoginDTO loginDTO, HttpSession session) {
+        System.out.println("로그인 요청 수신: " + loginDTO);
         Member loginResult = memberService.login(loginDTO);
         if (loginResult != null) {
             //로그인 성공

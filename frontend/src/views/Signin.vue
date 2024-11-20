@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeUnmount, onBeforeMount } from 'vue';
+import { computed, ref, onBeforeUnmount, onBeforeMount } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Navbar from '@/examples/PageLayout/Navbar.vue';
@@ -40,12 +40,15 @@ const login = async () => {
         const response = await memberApi.login(loginDTO);
         console.log('Login success : ', response);
 
-        router.push('/dashboard');
+        router.push('/');
     } catch (error) {
         console.error('로그인 실패 : ', error.response?.data || error.message);
         alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
     }
 };
+
+// 버튼 비활성화
+const disableSubmit = computed(() => !(email.value && password.value));
 </script>
 
 <template>
@@ -79,7 +82,9 @@ const login = async () => {
                                         <argon-switch id="rememberMe" name="remember-me">Remember me</argon-switch>
                                         <!-- 로그인 버튼 -->
                                         <div class="text-center">
-                                            <argon-button class="mt-4" variant="gradient" color="success" fullWidth size="lg" type="submit">Sign in</argon-button>
+                                            <argon-button class="mt-4" variant="gradient" color="success" fullWidth size="lg" type="submit" :disabled="disableSubmit"
+                                                >Sign in</argon-button
+                                            >
                                         </div>
                                     </form>
                                 </div>
