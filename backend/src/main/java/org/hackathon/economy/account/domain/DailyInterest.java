@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Getter @Setter
@@ -19,6 +20,8 @@ public class DailyInterest {
     private Double todayRate;
     @Column(nullable = false)
     private Long todayInterest;
+    @Column(nullable = false)
+    private Long monthlyInterest;
     @Column(nullable = false)
     private Long totalInterest;
     @Column(nullable = false)

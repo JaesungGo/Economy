@@ -1,0 +1,137 @@
+<script setup>
+import MiniStatisticsCard from '@/examples/Cards/MiniStatisticsCard.vue';
+import GradientLineChart from '@/examples/Charts/GradientLineChart.vue';
+import Carousel from './components/Carousel.vue';
+import CategoriesList from './components/CategoriesList.vue';
+
+import TodayQuest from './components/TodayQuest.vue';
+</script>
+<template>
+    <div class="py-4 container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <mini-statistics-card
+                            title="Today's Money"
+                            value="$53,000"
+                            description="<span
+                class='text-sm font-weight-bolder text-success'
+                >+55%</span> since yesterday"
+                            :icon="{
+                                component: 'ni ni-money-coins',
+                                background: 'bg-gradient-primary',
+                                shape: 'rounded-circle',
+                            }"
+                        />
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <mini-statistics-card
+                            title="Today's Users"
+                            value="2,300"
+                            description="<span
+                class='text-sm font-weight-bolder text-success'
+                >+3%</span> since last week"
+                            :icon="{
+                                component: 'ni ni-world',
+                                background: 'bg-gradient-danger',
+                                shape: 'rounded-circle',
+                            }"
+                        />
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <mini-statistics-card
+                            title="New Clients"
+                            value="+3,462"
+                            description="<span
+                class='text-sm font-weight-bolder text-danger'
+                >-2%</span> since last quarter"
+                            :icon="{
+                                component: 'ni ni-paper-diploma',
+                                background: 'bg-gradient-success',
+                                shape: 'rounded-circle',
+                            }"
+                        />
+                    </div>
+                    <!-- 가장 많이 완료한 퀘스트 알림 -->
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <mini-statistics-card
+                            title="김예은 님은"
+                            value="수도세 절약"
+                            description="을(를) 가장 많이 수행하셨습니다!"
+                            :icon="{
+                                component: 'ni ni-cart',
+                                background: 'bg-gradient-success',
+                                shape: 'rounded-circle',
+                            }"
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-7 mb-lg">
+                        <!-- line chart -->
+                        <div class="card z-index-2">
+                            <gradient-line-chart
+                                id="chart-line"
+                                title="Sales Overview"
+                                description="<i class='fa fa-arrow-up text-success'></i>
+      <span class='font-weight-bold'>4% more</span> in 2021"
+                                :chart="{
+                                    labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                                    datasets: [
+                                        {
+                                            label: 'Mobile Apps',
+                                            data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                                        },
+                                    ],
+                                }"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <carousel />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-7 mb-lg-0 mb-4">
+                        <div class="card">
+                            <today-quest />
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <categories-list
+                            :categories="[
+                                {
+                                    icon: {
+                                        component: 'ni ni-mobile-button',
+                                        background: 'dark',
+                                    },
+                                    label: 'Devices',
+                                    description: '250 in stock <strong>346+ sold</strong>',
+                                },
+                                {
+                                    icon: {
+                                        component: 'ni ni-tag',
+                                        background: 'dark',
+                                    },
+                                    label: 'Tickets',
+                                    description: '123 closed <strong>15 open</strong>',
+                                },
+                                {
+                                    icon: { component: 'ni ni-box-2', background: 'dark' },
+                                    label: 'Error logs',
+                                    description: '1 is active <strong>40 closed</strong>',
+                                },
+                                {
+                                    icon: { component: 'ni ni-satisfied', background: 'dark' },
+                                    label: 'Happy Users',
+                                    description: '+ 430',
+                                },
+                            ]"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
