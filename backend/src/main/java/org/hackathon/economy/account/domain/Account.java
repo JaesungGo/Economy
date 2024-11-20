@@ -28,6 +28,8 @@ public class Account {
     @Column(nullable = false)
     private Date closedDate;
     @Column(nullable = false)
+    private Date updateDate;
+    @Column(nullable = false)
     private Boolean accountStatus;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -29,4 +29,9 @@ public class AuthenticationService {
         }
         return memberEmail;
     }
+
+    public Long getAccountNo(HttpSession session){
+        Member member = getAuthenticatedMember(session);
+        return member.getAccount().getAccountNo();
+    }
 }

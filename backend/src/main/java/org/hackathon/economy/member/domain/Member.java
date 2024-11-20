@@ -22,20 +22,16 @@ public class Member {
     private Long memberNo;
     @Column(nullable = false)
     private String memberName;
-    @Column(nullable = false)
     @ColumnDefault("0")
     private Integer memberGrade;
-    @Column(nullable = false)
     @ColumnDefault("0")
     private Long memberPoint;
     @Column(nullable = false)
     private String memberEmail;
     @Column(nullable = false)
     private String memberPassword;
-    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
 
