@@ -41,4 +41,11 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestAchieve> questAchieves = new ArrayList<>();
+
+    // 날짜 디폴트
+    @PrePersist
+    protected void onCreate() {
+        this.createDate = new Date(); // 현재 시간 자동 설정
+        this.updatedDate = new Date();
+    }
 }
