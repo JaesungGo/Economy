@@ -78,8 +78,10 @@ export default {
 }
 .info-icon {
   background-color: yellow;
-  border-radius: 50%;
-  padding: 5px;
+  border-radius: 100%;
+  padding: 7px;
+  width: 40px;
+  height: 40px;
   margin-right: 10px;
   font-weight: bold;
   cursor: pointer;

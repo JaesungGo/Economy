@@ -166,7 +166,7 @@ export default {
 }
 
 .interest-table thead {
-  background-color: #4caf50; /* 헤더 배경색 */
+  background-color: #40a578; /* 헤더 배경색 */
   color: white;
 }
 
