@@ -1,13 +1,34 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import SidenavItem from './SidenavItem.vue';
 import SidenavCard from './SidenavCard.vue';
+import auth from '@/store/auth';
+
+const isLoggedIn = ref(false); //로그인 여부
+const userInfo = ref(null); //사용자 정보
 
 const getRoute = () => {
     const route = useRoute();
     const routeArr = route.path.split('/');
     return routeArr[1];
 };
+
+// 로그인 상태 확인
+const fetchLoginStatus = async () => {
+    try {
+        const status = await auth.checkLogin(); // auth.js의 checkLogin 호출
+        isLoggedIn.value = true;
+        userInfo.value = { email: status.split(' ')[2] }; // "Logged in as: email@example.com"에서 이메일 추출
+    } catch (error) {
+        isLoggedIn.value = false;
+        userInfo.value = null;
+        console.error('로그인 상태 확인 실패:', error.message);
+    }
+};
+
+// 컴포넌트 로드 시 로그인 상태 확인
+onMounted(fetchLoginStatus);
 </script>
 
 <template>
@@ -66,35 +87,12 @@ const getRoute = () => {
                 </sidenav-item>
             </li>
 
-            <li class="nav-item">
-                <sidenav-item to="/tables" :class="getRoute() === 'tables' ? 'active' : ''" navText="Tables(예시)">
-                    <template v-slot:icon>
-                        <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
-                    </template>
-                </sidenav-item>
-            </li>
-
-            <li class="nav-item">
-                <sidenav-item to="/billing" :class="getRoute() === 'billing' ? 'active' : ''" navText="Billing(예시)">
-                    <template v-slot:icon>
-                        <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
-                    </template>
-                </sidenav-item>
-            </li>
-
-            <li class="mt-3 nav-item">
+            <!-- ACCOUNT PAGES -->
+            <li class="mt-3 nav-item" v-if="!isLoggedIn">
                 <h6 class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6 ms-2">ACCOUNT PAGES</h6>
             </li>
 
-            <li class="nav-item">
-                <sidenav-item to="/profile" :class="getRoute() === 'profile' ? 'active' : ''" navText="Profile">
-                    <template v-slot:icon>
-                        <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
-                    </template>
-                </sidenav-item>
-            </li>
-
-            <li class="nav-item">
+            <li class="nav-item" v-if="!isLoggedIn">
                 <sidenav-item to="/signin" :class="getRoute() === 'signin' ? 'active' : ''" navText="Sign In">
                     <template v-slot:icon>
                         <i class="ni ni-single-copy-04 text-danger text-sm opacity-10"></i>
@@ -102,7 +100,7 @@ const getRoute = () => {
                 </sidenav-item>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item" v-if="!isLoggedIn">
                 <sidenav-item to="/signup" :class="getRoute() === 'signup' ? 'active' : ''" navText="Sign Up">
                     <template v-slot:icon>
                         <i class="ni ni-collection text-info text-sm opacity-10"></i>

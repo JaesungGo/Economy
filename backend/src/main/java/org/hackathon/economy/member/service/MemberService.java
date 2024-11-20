@@ -41,6 +41,7 @@ public class MemberService {
     }
 
     public Member login(LoginDTO loginDTO) {
+        System.out.println(loginDTO.getEmail());
         Member member = memberRepository.findByEmail(loginDTO.getEmail());
         if (member != null && member.getMemberPassword().equals(loginDTO.getPassword())) {
             return member;

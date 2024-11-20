@@ -28,7 +28,7 @@
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">타입</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">포인트</th>
                             <!-- <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Employed</th> -->
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">인증</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,11 +56,9 @@
                             <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">50P</span>
                             </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">완료</a>
-                            </td>
+
                             <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-success">완료!</span>
+                                <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
                         <tr>
@@ -86,11 +84,9 @@
                             <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">50P</span>
                             </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">완료</a>
-                            </td>
+
                             <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-success">완료!</span>
+                                <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
                         <tr>
@@ -115,11 +111,9 @@
                             <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">50P</span>
                             </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">완료</a>
-                            </td>
+
                             <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-success">완료!</span>
+                                <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
                         <tr>
@@ -144,11 +138,9 @@
                             <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">50P</span>
                             </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">완료</a>
-                            </td>
+
                             <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-success">완료!</span>
+                                <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
                         <tr>
@@ -173,11 +165,9 @@
                             <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">50P</span>
                             </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">완료</a>
-                            </td>
+
                             <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-success">완료!</span>
+                                <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
                         <tr>
@@ -203,11 +193,9 @@
                             <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">50P</span>
                             </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">완료</a>
-                            </td>
+
                             <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-success">완료!</span>
+                                <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
                         <tr>
@@ -232,11 +220,9 @@
                             <td class="align-middle text-center">
                                 <span class="text-secondary text-xs font-weight-bold">50P</span>
                             </td>
-                            <td class="align-middle text-center">
-                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">완료</a>
-                            </td>
+
                             <td class="align-middle text-center text-sm">
-                                <span class="badge badge-sm bg-gradient-success">완료!</span>
+                                <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
                     </tbody>
