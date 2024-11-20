@@ -28,7 +28,7 @@ export default {
         '어린 나무': 'path/to/young-tree.png', // 어린 나무 이미지 경로
         '작은 숲': 'path/to/small-forest.png', // 작은 숲 이미지 경로
         '울창한 숲': 'path/to/dense-forest.png', // 울창한 숲 이미지 경로
-        열대우림: 'path/to/rainforest.png', // 열대우림 이미지 경로
+        열대우림: 'path/to/rain-forest.png', // 열대우림 이미지 경로
       },
     };
   },

@@ -42,15 +42,15 @@
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">
                                         <!-- 퀘스트 내용 -->
-                                        <h6 class="mb-0 text-sm">{{ QuestContent }}</h6>
+                                        <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -61,6 +61,7 @@
                                 <span class="badge bg-gradient-success"> 완료!</span>
                             </td>
                         </tr>
+
                         <tr>
                             <td>
                                 <div class="d-flex px-2 py-1">
@@ -72,13 +73,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -99,13 +100,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -126,13 +127,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -153,13 +154,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -181,13 +182,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -208,13 +209,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">

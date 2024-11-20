@@ -1,6 +1,10 @@
 <script setup>
 // import { ref, reactive, computed } from 'vue';
 // import { useRoute, useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
+
+// questApi 작성후 살리기
+// import questApi from '@/api/questApi';
 
 // const props = defineProps({
 //     memberNo: Number,
@@ -12,6 +16,28 @@
 //         questContentObject.value = await questApi.
 //     }
 // }
+
+const handleQuestAchieve = async (questContent, questId) => {
+    try {
+        const result = await Swal.fire({
+            title: `${questContent}을(를) 인증하시겠습니까?`,
+            text: '이 작업은 되돌릴 수 없습니다!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소',
+        });
+
+        if (result.isConfirmed) {
+            console.log(`퀘스트 ${questId} 인증 진행`);
+            Swal.fire('인증 완료!', '퀘스트 인증이 성공적으로 완료되었습니다.', 'success');
+        }
+    } catch (error) {
+        Swal.fire('에러', '서버 오류로 인해 인증이 실패했습니다.', 'error');
+    }
+};
 </script>
 
 <template>
@@ -42,43 +68,15 @@
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">
                                         <!-- 퀘스트 내용 -->
-                                        <h6 class="mb-0 text-sm">{{ Questcontent }}</h6>
-                                        <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
-                            </td>
-
-                            <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">50P</span>
-                            </td>
-
-                            <td class="align-middle text-center text-sm">
-                                <span class="badge bg-gradient-secondary">인증</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <!-- 퀘스트 종류에 따른 이미지 -->
-                                        <img src="../../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1" />
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -86,9 +84,10 @@
                             </td>
 
                             <td class="align-middle text-center text-sm">
-                                <span class="badge bg-gradient-secondary">인증</span>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
                             </td>
                         </tr>
+
                         <tr>
                             <td>
                                 <div class="d-flex px-2 py-1">
@@ -99,13 +98,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -113,7 +112,7 @@
                             </td>
 
                             <td class="align-middle text-center text-sm">
-                                <span class="badge bg-gradient-secondary">인증</span>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
                             </td>
                         </tr>
                         <tr>
@@ -126,13 +125,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -140,7 +139,7 @@
                             </td>
 
                             <td class="align-middle text-center text-sm">
-                                <span class="badge bg-gradient-secondary">인증</span>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
                             </td>
                         </tr>
                         <tr>
@@ -153,13 +152,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -167,7 +166,7 @@
                             </td>
 
                             <td class="align-middle text-center text-sm">
-                                <span class="badge bg-gradient-secondary">인증</span>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
                             </td>
                         </tr>
                         <tr>
@@ -181,13 +180,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0"></p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -195,7 +194,7 @@
                             </td>
 
                             <td class="align-middle text-center text-sm">
-                                <span class="badge bg-gradient-secondary">인증</span>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
                             </td>
                         </tr>
                         <tr>
@@ -208,13 +207,13 @@
                                         <!-- 퀘스트 내용 -->
                                         <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
                                         <!-- 퀘스트 세부 내용 -->
-                                        <p class="text-xs text-secondary mb-0">50,000원 이상 구매시 적용이 가능합니다!</p>
+                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                <p class="text-xs text-secondary mb-0"></p>
                             </td>
 
                             <td class="align-middle text-center">
@@ -222,7 +221,7 @@
                             </td>
 
                             <td class="align-middle text-center text-sm">
-                                <span class="badge bg-gradient-secondary">인증</span>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
                             </td>
                         </tr>
                     </tbody>
