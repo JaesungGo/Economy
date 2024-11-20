@@ -52,7 +52,7 @@ public class DailyInterestTasklet implements Tasklet {
             log.info("-------------------Member: {}", member);
             DailyInterest dailyInterest = new DailyInterest(); // 새로운 DailyInterest 생성 및 저장
 
-            dailyInterest.setAccount(account); // 계좌 번호
+            //dailyInterest.setAccount(null); // 계좌 번호
             dailyInterest.setTodayBalance(account.getAccountBalance()); // 당일 잔고
             dailyInterest.setTodayGrade(member.getMemberGrade()); // 당일 등급
 
