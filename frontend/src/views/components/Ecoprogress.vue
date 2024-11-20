@@ -24,18 +24,18 @@ export default {
         level: '', // 현재 단계
       },
       treeImages: {
-        새싹: 'path/to/sprout.png', // 새싹 이미지 경로
-        '어린 나무': 'path/to/young-tree.png', // 어린 나무 이미지 경로
-        '작은 숲': 'path/to/small-forest.png', // 작은 숲 이미지 경로
-        '울창한 숲': 'path/to/dense-forest.png', // 울창한 숲 이미지 경로
-        열대우림: 'path/to/rain-forest.png', // 열대우림 이미지 경로
+        씨앗: 'src/assets/img/seed.png', // 새싹 이미지 경로
+        새싹: 'src/assets/img/sprout.png', // 어린 나무 이미지 경로
+        '어린 싹': 'src/assets/img/seedling.png', // 작은 숲 이미지 경로
+        '어린 나무': 'src/assets/img/sapling.png', // 울창한 숲 이미지 경로
+        '풍성한 나무': 'src/assets/img/lush-tree.png', // 열대우림 이미지 경로
       },
     };
   },
   computed: {
     // 현재 단계에 맞는 이미지 반환
     treeImage() {
-      return this.treeImages[this.userData.level] || 'path/to/default-tree.png';
+      return this.treeImages[this.userData.level] || 'src/assets/img/seed.png';
     },
   },
   methods: {

@@ -1,7 +1,7 @@
 import api from '@/api';
 // import axios from 'axios';
 
-const BASE_URL = '/api/dailyInterest';
+const BASE_URL = '/dailyinterest';
 
 export default {
   // 전체 내역 조회
