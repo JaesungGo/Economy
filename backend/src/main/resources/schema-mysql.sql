@@ -172,3 +172,5 @@ VALUES
 -- 퀴즈 5: '오존층'
 (5, 1, 'O', TRUE),
 (5, 2, 'X', FALSE);
+
+SELECT * FROM daily_quiz;
