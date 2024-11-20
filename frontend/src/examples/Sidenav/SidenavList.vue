@@ -66,7 +66,7 @@ const getRoute = () => {
                 </sidenav-item>
             </li>
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <sidenav-item to="/tables" :class="getRoute() === 'tables' ? 'active' : ''" navText="Tables(예시)">
                     <template v-slot:icon>
                         <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
@@ -80,19 +80,19 @@ const getRoute = () => {
                         <i class="ni ni-credit-card text-success text-sm opacity-10"></i>
                     </template>
                 </sidenav-item>
-            </li>
+            </li> -->
 
             <li class="mt-3 nav-item">
                 <h6 class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6 ms-2">ACCOUNT PAGES</h6>
             </li>
 
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <sidenav-item to="/profile" :class="getRoute() === 'profile' ? 'active' : ''" navText="Profile">
                     <template v-slot:icon>
                         <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
                     </template>
                 </sidenav-item>
-            </li>
+            </li> -->
 
             <li class="nav-item">
                 <sidenav-item to="/signin" :class="getRoute() === 'signin' ? 'active' : ''" navText="Sign In">
