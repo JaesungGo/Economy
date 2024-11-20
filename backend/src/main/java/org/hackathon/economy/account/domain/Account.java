@@ -3,6 +3,7 @@ package org.hackathon.economy.account.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hackathon.economy.member.domain.Member;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "ACCOUNT")
+@Slf4j
 public class Account {
 
     @Id @GeneratedValue
@@ -50,7 +52,7 @@ public class Account {
     public Long deposit(Long amount) {
         this.accountBalance += amount;
         this.updateDate = new Date();
-
+        log.info("depositttttt");
         return this.accountBalance;
     }
 

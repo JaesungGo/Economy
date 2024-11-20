@@ -42,60 +42,64 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, watch } from 'vue';
 import dailyInterestApi from '@/api/dailyInterestApi';
 
-export default {
-  name: 'InterestHistory',
-  data() {
-    return {
-      totalInterest: 0, // 오늘까지 받은 총 이자
-      selectedYear: new Date().getFullYear(), // 기본값: 현재 연도
-      interestHistory: {}, // 연도별 이자 데이터
-      filteredData: [], // 선택된 연도의 필터링된 데이터
-    };
-  },
-  methods: {
-    async fetchInterestData() {
-      try {
-        // API 호출: 누적 이자 및 월별 내역
-        const [total, monthlyData] = await Promise.all([
-          dailyInterestApi.getTotal(),
-          dailyInterestApi.getMonthly(),
-        ]);
+// 상태 변수
+const totalInterest = ref(0); // 오늘까지 받은 총 이자
+const selectedYear = ref(new Date().getFullYear()); // 기본값: 현재 연도
+const interestHistory = ref({}); // 연도별 이자 데이터
+const filteredData = ref([]); // 선택된 연도의 필터링된 데이터
 
-        // 데이터 설정
-        this.totalInterest = total; // 총 이자
-        this.interestHistory = this.formatMonthlyData(monthlyData); // 연도별 데이터 정리
+// 월별 데이터를 연도별로 그룹화
+const formatMonthlyData = (monthlyData) => {
+  return monthlyData.reduce((acc, item) => {
+    const year = new Date(item.date).getFullYear(); // 연도 추출
+    const month = new Date(item.date).getMonth() + 1; // 월 추출 (0부터 시작하므로 +1)
 
-        // 초기 필터링
-        this.filterInterestData();
-      } catch (error) {
-        console.error('Error fetching interest data:', error);
-      }
-    },
-    formatMonthlyData(monthlyData) {
-      // 월별 데이터를 연도별로 그룹화
-      return monthlyData.reduce((acc, item) => {
-        const year = new Date(item.date).getFullYear(); // 연도 추출
-        const month = new Date(item.date).getMonth() + 1; // 월 추출 (0부터 시작하므로 +1)
+    if (!acc[year]) acc[year] = []; // 해당 연도가 없으면 초기화
+    acc[year].push({ month, amount: item.amount });
 
-        if (!acc[year]) acc[year] = []; // 해당 연도가 없으면 초기화
-        acc[year].push({ month, amount: item.amount });
-
-        return acc;
-      }, {});
-    },
-    filterInterestData() {
-      // 선택된 연도의 이자 내역 필터링
-      this.filteredData = this.interestHistory[this.selectedYear] || [];
-    },
-  },
-  async mounted() {
-    await this.fetchInterestData(); // 데이터 가져오기
-  },
+    return acc;
+  }, {});
 };
+
+// 선택된 연도의 이자 내역 필터링
+const filterInterestData = () => {
+  filteredData.value = interestHistory.value[selectedYear.value] || [];
+};
+
+// API 호출: 누적 이자 및 월별 내역 가져오기
+const fetchInterestData = async () => {
+  try {
+    const [total, monthlyData] = await Promise.all([
+      dailyInterestApi.getTotal(),
+      dailyInterestApi.getMonthly(),
+    ]);
+
+    // 데이터 설정
+    totalInterest.value = total; // 총 이자
+    interestHistory.value = formatMonthlyData(monthlyData); // 연도별 데이터 정리
+
+    // 초기 필터링
+    filterInterestData();
+  } catch (error) {
+    console.error('Error fetching interest data:', error);
+  }
+};
+
+// 컴포넌트 로드시 데이터 가져오기
+onMounted(async () => {
+  await fetchInterestData();
+});
+
+// selectedYear 변경 시 필터링된 데이터 업데이트
+watch(selectedYear, () => {
+  filterInterestData();
+});
 </script>
+
 
 <style scoped>
 /* 전체 컨테이너 */
