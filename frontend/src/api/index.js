@@ -48,7 +48,7 @@ import router from '@/router';
 // Axios 인스턴스 생성
 const instance = axios.create({
     baseURL: '/api', // 프록시 경로와 일치
-    timeout: 10000,
+    timeout: 360000,
     withCredentials: true, // 세션 쿠키를 자동으로 포함 (필요한 경우)
     headers: {
         'Content-Type': 'application/json', // JSON 데이터를 처리하기 위한 기본 헤더
@@ -76,7 +76,7 @@ instance.interceptors.response.use(
 
         if (status === 401) {
             console.warn('Unauthorized: Redirecting to login page');
-            router.push('/auth/login?error=session_expired');
+            router.push('/signin');
             return Promise.reject({ error: '로그인이 필요한 서비스입니다.' });
         } else if (status === 404) {
             console.warn('Not Found:', error.response?.request);
