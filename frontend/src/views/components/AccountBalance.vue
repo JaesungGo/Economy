@@ -1,5 +1,6 @@
 <script setup>
 import accountApi from '@/api/accountApi';
+import memberApi from '@/api/memberApi';
 import { ref, computed, onMounted  } from 'vue';
 
 const now = new Date(); // 현재 시각
@@ -14,6 +15,9 @@ const myAccount = computed(() => accountObject.value);
 const myBalance = computed(() => myAccount.value.accountBalance);
 const myRate = computed(() => myAccount.value.accountRate);
 
+const memberObject = ref({});
+const myMember = computed(() => memberObject.value);
+
 // 이자 초기값 설정
 const myTotalInterest = computed(() => 
   (myAccount.value.accountBalance * (myAccount.value.accountRate / 100 / 365))
@@ -25,6 +29,7 @@ const myInterest = computed(() =>
   (myAccount.value.accountBalance * (myAccount.value.accountRate / 100 / 365 / (24 * 60 * 60)))
 );
 const countInterest = ref(0);
+
 
 // 매초마다 이자금을 더함
 const startInterestCount = () => {
@@ -45,6 +50,11 @@ const load = async () => {
     console.log('accountObject: ', accountObject.value);
     console.log('accountObject.accountBalance: ', myAccount.value.accountRate);
 
+    const memberData = await memberApi.getMember();
+    memberObject.value = memberData;
+    console.log('memberObject: ', memberObject.value);
+    console.log('memberObject.memberName: ', myMember.value.memberName);
+
     // 데이터 로드 후 countInterest를 초기화
     countInterest.value = myCurrentInterest.value;
 
@@ -55,11 +65,13 @@ const load = async () => {
 
 // 컴포넌트가 마운트될 때 카운트다운 시작
 onMounted(() => {
+  load();
+
   startInterestCount();
 });
 
 
-load();
+
 </script>
 
 
@@ -77,7 +89,7 @@ load();
         <div class="modal-content">
           <h3>이율 설명</h3>
           <p>
-            이율은 예금액에 대해 발생하는 금액의 비율입니다. 예를 들어, 이율이
+            이율은 예금액에 대해 발생하는 금액의 비율입니다. <br>예를 들어, 이율이
             2.5%라면 1,000,000원에 대해 25,000원의 이자가 발생합니다.
           </p>
           <button class="close-button" @click="toggleModal">닫기</button>
@@ -86,7 +98,7 @@ load();
 
       <!-- 현재 이율 정보 -->
       <h5 class="card-title mt-3">
-        000님의 현재 이율은 <strong>{{ myRate }}%</strong>입니다.<br>
+        {{ myMember.memberName }}님의 현재 이율은 <strong>{{ myRate }}%</strong>입니다.<br>
         
       </h5>
       <h2 class="display-4">{{ myBalance ? myBalance.toLocaleString() : 'N/A' }}원</h2>
@@ -156,15 +168,27 @@ export default {
 .interest-info {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  position: relative;
 }
+
 .info-icon {
-  background-color: yellow;
-  border-radius: 50%;
-  padding: 5px;
-  margin-right: 10px;
-  font-weight: bold;
-  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px; /* 아이콘 크기 */
+  height: 32px;
+  border-radius: 50%; /* 원형으로 만들기 */
+  background-color: #4caf50; /* 배경색 (녹색) */
+  color: white; /* 텍스트 색상 */
+  font-size: 1.2rem; /* 글자 크기 */
+  font-weight: bold; /* 글자 굵기 */
+  cursor: pointer; /* 클릭 가능 표시 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+  transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+}
+
+.info-icon:hover {
+  background-color: #45a049; /* 호버시 조금 더 어두운 녹색 */
 }
 
 /* 모달 스타일 */
@@ -184,7 +208,7 @@ export default {
   background-color: white;
   border-radius: 8px;
   padding: 20px;
-  width: 300px;
+  width: 700px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
