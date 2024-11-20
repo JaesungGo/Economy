@@ -28,6 +28,8 @@ public class Quest {
     private Integer questCount;
     @Column(nullable = false)
     private Date createTableDatetime;
+    @Column(nullable = false)
+    private Boolean isQr;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "questAchieve_no")
