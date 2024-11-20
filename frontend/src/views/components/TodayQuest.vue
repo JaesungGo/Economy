@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onUnmounted } from 'vue';
+import { ref, onUnmounted, computed } from 'vue';
 // import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import jsQR from 'jsqr';
@@ -8,19 +8,25 @@ const videoRef = ref(null);
 const canvasRef = ref(null);
 const streaming = ref(false);
 
-// questApi 작성후 살리기
-// import questApi from '@/api/questApi';
+// 샘플 퀘스트 데이터
+const quests = ref([
+    { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
+    { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
+    { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
+    { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
+    { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
+]);
 
-// const props = defineProps({
-//     memberNo: Number,
-// });
+// 선택된 퀘스트 타입 (기본값: null => 모든 퀘스트)
+const selectedQuestType = ref(null);
 
-// const load = async (memberNo) => {
-//     try {
-//         console.log('memberNo : ', memberNo);
-//         questContentObject.value = await questApi.
-//     }
-// }
+// 선택된 타입에 따른 퀘스트 필터링
+const filteredQuests = computed(() => {
+    if (selectedQuestType.value === null) {
+        return quests.value; // 선택된 타입이 없으면 모든 퀘스트 표시
+    }
+    return quests.value.filter((quest) => quest.questType === selectedQuestType.value);
+});
 
 const startQrScanner = async () => {
   try {
@@ -125,7 +131,11 @@ const handleQuestAchieve = async (questContent, questId, isQr) => {
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: '확인',
-      cancelButtonText: '취소'
+      cancelButtonText: '취소',
+      customClass: {
+                confirmButton: 'swal-confirm-btn', // 커스텀 클래스 이름 변경
+                cancelButton: 'swal-cancel-btn', // 커스텀 클래스 이름 변경
+            }
     });
 
     if (result.isConfirmed) {
@@ -142,15 +152,20 @@ const handleQuestAchieve = async (questContent, questId, isQr) => {
   }
 };
 
+// 카메라 테스트 코드
 // const handleQuestAchieve = async (questContent) => {
-//   try {
+//     try {
 //     const result = await Swal.fire({
-//       title: ${questContent} 인증,
-//       text: 'QR 코드를 스캔하시겠습니까?',
+//       title: `${questContent} 인증`,
+//       text: '인증하시겠습니까?',
 //       icon: 'question',
 //       showCancelButton: true,
-//       confirmButtonText: '스캔',
-//       cancelButtonText: '취소'
+//       confirmButtonText: '확인',
+//       cancelButtonText: '취소',
+//       customClass: {
+//                 confirmButton: 'swal-confirm-btn', // 커스텀 클래스 이름 변경
+//                 cancelButton: 'swal-cancel-btn', // 커스텀 클래스 이름 변경
+//             }
 //     });
 
 //     if (result.isConfirmed) {
@@ -169,8 +184,27 @@ onUnmounted(() => {
 
 <template>
     <div class="card">
-        <div class="card-header pb-0">
+        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
             <h6>오늘의 퀘스트</h6>
+            <!-- 퀘스트 타입 필터링 버튼 -->
+            <div class="btn-group">
+                <button
+                    class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover"
+                    :class="{ 'btn-success text-white': selectedQuestType === null }"
+                    @click="toggleQuestType(null)"
+                >
+                    전체
+                </button>
+                <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 0 }" @click="toggleQuestType(0)">
+                    일간
+                </button>
+                <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 1 }" @click="toggleQuestType(1)">
+                    주간
+                </button>
+                <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 2 }" @click="toggleQuestType(2)">
+                    월간
+                </button>
+            </div>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-0">
@@ -184,155 +218,33 @@ onUnmounted(() => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr v-for="quest in filteredQuests" :key="quest.questNo">
                             <td>
                                 <div class="d-flex px-2 py-1">
                                     <div>
-                                        <img src="../../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1" />
+                                        <!-- 퀘스트 종류에 따른 이미지 -->
+                                        <img src="../../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="quest" />
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
-                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
+                                        <!-- 퀘스트 내용 -->
+                                        <h6 class="mb-0 text-sm">{{ quest.questContent }}</h6>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0"></p>
+                                <p class="text-xs font-weight-bold mb-0 text-secondary">
+                                    {{ quest.questType === 0 ? '일간' : quest.questType === 1 ? '주간' : '월간' }}
+                                </p>
                             </td>
-
                             <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">50P</span>
+                                <span class="text-secondary text-xs font-weight-bold">{{ quest.questPoint }}P</span>
                             </td>
-
                             <td class="align-middle text-center text-sm">
-                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1, 'true')">인증</button>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve(quest.questContent, quest.questNo)">인증</button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <img src="../../assets/img/team-3.jpg" class="avatar avatar-sm me-3" alt="user2" />
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
-                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0"></p>
-                            </td>
-
-                            <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">50P</span>
-                            </td>
-
-                            <td class="align-middle text-center text-sm">
-                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <img src="../../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user3" />
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
-                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0"></p>
-                            </td>
-
-                            <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">50P</span>
-                            </td>
-
-                            <td class="align-middle text-center text-sm">
-                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <img src="../../assets/img/team-3.jpg" class="avatar avatar-sm me-3" alt="user4" />
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
-                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0"></p>
-                            </td>
-
-                            <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">50P</span>
-                            </td>
-
-                            <td class="align-middle text-center text-sm">
-                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <img src="../../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1" />
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
-                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0"></p>
-                            </td>
-
-                            <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">50P</span>
-                            </td>
-
-                            <td class="align-middle text-center text-sm">
-                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    <div>
-                                        <img src="../../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6" />
-                                    </div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0 text-sm">친환경 전문 매장을 방문하여 제품을 그린카드로 구매하세요!</h6>
-                                        <p class="text-xs text-secondary mb-0">나무 1그루🌲를 보호하고 6.6kg의 탄소☁️를 상쇄할 수 있습니다!</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-xs font-weight-bold mb-0">녹색 소비</p>
-                                <p class="text-xs text-secondary mb-0"></p>
-                            </td>
-
-                            <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">50P</span>
-                            </td>
-
-                            <td class="align-middle text-center text-sm">
-                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve('친환경 제품 구매', 1)">인증</button>
-                            </td>
+                        <tr v-if="filteredQuests.length === 0">
+                            <td colspan="4" class="text-center">해당 퀘스트가 없습니다.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -342,16 +254,18 @@ onUnmounted(() => {
 
     <!-- QR 스캐너 오버레이 -->
     <div v-if="streaming" class="qr-scanner-overlay">
-      <div class="qr-scanner-container">
-        <video ref="videoRef" autoplay playsinline class="qr-video"></video>
-        <canvas ref="canvasRef" class="qr-canvas"></canvas>
-        <div class="scanner-guide"></div>
-        <button @click="stopQrScanner" class="close-scanner">닫기</button>
+    <div class="qr-scanner-container">
+      <video ref="videoRef" autoplay playsinline class="qr-video"></video>
+      <canvas ref="canvasRef" class="qr-canvas"></canvas>
+      <div class="scanner-guide"></div>
+      <div class="scanner-controls">
+        <button @click="stopQrScanner" class="scanner-btn">닫기</button>
       </div>
     </div>
+  </div>
 </template>
 
-<style scoped>
+<style>
 /* 기존 스타일 (테이블, 카드 등) */
 .card {
     background-color: var(--bs-card-bg);
@@ -401,7 +315,7 @@ onUnmounted(() => {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     z-index: 1000;
     display: flex;
     justify-content: center;
@@ -410,13 +324,57 @@ onUnmounted(() => {
 
 .qr-scanner-container {
     position: relative;
-    width: 80%;
+    width: 100%;
     max-width: 500px;
+    aspect-ratio: 4/3;
+    margin: 20px;
 }
 
 .qr-video {
     width: 100%;
-    border-radius: 10px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    }
+
+.qr-canvas {
+    display: none;
+}
+
+.scanner-guide {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  border: 2px solid #40a578;
+  border-radius: 20px;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+}
+
+.scanner-controls {
+  position: absolute;
+  bottom: -60px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.scanner-btn {
+  background: #40a578;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.scanner-btn:hover {
+  background: #338a63;
 }
 
 .close-scanner {
@@ -428,5 +386,55 @@ onUnmounted(() => {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+/* 기본 상태를 유지하며 호버 시 효과 적용 */
+.custom-hover:hover {
+    background-color: #ffffff !important; /* 흰 배경 */
+    color: #40a578 !important; /* success 색상 */
+    border-color: #40a578 !important; /* 테두리 색 변경 */
+    transition: all 0.3s ease; /* 부드러운 애니메이션 */
+}
+
+/* 클릭된 상태 유지 */
+.btn-success.text-white {
+    background-color: #40a578 !important; /* 배경 초록색 */
+    color: #ffffff !important; /* 흰 글자색 */
+    border-color: #40a578 !important; /* 테두리 초록색 */
+}
+
+/* SweetAlert2 확인 버튼 */
+.swal-confirm-btn {
+    background: linear-gradient(90deg, #40a578, #3085d6); /* 그라디언트 색상 */
+    color: white;
+    font-size: 14px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px; /* 버튼 간격 */
+}
+
+.swal-confirm-btn:hover {
+    background: linear-gradient(90deg, #3085d6, #40a578); /* 호버 시 색상 반전 */
+    opacity: 0.9;
+}
+
+/* SweetAlert2 취소 버튼 */
+.swal-cancel-btn {
+    background: linear-gradient(90deg, #d33, #b52c2c); /* 그라디언트 색상 */
+    color: white;
+    font-size: 14px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.swal-cancel-btn:hover {
+    background: linear-gradient(90deg, #b52c2c, #d33); /* 호버 시 색상 반전 */
+    opacity: 0.9;
 }
 </style>
