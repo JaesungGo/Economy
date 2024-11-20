@@ -1,13 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Breadcrumbs from '../Breadcrumbs.vue';
+import auth from '@/store/auth';
 
 const showMenu = ref(false);
 const store = useStore();
-const isRTL = computed(() => store.state.isRTL);
-
+const router = useRouter();
 const route = useRoute();
 
 const currentRouteName = computed(() => {
@@ -18,6 +18,7 @@ const currentDirectory = computed(() => {
     return dir.charAt(0).toUpperCase() + dir.slice(1);
 });
 
+const isLoggedIn = computed(() => store.state.isLoggedIn);
 const minimizeSidebar = () => store.commit('sidebarMinimize');
 const toggleConfigurator = () => store.commit('toggleConfigurator');
 
@@ -26,34 +27,43 @@ const closeMenu = () => {
         showMenu.value = false;
     }, 100);
 };
+
+const logout = async () => {
+    try {
+        await auth.logout(); // auth.js의 logout 메서드 호출
+        store.commit('setLoggedIn', false); // Vuex 상태 업데이트
+        router.push('/signin'); // 로그아웃 후 로그인 페이지로 이동
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+};
 </script>
+
 <template>
-    <nav
-        class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
-        :class="isRTL ? 'top-0 position-sticky z-index-sticky' : ''"
-        v-bind="$attrs"
-        id="navbarBlur"
-        data-scroll="true"
-    >
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl top-0 position-sticky z-index-sticky" v-bind="$attrs" id="navbarBlur" data-scroll="true">
         <div class="px-3 py-1 container-fluid">
             <breadcrumbs :current-page="currentRouteName" :current-directory="currentDirectory" />
 
-            <div class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4" :class="isRTL ? 'px-0' : 'me-sm-4'" id="navbar">
-                <div class="pe-md-3 d-flex align-items-center" :class="isRTL ? 'me-md-auto' : 'ms-md-auto'">
+            <div class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4" id="navbar">
+                <div class="pe-md-3 d-flex align-items-center ms-md-auto">
                     <div class="input-group">
                         <span class="input-group-text text-body">
                             <i class="fas fa-search" aria-hidden="true"></i>
                         </span>
-                        <input type="text" class="form-control" :placeholder="isRTL ? 'أكتب هنا...' : 'Type here...'" />
+                        <input type="text" class="form-control" placeholder="Type here..." />
                     </div>
                 </div>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item d-flex align-items-center">
-                        <router-link :to="{ name: 'Signin' }" class="px-0 nav-link font-weight-bold text-white" target="_blank">
-                            <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-2'"></i>
-                            <span v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</span>
-                            <span v-else class="d-sm-inline d-none">Sign In</span>
+                        <!-- 로그인 여부에 따라 버튼 변경 -->
+                        <router-link v-if="!isLoggedIn" :to="{ name: 'Signin' }" class="px-0 nav-link font-weight-bold text-white" target="_blank">
+                            <i class="fa fa-user me-sm-2"></i>
+                            <span class="d-sm-inline d-none">Sign In</span>
                         </router-link>
+                        <button v-else @click="logout" class="btn btn-link px-0 nav-link font-weight-bold text-white">
+                            <i class="fa fa-sign-out-alt me-sm-2"></i>
+                            <span class="d-sm-inline d-none">Logout</span>
+                        </button>
                     </li>
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                         <a href="#" @click="minimizeSidebar" class="p-0 nav-link text-white" id="iconNavbarSidenav">
@@ -69,7 +79,7 @@ const closeMenu = () => {
                             <i class="cursor-pointer fa fa-cog fixed-plugin-button-nav"></i>
                         </a>
                     </li>
-                    <li class="nav-item dropdown d-flex align-items-center" :class="isRTL ? 'ps-2' : 'pe-2'">
+                    <li class="nav-item dropdown d-flex align-items-center pe-2">
                         <a
                             href="#"
                             class="p-0 nav-link text-white"

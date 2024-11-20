@@ -6,7 +6,7 @@ import Navbar from '@/examples/PageLayout/Navbar.vue';
 import ArgonInput from '@/components/ArgonInput.vue';
 import ArgonSwitch from '@/components/ArgonSwitch.vue';
 import ArgonButton from '@/components/ArgonButton.vue';
-import memberApi from '@/api/memberApi';
+import auth from '@/store/auth';
 
 const email = ref('');
 const password = ref('');
@@ -37,7 +37,7 @@ const login = async () => {
     };
 
     try {
-        const response = await memberApi.login(loginDTO);
+        const response = await auth.login(loginDTO);
         console.log('Login success : ', response);
 
         router.push('/');

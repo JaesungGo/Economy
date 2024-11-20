@@ -64,27 +64,6 @@ export default {
         return data;
     },
 
-    // 로그인
-    async login(loginDTO) {
-        const { data } = await api.post(`${BASE_URL}/login`, loginDTO);
-        console.log('POST MemberLogin:', data);
-        return data;
-    },
-
-    // 로그아웃
-    async logout() {
-        const { data } = await api.post(`${BASE_URL}/logout`);
-        console.log('POST Logout:', data);
-        return data;
-    },
-
-    // 로그인 상태 확인
-    async checkLogin() {
-        const { data } = await api.get(`${BASE_URL}/check-login`);
-        console.log('GET CheckLogin:', data);
-        return data; // 현재 로그인 상태 반환
-    },
-
     // 회원 정보 조회
     async getMember() {
         const { data } = await api.get(`${BASE_URL}/`);
