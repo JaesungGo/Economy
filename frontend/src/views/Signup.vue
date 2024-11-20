@@ -12,6 +12,7 @@ import ArgonButton from '@/components/ArgonButton.vue';
 const body = document.getElementsByTagName('body')[0];
 const store = useStore();
 
+const name = ref(''); //
 const email = ref(''); // 이메일 입력값
 const password = ref(''); // 비밀번호 입력값
 const message = ref(''); // 결과 메시지
@@ -20,6 +21,7 @@ const message = ref(''); // 결과 메시지
 const register = async () => {
   try {
     const response = await axios.post('/api/member/join', {
+      memberName: name.value,
       memberEmail: email.value,
       memberPassword: password.value,
     });
@@ -87,6 +89,13 @@ onBeforeUnmount(() => {
             <div class="card-body">
               <form @submit.prevent="register" role="form">
                 <!-- API 요청 -->
+                <argon-input
+                  id="name"
+                  v-model="name"
+                  type="text"
+                  placeholder="Name"
+                  aria-label="Name"
+                />
                 <argon-input
                   id="email"
                   v-model="email"

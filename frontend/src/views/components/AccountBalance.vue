@@ -74,15 +74,27 @@ export default {
 .interest-info {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  position: relative;
 }
+
 .info-icon {
-  background-color: yellow;
-  border-radius: 50%;
-  padding: 5px;
-  margin-right: 10px;
-  font-weight: bold;
-  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px; /* 아이콘 크기 */
+  height: 32px;
+  border-radius: 50%; /* 원형으로 만들기 */
+  background-color: #4caf50; /* 배경색 (녹색) */
+  color: white; /* 텍스트 색상 */
+  font-size: 1.2rem; /* 글자 크기 */
+  font-weight: bold; /* 글자 굵기 */
+  cursor: pointer; /* 클릭 가능 표시 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+  transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+}
+
+.info-icon:hover {
+  background-color: #45a049; /* 호버시 조금 더 어두운 녹색 */
 }
 
 /* 모달 스타일 */
