@@ -5,6 +5,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hackathon.economy.account.domain.Interest;
 import org.hackathon.economy.member.domain.Member;
+import org.hackathon.economy.member.repository.MemberRepository;
+import org.hackathon.economy.member.service.MemberService;
 import org.hackathon.economy.quest.domain.Quest;
 import org.hackathon.economy.quest.domain.QuestAchieve;
 import org.hackathon.economy.quest.repository.*;
@@ -22,6 +24,8 @@ public class QuestAuthService {
     private final QuestAchieveRepository questAchieveRepository;
     private final InterestRepository interestRepository;
     private final MemberAuthRepository memberAuthRepository;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     public void processQuestAchievements(Long memberNo) {
         // 멤버 객체 가져오기
@@ -87,6 +91,7 @@ public class QuestAuthService {
 
     private void updateMemberPoint(Member member, Integer questPoint) {
         member.setMemberPoint(member.getMemberPoint() + questPoint);
-        memberAuthRepository.save(member);
+        Member newMember = memberRepository.update(member);
+        memberService.updateGrade(newMember.getMemberPoint(), newMember.getMemberNo());
     }
 }
