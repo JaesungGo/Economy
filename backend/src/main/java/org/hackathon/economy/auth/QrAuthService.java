@@ -1,4 +1,4 @@
-package org.hackathon.economy.auth;
-
-public class QrAuthService {
-}
+//package org.hackathon.economy.auth;
+//
+//public class QrAuthService {
+//}
