@@ -15,7 +15,11 @@ const formatMonthlyData = (monthlyData) => {
     const month = new Date(item.todayDate).getMonth() + 1; // 월 추출 (0부터 시작하므로 +1)
 
     if (!acc[year]) acc[year] = []; // 해당 연도가 없으면 초기화
-    acc[year].push({ month, amount: item.monthlyInterest }); // 월과 이자 금액 추가
+    acc[year].push({
+      month,
+      amount: item.monthlyInterest,
+      today: item.todayInterest,
+    }); // 월과 이자 금액 추가
 
     return acc;
   }, {});
@@ -87,7 +91,7 @@ onMounted(() => {
         <tbody>
           <tr v-for="(entry, index) in filteredData" :key="index">
             <td>{{ entry.month }}월</td>
-            <td>{{ entry.amount }}원</td>
+            <td>{{ entry.amount + entry.today }}원</td>
           </tr>
         </tbody>
       </table>
