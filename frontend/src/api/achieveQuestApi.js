@@ -3,7 +3,7 @@ import api from '@/api';
 const BASE_URL = '/achieve';
 
 export default {
-    // 전체 퀘스트 조회
+    // 전체 완료 퀘스트 조회
     async getTotalAchieve() {
         const { data } = await api.get(`${BASE_URL}/total`);
         return data;
