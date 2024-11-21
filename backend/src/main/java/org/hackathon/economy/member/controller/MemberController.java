@@ -78,6 +78,7 @@ public class MemberController {
         if(memberEmail != null) {
             Member member = memberService.findByEmail(memberEmail);
             MemberUtil memberUtil = MemberUtil.builder()
+                    .memberNo(member.getMemberNo())
                     .memberName(member.getMemberName())
                     .memberGrade(member.getMemberGrade())
                     .memberPoint(member.getMemberPoint())
@@ -108,6 +109,7 @@ public class MemberController {
 @Data
 @Builder
 class MemberUtil {
+    private Long memberNo;
     private String memberName;
     private Integer memberGrade;
     private Long memberPoint;
