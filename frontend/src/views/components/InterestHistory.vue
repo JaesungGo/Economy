@@ -162,6 +162,7 @@ watch(selectedYear, () => {
 
 /* 테이블 컨테이너 */
 .interest-table-container {
+  margin-top: 3rem;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
