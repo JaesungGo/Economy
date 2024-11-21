@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long> {
@@ -33,11 +34,11 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
     Integer countAchievements(@Param("memberNo") Long memberNo, @Param("questNo") Long questNo);
 
     @Query(value = """
-        SELECT *
-        FROM quest_achieve
-        WHERE member_no = :memberNo
-    """, nativeQuery = true)
-    List<QuestAchieve> getTotal(@Param("memberNo") Long memberNo);
+    SELECT q.quest
+    FROM QuestAchieve q
+    WHERE q.member = :member
+""")
+    List<Optional<Quest>> getTotal(@Param("member") Member member);
 
     @Query(value = """
         SELECT *
