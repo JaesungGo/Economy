@@ -19,7 +19,7 @@ public class Quest {
     @GeneratedValue
     private Long questNo;
     @Column(nullable = false)
-    private Integer questType;
+    private Integer questType; // "0": 일간 , "1": 주간, "2": 월간
     @Column(nullable = false)
     private String questContent;
     @Column(nullable = false)
@@ -28,8 +28,10 @@ public class Quest {
     private Integer questCount;
     @Column(nullable = false)
     private Date createTableDatetime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "questAchieve_no")
-    private QuestAchieve questAchieve;
+    @Column(nullable = false)
+    private boolean isQr;
+    @Column(nullable = false)
+    private boolean isActivate;
+    @Column(nullable = false)
+    private Integer questFrequency;
 }
