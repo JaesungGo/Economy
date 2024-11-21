@@ -15,7 +15,7 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
 
     @Query(value = """
         SELECT COUNT(*)
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
           AND quest_no = :questNo
           AND achieveDateTime BETWEEN (NOW() - INTERVAL 30 SECOND) AND NOW()
@@ -34,14 +34,14 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
 
     @Query(value = """
         SELECT *
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
     """, nativeQuery = true)
     List<QuestAchieve> getTotal(@Param("memberNo") Long memberNo);
 
     @Query(value = """
         SELECT *
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
         AND DATE_FORMAT(achieveDateTime, "%Y-%m-%d") = CURDATE()
     """, nativeQuery = true)
@@ -49,7 +49,7 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
 
     @Query(value = """
         SELECT *
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
         AND 
           date_format(achieveDateTime,'%Y-%m-%d')
@@ -62,7 +62,7 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
 
     @Query(value = """
         SELECT *
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
         AND 
           date_format(achieveDateTime,'%Y-%m-%d')
