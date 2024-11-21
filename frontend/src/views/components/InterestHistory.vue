@@ -23,7 +23,8 @@ const formatMonthlyData = (monthlyData) => {
 
 // 선택된 연도의 이자 내역 필터링
 const filterInterestData = () => {
-  filteredData.value = interestHistory.value[selectedYear.value] || [];
+  filteredData.value =
+    interestHistory.value[selectedYear.value] || [];
 };
 
 // 데이터 가져오기
@@ -42,7 +43,10 @@ const fetchInterestData = async () => {
     // 초기 필터링 실행
     filterInterestData();
   } catch (error) {
-    console.error('이자 데이터를 가져오는 중 오류 발생:', error);
+    console.error(
+      '이자 데이터를 가져오는 중 오류 발생:',
+      error
+    );
   }
 };
 
@@ -56,7 +60,9 @@ onMounted(() => {
   <div class="interest-history">
     <!-- 상단 이자 정보 -->
     <div class="highlight-section text-center">
-      <p class="subtitle">오늘까지 받은 이자 <span class="emoji">🌟</span></p>
+      <p class="subtitle">
+        오늘까지 받은 이자 <span class="emoji">🌟</span>
+      </p>
       <h1 class="total-amount">{{ totalInterest }}원</h1>
     </div>
 
@@ -77,7 +83,10 @@ onMounted(() => {
     <!-- 테이블 영역 -->
     <div class="interest-table-container">
       <h3 class="year-title">{{ selectedYear }}년</h3>
-      <table class="interest-table" v-if="dailyMonthlyInterestObject.length > 0">
+      <table
+        class="interest-table"
+        v-if="dailyMonthlyInterestObject.length > 0"
+      >
         <thead>
           <tr>
             <th>월</th>
@@ -85,17 +94,28 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(entry, index) in dailyMonthlyInterestObject" :key="index">
+          <tr
+            v-for="(
+              entry, index
+            ) in dailyMonthlyInterestObject"
+            :key="index"
+          >
             <td>{{ entry.todayDate.slice(5, 7) }}월</td>
-            <td>{{ entry.monthlyInterest +  entry.todayInterest}}원</td>
+            <td>
+              {{
+                entry.monthlyInterest + entry.todayInterest
+              }}원
+            </td>
           </tr>
         </tbody>
       </table>
-      <p v-else class="empty-message">이자 내역이 없습니다.</p>
+      <p v-else class="empty-message">
+        이자 내역이 없습니다.
+      </p>
     </div>
   </div>
 </template>
-
+<!-- 
 <script setup>
 import { ref } from 'vue';
 import dailyInterestApi from '@/api/dailyInterestApi';
@@ -276,4 +296,4 @@ load();
     font-size: 0.9rem;
   }
 }
-</style>
+</style> -->
