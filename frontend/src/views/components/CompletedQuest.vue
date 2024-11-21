@@ -36,7 +36,7 @@ const loadQuests = async () => {
         filteredQuests.value = data; //기본적으로 모든 데이터 표시
     } catch (error) {
         console.error('퀘스트 로드 실패:', error);
-        Swal.fire('에러', '퀘스트 데이터를 불러오는 데 실패했습니다.', 'error');
+        Swal.fire('에러', '완료된 퀘스트 데이터를 불러오는 데 실패했습니다.', 'error');
     }
 };
 

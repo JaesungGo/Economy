@@ -4,6 +4,7 @@ import { ref, onUnmounted, onMounted, computed } from 'vue';
 import Swal from 'sweetalert2';
 import jsQR from 'jsqr';
 import todayQuestApi from '@/api/todayQuestApi';
+import memberApi from '@/api/memberApi';
 
 const quests = ref([]);
 const selectedQuestType = ref(null);
@@ -30,6 +31,7 @@ const questTypeImages = {
     default: require('@/assets/img/grade0.png'), // 기본 이미지
 };
 
+// 퀘스트 조회
 const fetchQuests = async (type) => {
     try {
         let data;
@@ -49,7 +51,7 @@ const fetchQuests = async (type) => {
         quests.value = data; // 데이터를 quests에 저장
     } catch (error) {
         console.error('퀘스트 데이터를 가져오는 중 오류 발생:', error);
-        Swal.fire('에러', '퀘스트 데이터를 불러오는 데 실패했습니다.', 'error');
+        Swal.fire('에러', '오늘의 퀘스트 데이터를 불러오는 데 실패했습니다.', 'error');
     }
 };
 
@@ -61,6 +63,19 @@ const toggleQuestType = async (type) => {
     selectedQuestType.value = type; // 선택된 타입 업데이트
     await fetchQuests(type); // API 호출
 };
+
+// 거래내역으로 퀘스트 인증
+// const processQuestAchieve = async(memberNo) => {
+//     try {
+//         const response = await todayQuestApi.processQuestAchievements(memberNo);
+
+//         if(response === 'success'){
+//             Swal.fire({
+//                 title : 퀘스트 인증 완료!
+//             })
+//         }
+//     }
+// }
 
 const startQrScanner = async (questNo) => {
     try {
@@ -176,15 +191,33 @@ const handleQuestAchieve = async (questContent, questNo, isQr) => {
         });
 
         if (result.isConfirmed) {
-            if (isQr === 'true') {
-                await startQrScanner(questNo);
+            if (isQr) {
+                await startQrScanner(questNo); // QR 인증 진행
             } else {
-                console.log(`퀘스트 ${questNo} 인증 진행`);
-                Swal.fire('인증 완료!', '퀘스트 인증이 성공적으로 완료되었습니다.', 'success');
+                console.log(`퀘스트 ${questNo} 거래내역 인증 진행`);
+
+                // 회원 정보 조회
+                const memberData = await memberApi.getMember();
+                const memberNo = memberData?.memberNo; // 회원 ID 추출
+
+                if (!memberNo) {
+                    Swal.fire('에러', '로그인 정보를 확인할 수 없습니다.', 'error');
+                    return;
+                }
+
+                // 거래내역 인증 요청
+                const response = await todayQuestApi.processQuestAchievements(memberNo);
+
+                // 서버 응답 확인
+                if (response === 'success') {
+                    Swal.fire('성공', '퀘스트 인증이 성공적으로 완료되었습니다.', 'success');
+                } else {
+                    Swal.fire('알림', '완료된 퀘스트가 없습니다.', 'info');
+                }
             }
         }
     } catch (error) {
-        console.error('Quest error:', error);
+        console.error('인증 오류:', error);
         Swal.fire('에러', '처리 중 오류가 발생했습니다.', 'error');
     }
 };
@@ -237,7 +270,7 @@ onUnmounted(() => {
                     전체
                 </button>
                 <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 0 }" @click="toggleQuestType(0)">
-                    일간
+                    일일
                 </button>
                 <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 1 }" @click="toggleQuestType(1)">
                     주간
@@ -281,7 +314,7 @@ onUnmounted(() => {
                                 <span class="text-secondary text-xs font-weight-bold">{{ quest.questPoint }}P</span>
                             </td>
                             <td class="align-middle text-center text-sm">
-                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve(quest.questContent, quest.questNo)">인증</button>
+                                <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve(quest.questContent, quest.questNo, quest.isQr)">인증</button>
                             </td>
                         </tr>
                         <tr v-if="filteredQuests.length === 0">
