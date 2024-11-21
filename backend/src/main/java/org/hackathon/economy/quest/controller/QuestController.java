@@ -25,13 +25,29 @@ public class QuestController {
 
     private final QuestService questService;
     private final AccountService accountService;
-    private final AuthenticationService authenticationService;
 
-    // 오늘의 퀘스트 조회
-//    @GetMapping("/")
-//    public ResponseEntity<List<QuestAchieve>> getQuest() {
-//
-//    }
+    // 진행 중인 퀘스트 전체 조회
+    @GetMapping("/active")
+    public ResponseEntity<List<Quest>> getActiveQuests() {
+        return questService.getActiveQuests();
+    }
+
+    // 진행 중인 일일 퀘스트 조회
+    @GetMapping("/active/daily")
+    public ResponseEntity<List<Quest>> getActiveDailyQuests() {
+        return questService.getActiveDailyQuests();
+    }
+
+    // 진행 중인 주간 퀘스트 조회
+    @GetMapping("/active/weekly")
+    public ResponseEntity<List<Quest>> getActiveWeelyQuests() {
+        return questService.getActiveWeeklyQuests();
+    }
 
 
+    // 진행 중인 월간 퀘스트 조회
+    @GetMapping("/active/monthly")
+    public ResponseEntity<List<Quest>> getActiveMonthlyQuests() {
+        return questService.getActiveMonthlyQuests();
+    }
 }
