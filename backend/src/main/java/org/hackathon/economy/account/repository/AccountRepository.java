@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import lombok.extern.slf4j.Slf4j;
 import org.hackathon.economy.account.domain.Account;
 import org.hackathon.economy.account.domain.Transaction;
 import org.hackathon.economy.member.domain.Member;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 
 @Repository
+@Slf4j
 public class AccountRepository {
 
     @PersistenceContext
@@ -37,7 +39,7 @@ public class AccountRepository {
     // 입금(잔고 반환)
     public Long deposit(Account account, Long amount) {
         Long newBalance = account.deposit(amount);
-
+        log.info("newBalanceeeeee {}",newBalance);
         // 거래 기록 생성
         Transaction transaction = Transaction.builder()
                 .transactionPrice(amount)
@@ -47,6 +49,7 @@ public class AccountRepository {
                 .build();
         // 거래 기록 저장
         account.getTransactions().add(transaction);
+        log.info("newBalanceeeeee2 {}",newBalance);
 
         return newBalance;
     }

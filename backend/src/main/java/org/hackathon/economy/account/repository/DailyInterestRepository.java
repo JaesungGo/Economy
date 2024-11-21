@@ -4,9 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.hackathon.economy.account.domain.DailyInterestUtil;
 import org.hackathon.economy.account.domain.Account;
 import org.hackathon.economy.account.domain.DailyInterest;
-import org.hackathon.economy.member.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -44,17 +44,18 @@ public class DailyInterestRepository {
         }
     }
 
+
     // 매월 말일 월별 누적이자 조회
-    public List<DailyInterest> getMonthly(Account account) {
+    public List<DailyInterestUtil> getMonthly(Account account) {
         try {
-            TypedQuery<DailyInterest> query = em.createQuery(
-                    "SELECT d FROM DailyInterest d " +
+            TypedQuery<DailyInterestUtil> query = em.createQuery(
+                    "SELECT d.todayBalance, d.todayRate, d.todayInterest, d.monthlyInterest ,d.totalInterest, d.todayGrade, d.todayDate FROM DailyInterest d " +
                             "WHERE d.todayDate IN (" +
                             "    SELECT MAX(subD.todayDate) " +
                             "    FROM DailyInterest subD " +
                             "    GROUP BY FUNCTION('YEAR', subD.todayDate), FUNCTION('MONTH', subD.todayDate)" +
                             ")",
-                    DailyInterest.class
+                    DailyInterestUtil.class
             );
             return query.getResultList();
         } catch(NoResultException e) {
