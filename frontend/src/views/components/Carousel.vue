@@ -1,4 +1,3 @@
-J
 <template>
     <div class="card card-carousel overflow-hidden h-100 p-0">
         <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
@@ -9,7 +8,9 @@ J
                         class="h-100 w-100 d-block"
                         :style="{
                             backgroundImage: 'url(' + require('@/assets/img/그린카드1.png') + ')',
-                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundSize: '95% auto',
+                            backgroundRepeat: 'no-repeat',
                             cursor: 'pointer',
                         }"
                     ></router-link>
@@ -20,7 +21,9 @@ J
                         class="h-100 w-100 d-block"
                         :style="{
                             backgroundImage: 'url(' + require('@/assets/img/그린카드2.png') + ')',
-                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundSize: '95% auto',
+                            backgroundRepeat: 'no-repeat',
                             cursor: 'pointer',
                         }"
                     ></router-link>
@@ -31,7 +34,9 @@ J
                         class="h-100 w-100 d-block"
                         :style="{
                             backgroundImage: 'url(' + require('@/assets/img/그린카드3.png') + ')',
-                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundSize: '95% auto',
+                            backgroundRepeat: 'no-repeat',
                             cursor: 'pointer',
                         }"
                     ></router-link>
@@ -60,3 +65,28 @@ onMounted(() => {
     });
 });
 </script>
+
+<style scoped>
+.card-carousel {
+    background-color: #ffffff;
+}
+
+.carousel-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 버튼 위치 조정 */
+:deep(.carousel-control-prev),
+:deep(.carousel-control-next) {
+    width: 5%;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .carousel-image {
+        background-size: contain !important;
+    }
+}
+</style>
