@@ -258,8 +258,8 @@ onMounted(() => {
         <div class="modal-content">
           <h3>이율 설명</h3>
           <p>
-            이율은 예금액에 대해 발생하는 금액의 비율입니다. <br />예를 들어,
-            이율이 2.5%라면 1,000,000원에 대해 25,000원의 이자가 발생합니다.
+            이율은 예금액에 대해 발생하는 금액의 비율입니다. 예를 들어, 이율이
+            2.5%라면 1,000,000원에 대해 25,000원의 이자가 발생합니다.
           </p>
           <button class="close-button" @click="toggleModal">닫기</button>
         </div>
@@ -267,17 +267,10 @@ onMounted(() => {
 
       <!-- 현재 이율 정보 -->
       <h5 class="card-title mt-3">
-        {{ myMember.memberName }}님의 현재 이율은
-        <strong>{{ myRate }}%</strong>입니다.<br />
+        000님의 현재 이율은 <strong>+2.5%</strong>입니다.
       </h5>
-      <h2 class="display-4">
-        {{ myBalance ? myBalance.toLocaleString() : 'N/A' }}원
-      </h2>
-      <!--<p class="text-muted">+124.23922434원 (금일 벌어들인 이자)</p>-->
-      <div>
-        <h3 class="text-color">+{{ countInterest.toFixed(4) }}원</h3>
-        <p class="text-muted inline-container">(금일 벌어들인 이자)</p>
-      </div>
+      <h2 class="display-4">10,000,000원</h2>
+      <p class="text-muted">+124.23922434원 (금일 벌어들인 이자)</p>
 
       <!-- 입금 및 출금 버튼 -->
       <div class="d-flex justify-content-center mt-4">
@@ -303,43 +296,19 @@ onMounted(() => {
   font-weight: bold;
 }
 
-.container {
-  display: flex;
-  justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 세로 정렬 */
-  gap: 8px; /* <h3>와 <p> 사이의 간격 */
-}
-.text-color {
-  /*margin-top: 20px;*/ /* 위쪽 간격을 늘림 */
-  /*font-size: 16px;*/ /* 글씨 크기 조정 (필요시 변경) */
-  color: #088a68; /* 글씨 색상 유지 */
-}
-
 /* 이율 정보 스타일 */
 .interest-info {
   display: flex;
   align-items: center;
-  position: relative;
+  margin-bottom: 20px;
 }
-
 .info-icon {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px; /* 아이콘 크기 */
-  height: 32px;
-  border-radius: 50%; /* 원형으로 만들기 */
-  background-color: #4caf50; /* 배경색 (녹색) */
-  color: white; /* 텍스트 색상 */
-  font-size: 1.2rem; /* 글자 크기 */
-  font-weight: bold; /* 글자 굵기 */
-  cursor: pointer; /* 클릭 가능 표시 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
-  transition: background-color 0.3s ease; /* 배경색 전환 효과 */
-}
-
-.info-icon:hover {
-  background-color: #45a049; /* 호버시 조금 더 어두운 녹색 */
+  background-color: yellow;
+  border-radius: 50%;
+  padding: 5px;
+  margin-right: 10px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /* 모달 스타일 */
@@ -359,7 +328,7 @@ onMounted(() => {
   background-color: white;
   border-radius: 8px;
   padding: 20px;
-  width: 700px;
+  width: 300px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
