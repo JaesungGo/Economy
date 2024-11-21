@@ -56,25 +56,59 @@ const toggleModal = () => {
 };
 
 // 입금 기능 함수
-const deposit = async () => {
-  const amount = parseFloat(prompt('입금할 금액을 입력하세요:'));
-  if (!amount || isNaN(amount) || Number(amount) <= 0) {
-    alert('유효한 금액을 입력해주세요.');
-    return;
-  }
-
+async function depositAmount() {
   try {
-    const response = await accountApi.deposit(Number(amount));
-    const updatedAccount = response.data; // 서버에서 반환된 최신 계좌 정보
-    accountObject.value = updatedAccount; // 최신 데이터로 업데이트
-    alert(
-      `입금 성공! 현재 잔액: ${updatedAccount.accountBalance.toLocaleString()}원`
-    );
+    // 사용자 입력 받기
+    const amount = prompt('입금할 금액을 입력하세요:');
+
+    // 입력값 검증
+    if (!amount || isNaN(amount) || amount <= 0) {
+      alert('올바른 금액을 입력하세요.');
+      return;
+    }
+    console.log(amount);
+    // API 호출
+    const response = await accountApi.deposit(amount);
+    console.log(response);
+
+    // 응답 처리
+    if (response.ok) {
+      const data = await response.value;
+      alert(`입금 성공! 새로운 잔액: ${data}`);
+    } else {
+      const error = await response.text();
+      alert(`입금 실패: ${error}`);
+    }
   } catch (error) {
-    const errorMessage = error.response?.data || '입금에 실패했습니다.';
-    alert(errorMessage);
+    console.error('Error:', error);
+    alert('입금 처리 중 오류가 발생했습니다.');
   }
-};
+}
+
+// // 출금 기능 함수
+// const withdraw = () => {
+//   alert('출금 기능이 호출되었습니다.');
+// };
+
+// const deposit = async () => {
+//   const amount = parseFloat(prompt('입금할 금액을 입력하세요:'));
+//   if (!amount || isNaN(amount) || Number(amount) <= 0) {
+//     alert('유효한 금액을 입력해주세요.');
+//     return;
+//   }
+
+//   try {
+//     const response = await accountApi.deposit(Number(amount));
+//     const updatedAccount = response.data; // 서버에서 반환된 최신 계좌 정보
+//     accountObject.value = updatedAccount; // 최신 데이터로 업데이트
+//     alert(
+//       `입금 성공! 현재 잔액: ${updatedAccount.accountBalance.toLocaleString()}원`
+//     );
+//   } catch (error) {
+//     const errorMessage = error.response?.data || '입금에 실패했습니다.';
+//     alert(errorMessage);
+//   }
+// };
 
 // 출금 기능 함수
 const withdraw = async () => {
@@ -161,7 +195,9 @@ onMounted(() => {
 
       <!-- 입금 및 출금 버튼 -->
       <div class="d-flex justify-content-center mt-4">
-        <button class="btn btn-primary mx-2" @click="deposit">입금</button>
+        <button class="btn btn-primary mx-2" @click="depositAmount">
+          입금
+        </button>
         <button class="btn btn-danger mx-2" @click="withdraw">출금</button>
       </div>
     </div>
