@@ -94,11 +94,6 @@ async function depositAmount() {
   }
 }
 
-// // 출금 기능 함수
-// const withdraw = () => {
-//   alert('출금 기능이 호출되었습니다.');
-// };
-
 // const deposit = async () => {
 //   const amount = parseFloat(prompt('입금할 금액을 입력하세요:'));
 //   if (!amount || isNaN(amount) || Number(amount) <= 0) {

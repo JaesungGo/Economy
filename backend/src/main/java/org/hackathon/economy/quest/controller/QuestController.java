@@ -1,20 +1,12 @@
 package org.hackathon.economy.quest.controller;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.hackathon.economy.account.domain.Account;
-import org.hackathon.economy.account.service.AccountService;
-import org.hackathon.economy.member.domain.Member;
-import org.hackathon.economy.member.service.AuthenticationService;
 import org.hackathon.economy.quest.domain.Quest;
-import org.hackathon.economy.quest.domain.QuestAchieve;
+import org.hackathon.economy.quest.service.QuestAuthService;
 import org.hackathon.economy.quest.service.QuestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +16,7 @@ import java.util.List;
 public class QuestController {
 
     private final QuestService questService;
+    private final QuestAuthService questAuthService;
 
     // 진행 중인 퀘스트 전체 조회
     @GetMapping("/active")
@@ -48,5 +41,21 @@ public class QuestController {
     @GetMapping("/active/monthly")
     public ResponseEntity<List<Quest>> getActiveMonthlyQuests() {
         return ResponseEntity.ok(questService.getActiveMonthlyQuests());
+    }
+  
+   @PostMapping("/process")
+    public ResponseEntity<String> processQuestAchievements(@RequestBody Long memberNo) {
+        try {
+            questAuthService.processQuestAchievements(memberNo);
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("error" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/recommend")
+    public ResponseEntity<Quest> getRecommendQuest() {
+        return ResponseEntity.ok(questService.getRecommendQuest());
     }
 }

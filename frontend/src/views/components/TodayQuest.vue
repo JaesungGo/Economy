@@ -1,36 +1,57 @@
 <script setup>
 import { ref, onUnmounted, onMounted, computed } from 'vue';
-import questApi from '@/api/questApi'; // questApi.js 임포트
 import Swal from 'sweetalert2';
 import jsQR from 'jsqr';
+import todayQuestApi from '@/api/todayQuestApi';
+import memberApi from '@/api/memberApi';
+
+const quests = ref([]);
+const selectedQuestType = ref(null);
 
 const videoRef = ref(null);
 const canvasRef = ref(null);
 const streaming = ref(false);
 const currentQuestNo = ref(null);
 
-const quests = ref([]); // 모든 퀘스트 데이터를 저장
-const selectedQuestType = ref(null); // 선택된 퀘스트 타입 (기본값: null => 모든 퀘스트)
-// 퀘스트 데이터 가져오기
-const fetchQuests = async () => {
+// 샘플 퀘스트 데이터
+// const quests = ref([
+//     { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
+//     { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
+//     { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
+//     { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
+//     { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
+// ]);
+
+//퀘스트 타입 이미지 맵
+const questTypeImages = {
+  1: require('@/assets/img/weeklyQuest.png'), // 주간 퀘스트 이미지
+  2: require('@/assets/img/monthlyQuest.png'), // 월간 퀘스트 이미지
+  default: require('@/assets/img/grade0.png'), // 기본 이미지
+};
+
+// 퀘스트 조회
+const fetchQuests = async (type) => {
   try {
     let data;
-    if (selectedQuestType.value === 0) {
-      data = await questApi.getActiveDailyQuests(); // 일일 퀘스트
-    } else if (selectedQuestType.value === 1) {
-      data = await questApi.getActiveWeeklyQuests(); // 주간 퀘스트
-    } else if (selectedQuestType.value === 2) {
-      data = await questApi.getActiveMonthlyQuests(); // 월간 퀘스트
-    } else {
-      data = await questApi.getActiveQuests(); // 모든 퀘스트
+    if (type === null) {
+      // 전체 퀘스트
+      data = await todayQuestApi.getTotalToday();
+    } else if (type === 1) {
+      // 주간 퀘스트
+      data = await todayQuestApi.getWeeklyToday();
+    } else if (type === 2) {
+      // 월간 퀘스트
+      data = await todayQuestApi.getMonthlyToday();
     }
-
-    quests.value = data; // API로부터 가져온 데이터를 업데이트
+    quests.value = data; // 데이터를 quests에 저장
   } catch (error) {
-    console.error('퀘스트 데이터 조회 오류:', error);
+    console.error(
+      '퀘스트 데이터를 가져오는 중 오류 발생:',
+      error
+    );
     Swal.fire(
       '에러',
-      '퀘스트 목록을 불러오는데 실패했습니다.',
+      '오늘의 퀘스트 데이터를 불러오는 데 실패했습니다.',
       'error'
     );
   }
@@ -41,14 +62,24 @@ const filteredQuests = computed(() => {
   return quests.value; // 선택된 타입에 따라 이미 필터링된 데이터 사용
 });
 
-// 인증 시작
-const startAuthentication = (quest) => {
-  if (quest.isQr) {
-    startQrScanner(quest.questNo); // QR 방식 인증
-  } else {
-    handleNonQrAuthentication(quest.questNo); // 비 QR 방식 인증
-  }
+// 퀘스트 타입 변경 및 데이터 로드
+const toggleQuestType = async (type) => {
+  selectedQuestType.value = type; // 선택된 타입 업데이트
+  await fetchQuests(type); // API 호출
 };
+
+// 거래내역으로 퀘스트 인증
+// const processQuestAchieve = async(memberNo) => {
+//     try {
+//         const response = await todayQuestApi.processQuestAchievements(memberNo);
+
+//         if(response === 'success'){
+//             Swal.fire({
+//                 title : 퀘스트 인증 완료!
+//             })
+//         }
+//     }
+// }
 
 const startQrScanner = async (questNo) => {
   try {
@@ -191,37 +222,103 @@ const stopQrScanner = () => {
   streaming.value = false;
 };
 
-// 비 QR 인증 처리
-const handleNonQrAuthentication = async (questNo) => {
+const handleQuestAchieve = async (
+  questContent,
+  questNo,
+  isQr
+) => {
   try {
-    const response =
-      await questApi.verifyNonQrQuest(questNo);
+    const result = await Swal.fire({
+      title: `${questContent} 인증`,
+      text: '인증하시겠습니까?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+      customClass: {
+        confirmButton: 'swal-confirm-btn', // 커스텀 클래스 이름 변경
+        cancelButton: 'swal-cancel-btn', // 커스텀 클래스 이름 변경
+      },
+    });
 
-    if (response.success) {
-      Swal.fire(
-        '성공',
-        `퀘스트 인증 완료! ${response.points} 포인트를 획득했습니다.`,
-        'success'
-      );
-    } else {
-      Swal.fire(
-        '실패',
-        '퀘스트 인증에 실패했습니다.',
-        'error'
-      );
+    if (result.isConfirmed) {
+      if (isQr) {
+        await startQrScanner(questNo); // QR 인증 진행
+      } else {
+        console.log(`퀘스트 ${questNo} 거래내역 인증 진행`);
+
+        // 회원 정보 조회
+        const memberData = await memberApi.getMember();
+        const memberNo = memberData?.memberNo; // 회원 ID 추출
+
+        if (!memberNo) {
+          Swal.fire(
+            '에러',
+            '로그인 정보를 확인할 수 없습니다.',
+            'error'
+          );
+          return;
+        }
+
+        // 거래내역 인증 요청
+        const response =
+          await todayQuestApi.processQuestAchievements(
+            memberNo
+          );
+
+        // 서버 응답 확인
+        if (response === 'success') {
+          Swal.fire(
+            '성공',
+            '퀘스트 인증이 성공적으로 완료되었습니다.',
+            'success'
+          );
+        } else {
+          Swal.fire(
+            '알림',
+            '완료된 퀘스트가 없습니다.',
+            'info'
+          );
+        }
+      }
     }
   } catch (error) {
     console.error('인증 오류:', error);
-    Swal.fire('에러', '서버 연결에 실패했습니다.', 'error');
+    Swal.fire(
+      '에러',
+      '처리 중 오류가 발생했습니다.',
+      'error'
+    );
   }
 };
 
-const toggleQuestType = (type) => {
-  selectedQuestType.value = type;
-};
+// 카메라 테스트 시 코드
+// const handleQuestAchieve = async (questContent) => {
+//     try {
+//     const result = await Swal.fire({
+//       title: `${questContent} 인증`,
+//       text: '인증하시겠습니까?',
+//       icon: 'question',
+//       showCancelButton: true,
+//       confirmButtonText: '확인',
+//       cancelButtonText: '취소',
+//       customClass: {
+//                 confirmButton: 'swal-confirm-btn', // 커스텀 클래스 이름 변경
+//                 cancelButton: 'swal-cancel-btn', // 커스텀 클래스 이름 변경
+//             }
+//     });
+
+//     if (result.isConfirmed) {
+//       await startQrScanner();
+//     }
+//   } catch (error) {
+//     console.error('Quest error:', error);
+//     Swal.fire('에러', '처리 중 오류가 발생했습니다.', 'error');
+//   }
+// };
 
 onMounted(() => {
-  fetchQuests(); // 초기 모든 퀘스트 가져오기
+  fetchQuests(null);
 });
 
 onUnmounted(() => {
@@ -247,16 +344,7 @@ onUnmounted(() => {
         >
           전체
         </button>
-        <button
-          class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover"
-          :class="{
-            'btn-success text-white':
-              selectedQuestType === 0,
-          }"
-          @click="toggleQuestType(0)"
-        >
-          일간
-        </button>
+
         <button
           class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover"
           :class="{
@@ -314,7 +402,10 @@ onUnmounted(() => {
                   <div>
                     <!-- 퀘스트 종류에 따른 이미지 -->
                     <img
-                      src="../../assets/img/team-2.jpg"
+                      :src="
+                        questTypeImages[quest.questType] ||
+                        questTypeImages.default
+                      "
                       class="avatar avatar-sm me-3"
                       alt="quest"
                     />
@@ -351,7 +442,13 @@ onUnmounted(() => {
               <td class="align-middle text-center text-sm">
                 <button
                   class="badge bg-gradient-success border-0"
-                  @click="startAuthentication(quest)"
+                  @click="
+                    handleQuestAchieve(
+                      quest.questContent,
+                      quest.questNo,
+                      quest.isQr
+                    )
+                  "
                 >
                   인증
                 </button>
