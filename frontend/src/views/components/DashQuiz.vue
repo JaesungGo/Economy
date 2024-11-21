@@ -1,8 +1,19 @@
 <template>
-    <div class="quiz-status">
+    <div class="quiz-status border-radius-lg h-100">
         <!-- 퀴즈를 풀지 않은 경우 -->
         <div v-if="!hasCompletedQuiz">
-            <p>아직 퀴즈를 풀지 않으셨군요!</p>
+            <div
+                class="quiz-content"
+                :style="{
+                    backGroundIm: 'url(' + require('@/assets/img/quizbg.png') + ')',
+                    backgroundSize: 'cover',
+                    cursor: 'pointer',
+                }"
+            >
+                <p class="quiz-prompt">아직 퀴즈를 풀지 않으셨군요!</p>
+                <p class="quiz-info">우리는 친환경 행동에 대해 얼마나 잘 알고 있을까요?</p>
+                <p class="quiz-info">매일 퀴즈를 풀고 이율과 상식을 높여보세요.</p>
+            </div>
             <button @click="openQuizModal" class="btn btn-primary">퀴즈 풀기</button>
         </div>
 
@@ -71,6 +82,34 @@ onMounted(() => {
 .quiz-status {
     text-align: center;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 버튼을 아래로 내리기 위해 추가 */
+    height: 100%; /* 부모 높이에 맞게 조정 */
+    background-image: url('@/assets/img/quizbg.png'); /* 배경 이미지 설정 */
+    background-size: cover; /* 컴포넌트 크기에 꽉 차게 설정 */
+    background-position: center; /* 배경 이미지를 중앙 정렬 */
+    background-repeat: no-repeat; /* 이미지 반복 방지 */
+    color: #fff; /* 텍스트 색상을 흰색으로 변경 */
+}
+
+.quiz-content {
+    margin-bottom: 20px; /* 버튼과 콘텐츠 사이 간격 추가 */
+}
+
+.quiz-prompt {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    color: #4caf50;
+}
+
+.quiz-info {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: white;
 }
 
 button {
@@ -80,6 +119,8 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-top: 30px; /* 추가 간격 */
+    margin-bottom: 70px;
 }
 
 button:disabled {
