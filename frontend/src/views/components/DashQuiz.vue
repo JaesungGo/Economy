@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 import quizApi from '@/api/quizApi';
 import memberApi from '@/api/memberApi';
 import Quiz from '../Quiz.vue';
@@ -58,7 +58,7 @@ const fetchQuizStatus = async () => {
         hasCompletedQuiz.value = response?.data?.completed || false;
     } catch (error) {
         console.error('Error fetching quiz status:', error);
-        Swal.fire('에러', '퀴즈 상태를 확인하지 못했습니다.', 'error');
+        // Swal.fire('에러', '퀴즈 상태를 확인하지 못했습니다.', 'error');
     }
 };
 
@@ -98,7 +98,7 @@ onMounted(() => {
 }
 
 .quiz-prompt {
-    font-size: 18px;
+    font-size: 23px;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 25px;
@@ -120,7 +120,7 @@ button {
     border-radius: 4px;
     cursor: pointer;
     margin-top: 30px; /* 추가 간격 */
-    margin-bottom: 70px;
+    margin-bottom: 60px;
 }
 
 button:disabled {
