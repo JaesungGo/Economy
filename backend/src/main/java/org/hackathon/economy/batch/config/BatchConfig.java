@@ -55,6 +55,13 @@ public class BatchConfig {
                 .start(weeklyUpdateInterestStep)
                 .build();
     }
+    @Bean
+    public Job weeklyUpdateQuestJob(Step weeklyUpdateQuestStep) {
+        JobBuilder jobBuilder = new JobBuilder("weeklyUpdateQuestJob", jobRepository);
+        return jobBuilder.incrementer(new RunIdIncrementer())
+                .start(weeklyUpdateQuestStep)
+                .build();
+    }
 
     // Monthly Job
     @Bean
@@ -62,6 +69,13 @@ public class BatchConfig {
         JobBuilder jobBuilder = new JobBuilder("monthlyUpdateInterestJob", jobRepository);
         return jobBuilder.incrementer(new RunIdIncrementer())
                 .start(monthlyUpdateInterestStep)
+                .build();
+    }
+    @Bean
+    public Job monthlyUpdateQuestJob(Step monthlyUpdateQuestStep) {
+        JobBuilder jobBuilder = new JobBuilder("monthlyUpdateQuestJob", jobRepository);
+        return jobBuilder.incrementer(new RunIdIncrementer())
+                .start(monthlyUpdateQuestStep)
                 .build();
     }
 
@@ -83,12 +97,22 @@ public class BatchConfig {
         StepBuilder stepBuilder = new StepBuilder("weeklyUpdateInterestStep", jobRepository);
         return stepBuilder.tasklet(weeklyUpdateInterestTasklet, transactionManager).build();
     }
+    @Bean
+    public Step weeklyUpdateQuestStep(@Qualifier("weeklyQuestTasklet") Tasklet weeklyUpdateQuestTasklet) {
+        StepBuilder stepBuilder = new StepBuilder("weeklyUpdateQuestStep", jobRepository);
+        return stepBuilder.tasklet(weeklyUpdateQuestTasklet, transactionManager).build();
+    }
 
     // Monthly Step
     @Bean
     public Step monthlyUpdateInterestStep(@Qualifier("monthlyTasklet") Tasklet monthlyUpdateInterestTasklet) {
         StepBuilder stepBuilder = new StepBuilder("monthlyUpdateInterestStep", jobRepository);
         return stepBuilder.tasklet(monthlyUpdateInterestTasklet, transactionManager).build();
+    }
+    @Bean
+    public Step monthlyUpdateQuestStep(@Qualifier("monthlyQuestTasklet") Tasklet monthlyUpdateQuestTasklet) {
+        StepBuilder stepBuilder = new StepBuilder("monthlyUpdateQuestStep", jobRepository);
+        return stepBuilder.tasklet(monthlyUpdateQuestTasklet, transactionManager).build();
     }
 
 //    @Bean

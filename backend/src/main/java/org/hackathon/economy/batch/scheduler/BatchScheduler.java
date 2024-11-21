@@ -7,6 +7,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,14 +22,23 @@ public class BatchScheduler {
     private final Job dailyInsertInterestJob;
     private final Job weeklyUpdateInterestJob;
     private final Job monthlyUpdateInterestJob;
+    private final Job weeklyUpdateQuestJob;
+    private final Job monthlyUpdateQuestJob;
 
     @Autowired
-    public BatchScheduler(JobLauncher jobLauncher, Job dailyUpdateInterestJob, Job dailyInsertInterestJob ,Job weeklyUpdateInterestJob, Job monthlyUpdateInterestJob) {
+    public BatchScheduler(JobLauncher jobLauncher, @Qualifier("dailyUpdateInterestJob") Job dailyUpdateInterestJob,
+                          @Qualifier("dailyInsertInterestJob") Job dailyInsertInterestJob,
+                          @Qualifier("weeklyUpdateInterestJob") Job weeklyUpdateInterestJob,
+                          @Qualifier("monthlyUpdateInterestJob") Job monthlyUpdateInterestJob,
+                          @Qualifier("weeklyUpdateQuestJob") Job weeklyUpdateQuestJob,
+                          @Qualifier("monthlyUpdateQuestJob") Job monthlyUpdateQuestJob) {
         this.jobLauncher = jobLauncher;
         this.dailyUpdateInterestJob = dailyUpdateInterestJob;
         this.dailyInsertInterestJob = dailyInsertInterestJob;
         this.weeklyUpdateInterestJob = weeklyUpdateInterestJob;
         this.monthlyUpdateInterestJob = monthlyUpdateInterestJob;
+        this.weeklyUpdateQuestJob = weeklyUpdateQuestJob;
+        this.monthlyUpdateQuestJob = monthlyUpdateQuestJob;
     }
 
 //    @Scheduled(cron = "0 0 12 * * ?") // 매일 12시 - cron 표현식: [초] [분] [시간] [일] [월] [요일]
@@ -63,6 +73,12 @@ public class BatchScheduler {
         log.info("-------------------runWeeklyUpdateInterestJob-------------------");
         runJob(weeklyUpdateInterestJob);
     }
+    @Scheduled(cron = "0 26 19 * * *")
+    public void runWeeklyUpdateQuestJob() throws Exception {
+        log.info("-------------------runWeeklyUpdateQuestJob-------------------");
+        runJob(weeklyUpdateQuestJob);
+    }
+
 
     // 매월 1일 자정에 실행되는 작업
     //@Scheduled(cron = "0 0 0 1 * *")
@@ -70,6 +86,11 @@ public class BatchScheduler {
     public void runMonthlyUpdateInterestJob() throws Exception {
         log.info("-------------------runMonthlyUpdateInterestJob-------------------");
         runJob(monthlyUpdateInterestJob);
+    }
+    @Scheduled(cron = "0 29 19 * * *")
+    public void runMonthlyUpdateQuestJob() throws Exception {
+        log.info("-------------------runMonthlyUpdateQuestJob-------------------");
+        runJob(monthlyUpdateQuestJob);
     }
 
     public void runJob(Job job) throws Exception {
