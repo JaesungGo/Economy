@@ -34,7 +34,9 @@ const formatMonthlyData = (monthlyData) => {
 
 // 선택된 연도의 이자 내역 필터링
 const filterInterestData = () => {
-  filteredData.value = interestHistory.value[selectedYear.value] || [];
+  const yearData = interestHistory.value[selectedYear.value] || [];
+  // 최근 달이 위로 오도록 정렬
+  filteredData.value = yearData.sort((a, b) => b.month - a.month);
   console.log('filteredData.value:', filteredData.value);
 };
 
@@ -79,7 +81,9 @@ watch(selectedYear, () => {
     <!-- 상단 이자 정보 -->
     <div class="highlight-section text-center">
       <p class="subtitle">오늘까지 받은 이자 <span class="emoji">🌟</span></p>
-      <h1 class="total-amount">{{ totalInterest }}원</h1>
+      <h1 class="total-amount">
+        {{ totalInterest ? totalInterest.toLocaleString() : 'N/A' }}원
+      </h1>
     </div>
 
     <!-- 연도 선택 입력 -->

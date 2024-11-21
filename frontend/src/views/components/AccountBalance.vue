@@ -1,6 +1,7 @@
 <script setup>
 import accountApi from '@/api/accountApi';
 import memberApi from '@/api/memberApi';
+import Swal from 'sweetalert2';
 import { ref, computed, onMounted } from 'vue';
 
 // 모달 표시 여부
@@ -55,33 +56,78 @@ const toggleModal = () => {
   showModal.value = !showModal.value;
 };
 
-// 입금 기능 함수
+// 입금 기능 함수 (SweetAlert 사용)
 async function depositAmount() {
   try {
-    // 사용자 입력 받기
-    const amount = prompt('입금할 금액을 입력하세요:');
+    // 사용자 입력 받기 (SweetAlert 사용)
+    const { value: amount } = await Swal.fire({
+      title: '입금하기',
+      input: 'number',
+      inputLabel: '입금할 금액을 입력하세요:',
+      inputPlaceholder: '금액 입력',
+      showCancelButton: true, // 취소 버튼 활성화
+      confirmButtonText: '입금', // 확인 버튼 텍스트
+      cancelButtonText: '취소', // 취소 버튼 텍스트
+      inputValidator: (value) => {
+        if (!value || isNaN(value) || value <= 0) {
+          return '올바른 금액을 입력하세요.';
+        }
+      },
+      customClass: {
+        input: 'swal2-centered-input', // 입력 필드 중앙 정렬 클래스
+        actions: 'swal2-centered-actions', // 버튼 중앙 정렬 클래스
+        popup: 'swal2-centered-popup', // 팝업 자체 정렬 클래스
+        confirmButton: 'swal2-button-confirm', // 입금 버튼 스타일
+        cancelButton: 'swal2-button-cancel', // 취소 버튼 스타일
+      },
+    });
 
-    // 입력값 검증
-    if (!amount || isNaN(amount) || amount <= 0) {
-      alert('올바른 금액을 입력하세요.');
+    // 사용자가 취소 버튼을 누른 경우 처리
+    if (!amount) {
       return;
     }
-    console.log(amount);
+
+    console.log('입금 금액:', amount);
+
     // API 호출
     const response = await accountApi.deposit(amount);
-    console.log(response);
+    console.log('API 응답:', response);
 
     // 응답 처리
     if (response.ok) {
-      const data = await response.value;
-      alert(`입금 성공! 새로운 잔액: ${data}`);
+      const data = await response.json(); // 응답 데이터를 JSON으로 파싱
+      await Swal.fire({
+        icon: 'success',
+        title: '입금 성공!',
+        text: `새로운 잔액: ${data.balance}원`,
+        customClass: {
+          title: 'swal2-centered-text',
+          content: 'swal2-centered-text',
+        },
+      });
     } else {
       const error = await response.text();
-      alert(`입금 실패: ${error}`);
+      await Swal.fire({
+        icon: 'error',
+        title: '입금 실패',
+        text: error,
+        customClass: {
+          title: 'swal2-centered-text',
+          content: 'swal2-centered-text',
+        },
+      });
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('입금 처리 중 오류가 발생했습니다.');
+    await Swal.fire({
+      icon: 'error',
+      title: '오류 발생',
+      text: '입금 처리 중 오류가 발생했습니다.',
+      customClass: {
+        title: 'swal2-centered-text',
+        content: 'swal2-centered-text',
+      },
+    });
   }
 }
 
@@ -112,22 +158,62 @@ async function depositAmount() {
 
 // 출금 기능 함수
 const withdraw = async () => {
-  const amount = prompt('출금할 금액을 입력하세요:');
-  if (!amount || isNaN(amount) || Number(amount) <= 0) {
-    alert('유효한 금액을 입력해주세요.');
-    return;
-  }
-
   try {
+    // 사용자 입력 받기 (SweetAlert 사용)
+    const { value: amount } = await Swal.fire({
+      title: '출금하기',
+      input: 'number',
+      inputLabel: '출금할 금액을 입력하세요:',
+      inputPlaceholder: '금액 입력',
+      showCancelButton: true,
+      confirmButtonText: '출금',
+      cancelButtonText: '취소',
+      inputValidator: (value) => {
+        if (!value || isNaN(value) || value <= 0) {
+          return '유효한 금액을 입력해주세요.';
+        }
+      },
+      customClass: {
+        input: 'swal2-centered-input', // 입력 필드 중앙 정렬
+        actions: 'swal2-centered-actions', // 버튼 중앙 정렬
+        popup: 'swal2-centered-popup', // 팝업 중앙 정렬
+      },
+    });
+
+    // 사용자가 취소를 누른 경우 처리
+    if (!amount) return;
+
+    console.log('출금 요청 금액:', amount);
+
+    // API 호출
     const response = await accountApi.withdraw(Number(amount));
     const updatedAccount = response.data; // 서버에서 반환된 최신 계좌 정보
     accountObject.value = updatedAccount; // 최신 데이터로 업데이트
-    alert(
-      `출금 성공! 현재 잔액: ${updatedAccount.accountBalance.toLocaleString()}원`
-    );
+
+    // 성공 메시지
+    await Swal.fire({
+      icon: 'success',
+      title: '출금 성공!',
+      text: `출금이 완료되었습니다. 현재 잔액: ${updatedAccount.accountBalance.toLocaleString()}원`,
+      customClass: {
+        title: 'swal2-centered-text',
+        content: 'swal2-centered-text',
+      },
+    });
   } catch (error) {
+    console.error('Error during withdrawal:', error);
+
+    // 실패 메시지
     const errorMessage = error.response?.data || '출금에 실패했습니다.';
-    alert(errorMessage);
+    await Swal.fire({
+      icon: 'error',
+      title: '출금 실패',
+      text: errorMessage,
+      customClass: {
+        title: 'swal2-centered-text',
+        content: 'swal2-centered-text',
+      },
+    });
   }
 };
 
@@ -293,5 +379,62 @@ onMounted(() => {
 }
 .close-button:hover {
   background-color: #0056b3;
+}
+/* SweetAlert2 커스텀 스타일 */
+
+/* 팝업 자체를 중앙에 정렬 */
+.swal2-centered-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 입력 필드 중앙 정렬 */
+.swal2-centered-input {
+  display: block;
+  margin: 10px auto;
+  text-align: center;
+  width: 60%;
+  min-width: 250px;
+}
+
+/* 버튼 영역 중앙 정렬 */
+.swal2-centered-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* 입금 버튼 스타일 */
+.swal2-button-confirm {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.swal2-button-confirm:hover {
+  background-color: #0056b3;
+}
+
+/* 취소 버튼 스타일 */
+.swal2-button-cancel {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.swal2-button-cancel:hover {
+  background-color: #5a6268;
 }
 </style>
