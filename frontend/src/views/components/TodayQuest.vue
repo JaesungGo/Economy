@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onUnmounted, computed } from 'vue';
+import { ref, onUnmounted, onMounted, computed } from 'vue';
 // import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import jsQR from 'jsqr';
@@ -7,18 +7,40 @@ import jsQR from 'jsqr';
 const videoRef = ref(null);
 const canvasRef = ref(null);
 const streaming = ref(false);
+const currentQuestNo = ref(null);
 
 // 샘플 퀘스트 데이터
-const quests = ref([
-    { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
-    { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
-    { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
-    { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
-    { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
-]);
+// const quests = ref([
+//     { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
+//     { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
+//     { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
+//     { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
+//     { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
+// ]);
+
+const quests = ref([]);
 
 // 선택된 퀘스트 타입 (기본값: null => 모든 퀘스트)
 const selectedQuestType = ref(null);
+
+const fetchQuests = async () => {
+  try {
+    const response = await fetch('/api/quest', {
+      method: 'GET',
+      credentials: 'include'
+    });
+    
+    if (!response.ok) {
+      throw new Error('퀘스트 데이터를 가져오는데 실패했습니다.');
+    }
+    
+    const data = await response.json();
+    quests.value = data;
+  } catch (error) {
+    console.error('퀘스트 데이터 조회 오류:', error);
+    Swal.fire('에러', '퀘스트 목록을 불러오는데 실패했습니다.', 'error');
+  }
+};
 
 // 선택된 타입에 따른 퀘스트 필터링
 const filteredQuests = computed(() => {
@@ -28,9 +50,10 @@ const filteredQuests = computed(() => {
     return quests.value.filter((quest) => quest.questType === selectedQuestType.value);
 });
 
-const startQrScanner = async () => {
+const startQrScanner = async (questNo) => {
   try {
     streaming.value = true;
+    currentQuestNo.value = questNo;
     
     // 모바일과 데스크톱 모두 지원하는 설정
     const constraints = {
@@ -85,7 +108,7 @@ const scanQRCode = () => {
     if (code) {
       // QR 코드 발견
       stopQrScanner();
-      verifyQrCode(code.data);
+      verifyQrCode(code.data, currentQuestNo.value);
     } else {
       // 계속 스캔
       requestAnimationFrame(scanQRCode);
@@ -96,10 +119,12 @@ const scanQRCode = () => {
   }
 };
 
-const verifyQrCode = async (qrData) => {
+const verifyQrCode = async (qrData, questNo) => {
   try {
     console.log('Scanned QR code:', qrData); // 디버깅용
-    const response = await fetch(`/api/qr/verify/${qrData}`, {
+    console.log('Quest No:', questNo);
+
+    const response = await fetch(`/api/qr/verify/${qrData}/${questNo}`, {
       method: 'POST',
       credentials: 'include'
     });
@@ -123,7 +148,7 @@ const stopQrScanner = () => {
   streaming.value = false;
 };
 
-const handleQuestAchieve = async (questContent, questId, isQr) => {
+const handleQuestAchieve = async (questContent, questNo, isQr) => {
   try {
     const result = await Swal.fire({
       title: `${questContent} 인증`,
@@ -140,9 +165,9 @@ const handleQuestAchieve = async (questContent, questId, isQr) => {
 
     if (result.isConfirmed) {
       if (isQr === 'true') {
-        await startQrScanner();
+        await startQrScanner(questNo);  
       } else {
-        console.log(`퀘스트 ${questId} 인증 진행`);
+        console.log(`퀘스트 ${questNo} 인증 진행`);
         Swal.fire('인증 완료!', '퀘스트 인증이 성공적으로 완료되었습니다.', 'success');
       }
     }
@@ -176,6 +201,14 @@ const handleQuestAchieve = async (questContent, questId, isQr) => {
 //     Swal.fire('에러', '처리 중 오류가 발생했습니다.', 'error');
 //   }
 // };
+
+const toggleQuestType = (type) => {
+    selectedQuestType.value = type;
+};
+
+onMounted(() => {
+  fetchQuests();
+});
 
 onUnmounted(() => {
   stopQrScanner();

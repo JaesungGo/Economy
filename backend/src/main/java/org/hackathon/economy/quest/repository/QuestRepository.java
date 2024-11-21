@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import org.hackathon.economy.quest.domain.Quest;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.List;
 
 @Repository
@@ -12,6 +13,11 @@ public class QuestRepository {
 
     @PersistenceContext
     private EntityManager em;
+
+    public Optional<Quest> findByNo(Long questNo) {
+        return Optional.ofNullable(em.find(Quest.class, questNo));
+    }
+
 
     public List<Quest> getActiveQuests() {
         return em.createQuery("select q from Quest q where q.isActive = true", Quest.class).getResultList();
