@@ -19,7 +19,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class QuestAuthService {
-    private final QuestRepository questRepository;
+    private final QuestRepositoryInterface questRepositoryInterface;
     private final GreenTransactionRepository greenTransactionRepository;
     private final QuestAchieveRepository questAchieveRepository;
     private final InterestRepository interestRepository;
@@ -31,7 +31,7 @@ public class QuestAuthService {
         // 멤버 객체 가져오기
         Member member = memberAuthRepository.findById(memberNo).orElseThrow();
 
-        List<Quest> activeQuests = questRepository.findByIsActivateAndIsQr(true, false);
+        List<Quest> activeQuests = questRepositoryInterface.findByIsActivateAndIsQr(true, false);
 
         for (Quest quest : activeQuests) {
             // 이미 달성한 퀘스트인지 확인
