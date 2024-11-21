@@ -16,20 +16,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class QrAuthController {
 
-    private final QrAuthService qrAuthService;
-    private final AuthenticationService authenticationService;
-    private final QuestService questService; // 아직 안 만들어짐
-
-    @PostMapping("/generate/{questNo}")
-    public ResponseEntity<?> generateQrCode(@PathVariable final Long questNo, HttpSession session) {
-        try {
-            Member member = authenticationService.getAuthenticatedMember(session);
-            if (member.getMemberGrade() != 1) {
-                return ResponseEntity.status((HttpStatus.FORBIDDEN).body(
-                        "관리자만 QR코드를 생성할 수 있습니다.");
-                )
-            }
-            Quest quest = questService.findOneQu()
-        }
-    }
 }
