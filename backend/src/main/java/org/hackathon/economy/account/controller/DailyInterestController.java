@@ -4,8 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.servlet.http.HttpSession;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.hackathon.economy.account.domain.DailyInterest;
+import org.hackathon.economy.account.domain.DailyInterestUtil;
 import org.hackathon.economy.account.service.DailyInterestService;
 import org.hackathon.economy.member.domain.Member;
 import org.hackathon.economy.member.service.AuthenticationService;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,13 +56,15 @@ public class DailyInterestController {
 
     // 매월 말일 월별 누적이자 조회
     @GetMapping("/monthly")
-    public ResponseEntity<List<DailyInterest>> getMonthly(HttpSession session) {
+    public ResponseEntity<List<DailyInterestUtil>> getMonthly(HttpSession session) {
         try {
             Member member = authenticationService.getAuthenticatedMember(session);
-            List<DailyInterest> monthlyInterest = dailyInterestService.getMonthly(member);
+            List<DailyInterestUtil> monthlyInterest = dailyInterestService.getMonthly(member);
             return ResponseEntity.ok(monthlyInterest);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 }
+
+
