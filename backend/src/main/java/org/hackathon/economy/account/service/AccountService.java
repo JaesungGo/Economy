@@ -1,6 +1,7 @@
 package org.hackathon.economy.account.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hackathon.economy.account.domain.Account;
 import org.hackathon.economy.account.domain.Interest;
 import org.hackathon.economy.account.repository.AccountRepository;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService {
 
     private final AccountRepository accountRepository;
@@ -44,6 +46,7 @@ public class AccountService {
 
     @Transactional
     public Long deposit(Account account, Long amount) {
+        log.info("serviceeeeeeeeeeeeeeeee");
         return accountRepository.deposit(account, amount);
     }
 

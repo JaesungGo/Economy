@@ -52,7 +52,7 @@ public class DailyInterestTasklet implements Tasklet {
             log.info("-------------------Member: {}", member);
             DailyInterest dailyInterest = new DailyInterest(); // 새로운 DailyInterest 생성 및 저장
 
-            //dailyInterest.setAccount(null); // 계좌 번호
+            dailyInterest.setAccount(account); // 계좌 번호
             dailyInterest.setTodayBalance(account.getAccountBalance()); // 당일 잔고
             dailyInterest.setTodayGrade(member.getMemberGrade()); // 당일 등급
 
@@ -82,7 +82,9 @@ public class DailyInterestTasklet implements Tasklet {
 
             // 결과가 있으면 Optional<DailyInterest>, 없으면 Optional.empty() 반환
             LocalDate yesterday = LocalDate.now().minusDays(1);
+            log.info("-------------------yesterdayyyyyy: {}", yesterday);
             Optional<DailyInterest> yesterdayInterest = dailyInterestRepositoryInterface.findDailyInterestByAccount_AccountNoAndTodayDate(account.getAccountNo(), yesterday);
+            log.info("-------------------yesterdayInterestttttt: {}", yesterdayInterest);
             yesterdayInterest.ifPresentOrElse(
                     dailyInterestFromYesterday -> {
                         // 어제의 이자 누적량이 있으면, 오늘의 이자와 더해서 누적
