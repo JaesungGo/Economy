@@ -24,6 +24,8 @@ const memberObject = ref({
 });
 const myMember = computed(() => memberObject.value);
 
+const myRate = computed(() => myAccount.value.accountRate);
+
 // 이자 계산 관련
 const myTotalInterest = computed(
   () => myAccount.value.accountBalance * (myAccount.value.accountRate / 100 / 365)
@@ -168,9 +170,7 @@ onMounted(() => {
                         <mini-statistics-card
                             title="금일 벌어들인 이자"
                             :value="`+${countInterest.toFixed(4)}원`"
-                            description="<span
-                class='text-sm font-weight-bolder text-danger'
-                >+2%</span> since last quarter"
+                            :description="`<span class='text-md font-weight-bolder text-danger'>현재 이자율 +${myRate}%</span> 퀘스트로 더 높은 이율을 받아보세요!`"
                             :icon="{
                                 component: 'ni ni-paper-diploma',
                                 background: 'bg-gradient-success',
