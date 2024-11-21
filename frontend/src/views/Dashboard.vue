@@ -1,6 +1,7 @@
 <script setup>
 import MiniStatisticsCard from '@/examples/Cards/MiniStatisticsCard.vue';
-import GradientLineChart from '@/examples/Charts/GradientLineChart.vue';
+import InterestChart from '@/examples/Charts/InterestChart.vue';
+import ActiveUsersChart from '@/examples/Charts/ActiveUsersChart.vue';
 import Carousel from './components/Carousel.vue';
 import TodayQuest from './components/TodayQuest.vue';
 import accountApi from '@/api/accountApi';
@@ -141,6 +142,7 @@ onMounted(() => {
     <div class="py-4 container-fluid">
         <div class="row">
             <div class="col-lg-12">
+                <!-- 상단 카드들 -->
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-12">
                         <mini-statistics-card
@@ -154,18 +156,6 @@ onMounted(() => {
                             }"
                         />
                     </div>
-                    <!-- <div class="col-lg-3 col-md-6 col-12">
-                        <mini-statistics-card
-                            title="찜한 퀘스트"
-                            value="n개"
-                            description="회원님이 찜한 퀘스트가 기다리고 있어요!"
-                            :icon="{
-                                component: 'ni ni-favourite-28',
-                                background: 'bg-gradient-danger',
-                                shape: 'rounded-circle',
-                            }"
-                        />
-                    </div> -->
                     <div class="col-lg-4 col-md-6 col-12">
                         <mini-statistics-card
                             title="금일 벌어들인 이자"
@@ -191,14 +181,16 @@ onMounted(() => {
                         />
                     </div>
                 </div>
-                <div class="row">
+
+                <!-- 중단 차트와 캐러셀 -->
+                <div class="row" style="margin-top: 25px;">
                     <div class="col-lg-5 col-md-">
                         <div class="card z-index-2 chart-card">
-                            <gradient-line-chart
+                            <ActiveUsersChart
                                 id="chart-line"
                                 title="Sales Overview"
                                 description="<i class='fa fa-arrow-up text-success'></i>
-      <span class='font-weight-bold'>4% more</span> in 2021"
+                                <span class='font-weight-bold'>4% more</span> in 2021"
                                 :chart="{
                                     labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                                     datasets: [
@@ -212,22 +204,33 @@ onMounted(() => {
                         </div>
                     </div>
                     <div class="col-lg-7">
-      <carousel class="h-100" />
-    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-12 mb-lg-0 mb-4">
-                        <div class="card">
-                            <today-quest />
-                        </div>
+                        <carousel class="h-100" />
                     </div>
                 </div>
+
+                <!-- 하단 카드들 -->
+                <div class="row mt-4">
+   <div class="col-lg-6">
+       <div class="card h-100" style="margin-bottom: 0;">
+           <InterestChart/>
+       </div>
+   </div>
+   <div class="col-lg-6">
+       <div class="card h-100" style="margin-bottom: 0;">
+           <today-quest />
+       </div>
+   </div>
+</div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.card {
+  height: 100%;
+}
+
 /* 특정 차트 카드에만 높이 100% 적용 */
 .chart-card {
   height: 100%;
