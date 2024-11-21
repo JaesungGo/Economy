@@ -9,5 +9,5 @@ package org.hackathon.economy.quest.repository;
 
  @Repository
  public interface QuestRepositoryInterface extends JpaRepository<Quest, Long> {
-     List<Quest> findByIsActivateAndIsQr(boolean isActivate, boolean isQr);
+     List<Quest> findByIsActiveAndIsQr(boolean isActive, boolean isQr);
  }
