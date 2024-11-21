@@ -1,28 +1,41 @@
+J
 <template>
     <div class="card card-carousel overflow-hidden h-100 p-0">
         <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
             <div class="carousel-inner border-radius-lg h-100">
-                <router-link to="/about" class="carousel-item h-100 active" 
-                    :style="{
-                        backgroundImage: 'url(' + require('@/assets/img/그린카드1.png') + ')',
-                        backgroundSize: 'cover',
-                        cursor: 'pointer'
-                    }"
-                />
-                <router-link to="/about" class="carousel-item h-100"
-                    :style="{
-                        backgroundImage: 'url(' + require('@/assets/img/그린카드2.png') + ')',
-                        backgroundSize: 'cover',
-                        cursor: 'pointer'
-                    }"
-                />
-                <router-link to="/about" class="carousel-item h-100"
-                    :style="{
-                        backgroundImage: 'url(' + require('@/assets/img/그린카드3.png') + ')',
-                        backgroundSize: 'cover',
-                        cursor: 'pointer'
-                    }"
-                />
+                <div class="carousel-item h-100 active">
+                    <router-link
+                        to="/about"
+                        class="h-100 w-100 d-block"
+                        :style="{
+                            backgroundImage: 'url(' + require('@/assets/img/그린카드1.png') + ')',
+                            backgroundSize: 'cover',
+                            cursor: 'pointer',
+                        }"
+                    ></router-link>
+                </div>
+                <div class="carousel-item h-100">
+                    <router-link
+                        to="/about"
+                        class="h-100 w-100 d-block"
+                        :style="{
+                            backgroundImage: 'url(' + require('@/assets/img/그린카드2.png') + ')',
+                            backgroundSize: 'cover',
+                            cursor: 'pointer',
+                        }"
+                    ></router-link>
+                </div>
+                <div class="carousel-item h-100">
+                    <router-link
+                        to="/about"
+                        class="h-100 w-100 d-block"
+                        :style="{
+                            backgroundImage: 'url(' + require('@/assets/img/그린카드3.png') + ')',
+                            backgroundSize: 'cover',
+                            cursor: 'pointer',
+                        }"
+                    ></router-link>
+                </div>
             </div>
             <button class="carousel-control-prev w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -37,4 +50,13 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import * as bootstrap from 'bootstrap';
+
+onMounted(() => {
+    new bootstrap.Carousel(document.getElementById('carouselExampleCaptions'), {
+        interval: 3000, // 3초마다
+        wrap: true     // 무한 반복
+    });
+});
 </script>

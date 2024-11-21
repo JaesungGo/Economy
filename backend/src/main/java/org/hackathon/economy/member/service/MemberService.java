@@ -48,4 +48,22 @@ public class MemberService {
         }
         return null;
     }
+
+    @Transactional
+    public void updateGrade(Long point, Long memberNo) {
+        Long grade = null;
+        if(point < 50) {
+            grade = 0L;
+        } else if(point < 120) {
+            grade = 1L;
+        } else if(point < 200) {
+            grade = 2L;
+        } else if(point < 320) {
+            grade = 3L;
+        } else {
+            grade = 4L;
+        }
+
+        memberRepository.updateGrade(grade, memberNo);
+    }
 }
