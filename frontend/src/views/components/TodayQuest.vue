@@ -1,155 +1,192 @@
 <script setup>
-import { ref, onUnmounted, computed } from 'vue';
+import { ref, onUnmounted, onMounted, computed } from 'vue';
 // import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import jsQR from 'jsqr';
+import todayQuestApi from '@/api/todayQuestApi';
+
+const quests = ref([]);
+const selectedQuestType = ref(null);
 
 const videoRef = ref(null);
 const canvasRef = ref(null);
 const streaming = ref(false);
+const currentQuestNo = ref(null);
 
 // 샘플 퀘스트 데이터
-const quests = ref([
-    { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
-    { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
-    { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
-    { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
-    { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
-]);
+// const quests = ref([
+//     { questNo: 1, questType: 0, questContent: '일간 퀘스트 1', questPoint: 10 },
+//     { questNo: 2, questType: 1, questContent: '주간 퀘스트 1', questPoint: 20 },
+//     { questNo: 3, questType: 2, questContent: '월간 퀘스트 1', questPoint: 30 },
+//     { questNo: 4, questType: 0, questContent: '일간 퀘스트 2', questPoint: 15 },
+//     { questNo: 5, questType: 1, questContent: '주간 퀘스트 2', questPoint: 25 },
+// ]);
 
-// 선택된 퀘스트 타입 (기본값: null => 모든 퀘스트)
-const selectedQuestType = ref(null);
+//퀘스트 타입 이미지 맵
+const questTypeImages = {
+    0: require('@/assets/img/dailyQuest.png'), // 일간 퀘스트 이미지
+    1: require('@/assets/img/weeklyQuest.png'), // 주간 퀘스트 이미지
+    2: require('@/assets/img/monthlyQuest.png'), // 월간 퀘스트 이미지
+    default: require('@/assets/img/grade0.png'), // 기본 이미지
+};
+
+const fetchQuests = async (type) => {
+    try {
+        let data;
+        if (type === null) {
+            // 전체 퀘스트
+            data = await todayQuestApi.getTotalToday();
+        } else if (type === 0) {
+            // 일일 퀘스트
+            data = await todayQuestApi.getDailyToday();
+        } else if (type === 1) {
+            // 주간 퀘스트
+            data = await todayQuestApi.getWeeklyToday();
+        } else if (type === 2) {
+            // 월간 퀘스트
+            data = await todayQuestApi.getMonthlyToday();
+        }
+        quests.value = data; // 데이터를 quests에 저장
+    } catch (error) {
+        console.error('퀘스트 데이터를 가져오는 중 오류 발생:', error);
+        Swal.fire('에러', '퀘스트 데이터를 불러오는 데 실패했습니다.', 'error');
+    }
+};
 
 // 선택된 타입에 따른 퀘스트 필터링
-const filteredQuests = computed(() => {
-    if (selectedQuestType.value === null) {
-        return quests.value; // 선택된 타입이 없으면 모든 퀘스트 표시
-    }
-    return quests.value.filter((quest) => quest.questType === selectedQuestType.value);
-});
+const filteredQuests = computed(() => quests.value);
 
-const startQrScanner = async () => {
-  try {
-    streaming.value = true;
-    
-    // 모바일과 데스크톱 모두 지원하는 설정
-    const constraints = {
-      video: {
-        facingMode: 'environment',
-        width: { min: 640, ideal: 1280, max: 1920 },
-        height: { min: 480, ideal: 720, max: 1080 },
-        aspectRatio: { ideal: 1.7777777778 }
-      }
-    };
-    
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    if (videoRef.value) {
-      videoRef.value.srcObject = stream;
-      await videoRef.value.play();
-      requestAnimationFrame(scanQRCode); // 즉시 스캔 시작
+// 퀘스트 타입 변경 및 데이터 로드
+const toggleQuestType = async (type) => {
+    selectedQuestType.value = type; // 선택된 타입 업데이트
+    await fetchQuests(type); // API 호출
+};
+
+const startQrScanner = async (questNo) => {
+    try {
+        streaming.value = true;
+        currentQuestNo.value = questNo;
+
+        // 모바일과 데스크톱 모두 지원하는 설정
+        const constraints = {
+            video: {
+                facingMode: 'environment',
+                width: { min: 640, ideal: 1280, max: 1920 },
+                height: { min: 480, ideal: 720, max: 1080 },
+                aspectRatio: { ideal: 1.7777777778 },
+            },
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        if (videoRef.value) {
+            videoRef.value.srcObject = stream;
+            await videoRef.value.play();
+            requestAnimationFrame(scanQRCode); // 즉시 스캔 시작
+        }
+    } catch (error) {
+        console.error('Camera error:', error);
+        Swal.fire('에러', '카메라 접근에 실패했습니다.', 'error');
+        streaming.value = false;
     }
-  } catch (error) {
-    console.error('Camera error:', error);
-    Swal.fire('에러', '카메라 접근에 실패했습니다.', 'error');
-    streaming.value = false;
-  }
 };
 
 const scanQRCode = () => {
-  if (!streaming.value || !videoRef.value || !canvasRef.value) return;
+    if (!streaming.value || !videoRef.value || !canvasRef.value) return;
 
-  const video = videoRef.value;
-  const canvas = canvasRef.value;
-  const context = canvas.getContext('2d', { willReadFrequently: true });
+    const video = videoRef.value;
+    const canvas = canvasRef.value;
+    const context = canvas.getContext('2d', { willReadFrequently: true });
 
-  // 비디오가 준비되지 않았으면 다시 시도
-  if (video.readyState !== video.HAVE_ENOUGH_DATA) {
-    requestAnimationFrame(scanQRCode);
-    return;
-  }
-
-  // 캔버스 크기를 비디오 크기에 맞춤
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-
-  try {
-    // 비디오 프레임을 캔버스에 그림
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    
-    // QR 코드 스캔 시도
-    const code = jsQR(imageData.data, imageData.width, imageData.height, {
-      inversionAttempts: "dontInvert",
-    });
-
-    if (code) {
-      // QR 코드 발견
-      stopQrScanner();
-      verifyQrCode(code.data);
-    } else {
-      // 계속 스캔
-      requestAnimationFrame(scanQRCode);
+    // 비디오가 준비되지 않았으면 다시 시도
+    if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+        requestAnimationFrame(scanQRCode);
+        return;
     }
-  } catch (error) {
-    console.error('Scanning error:', error);
-    requestAnimationFrame(scanQRCode);
-  }
+
+    // 캔버스 크기를 비디오 크기에 맞춤
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    try {
+        // 비디오 프레임을 캔버스에 그림
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+        // QR 코드 스캔 시도
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'dontInvert',
+        });
+
+        if (code) {
+            // QR 코드 발견
+            stopQrScanner();
+            verifyQrCode(code.data, currentQuestNo.value);
+        } else {
+            // 계속 스캔
+            requestAnimationFrame(scanQRCode);
+        }
+    } catch (error) {
+        console.error('Scanning error:', error);
+        requestAnimationFrame(scanQRCode);
+    }
 };
 
-const verifyQrCode = async (qrData) => {
-  try {
-    console.log('Scanned QR code:', qrData); // 디버깅용
-    const response = await fetch(`/api/qr/verify/${qrData}`, {
-      method: 'POST',
-      credentials: 'include'
-    });
+const verifyQrCode = async (qrData, questNo) => {
+    try {
+        console.log('Scanned QR code:', qrData); // 디버깅용
+        console.log('Quest No:', questNo);
 
-    if (response.ok) {
-      Swal.fire('성공', 'QR 코드 인증이 완료되었습니다.', 'success');
-    } else {
-      const error = await response.text();
-      Swal.fire('실패', error || 'QR 코드 인증에 실패했습니다.', 'error');
+        const response = await fetch(`/api/qr/verify/${qrData}/${questNo}`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            Swal.fire('성공', 'QR 코드 인증이 완료되었습니다.', 'success');
+        } else {
+            const error = await response.text();
+            Swal.fire('실패', error || 'QR 코드 인증에 실패했습니다.', 'error');
+        }
+    } catch (error) {
+        console.error('Verification error:', error);
+        Swal.fire('에러', '서버 연결에 실패했습니다.', 'error');
     }
-  } catch (error) {
-    console.error('Verification error:', error);
-    Swal.fire('에러', '서버 연결에 실패했습니다.', 'error');
-  }
 };
 
 const stopQrScanner = () => {
-  if (videoRef.value?.srcObject) {
-    videoRef.value.srcObject.getTracks().forEach(track => track.stop());
-  }
-  streaming.value = false;
+    if (videoRef.value?.srcObject) {
+        videoRef.value.srcObject.getTracks().forEach((track) => track.stop());
+    }
+    streaming.value = false;
 };
 
-const handleQuestAchieve = async (questContent, questId, isQr) => {
-  try {
-    const result = await Swal.fire({
-      title: `${questContent} 인증`,
-      text: '인증하시겠습니까?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: '확인',
-      cancelButtonText: '취소',
-      customClass: {
+const handleQuestAchieve = async (questContent, questNo, isQr) => {
+    try {
+        const result = await Swal.fire({
+            title: `${questContent} 인증`,
+            text: '인증하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소',
+            customClass: {
                 confirmButton: 'swal-confirm-btn', // 커스텀 클래스 이름 변경
                 cancelButton: 'swal-cancel-btn', // 커스텀 클래스 이름 변경
-            }
-    });
+            },
+        });
 
-    if (result.isConfirmed) {
-      if (isQr === 'true') {
-        await startQrScanner();
-      } else {
-        console.log(`퀘스트 ${questId} 인증 진행`);
-        Swal.fire('인증 완료!', '퀘스트 인증이 성공적으로 완료되었습니다.', 'success');
-      }
+        if (result.isConfirmed) {
+            if (isQr === 'true') {
+                await startQrScanner(questNo);
+            } else {
+                console.log(`퀘스트 ${questNo} 인증 진행`);
+                Swal.fire('인증 완료!', '퀘스트 인증이 성공적으로 완료되었습니다.', 'success');
+            }
+        }
+    } catch (error) {
+        console.error('Quest error:', error);
+        Swal.fire('에러', '처리 중 오류가 발생했습니다.', 'error');
     }
-  } catch (error) {
-    console.error('Quest error:', error);
-    Swal.fire('에러', '처리 중 오류가 발생했습니다.', 'error');
-  }
 };
 
 // 카메라 테스트 시 코드
@@ -177,8 +214,12 @@ const handleQuestAchieve = async (questContent, questId, isQr) => {
 //   }
 // };
 
+onMounted(() => {
+    fetchQuests(null);
+});
+
 onUnmounted(() => {
-  stopQrScanner();
+    stopQrScanner();
 });
 </script>
 
@@ -223,7 +264,7 @@ onUnmounted(() => {
                                 <div class="d-flex px-2 py-1">
                                     <div>
                                         <!-- 퀘스트 종류에 따른 이미지 -->
-                                        <img src="../../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="quest" />
+                                        <img :src="questTypeImages[quest.questType] || questTypeImages.default" class="avatar avatar-sm me-3" alt="quest" />
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">
                                         <!-- 퀘스트 내용 -->
@@ -254,15 +295,15 @@ onUnmounted(() => {
 
     <!-- QR 스캐너 오버레이 -->
     <div v-if="streaming" class="qr-scanner-overlay">
-    <div class="qr-scanner-container">
-      <video ref="videoRef" autoplay playsinline class="qr-video"></video>
-      <canvas ref="canvasRef" class="qr-canvas"></canvas>
-      <div class="scanner-guide"></div>
-      <div class="scanner-controls">
-        <button @click="stopQrScanner" class="scanner-btn">닫기</button>
-      </div>
+        <div class="qr-scanner-container">
+            <video ref="videoRef" autoplay playsinline class="qr-video"></video>
+            <canvas ref="canvasRef" class="qr-canvas"></canvas>
+            <div class="scanner-guide"></div>
+            <div class="scanner-controls">
+                <button @click="stopQrScanner" class="scanner-btn">닫기</button>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <style>
@@ -335,46 +376,46 @@ onUnmounted(() => {
     height: 100%;
     object-fit: cover;
     border-radius: 12px;
-    }
+}
 
 .qr-canvas {
     display: none;
 }
 
 .scanner-guide {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  border: 2px solid #40a578;
-  border-radius: 20px;
-  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    border: 2px solid #40a578;
+    border-radius: 20px;
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
 }
 
 .scanner-controls {
-  position: absolute;
-  bottom: -60px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .scanner-btn {
-  background: #40a578;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    background: #40a578;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .scanner-btn:hover {
-  background: #338a63;
+    background: #338a63;
 }
 
 .close-scanner {

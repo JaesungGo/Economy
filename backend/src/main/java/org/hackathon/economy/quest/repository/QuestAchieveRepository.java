@@ -1,5 +1,7 @@
 package org.hackathon.economy.quest.repository;
 
+import org.hackathon.economy.member.domain.Member;
+import org.hackathon.economy.quest.domain.Quest;
 import org.hackathon.economy.quest.domain.QuestAchieve;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +21,8 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
           AND achieve_date_time BETWEEN (NOW() - INTERVAL 30 SECOND) AND NOW()
         """, nativeQuery = true)
     Integer countRecentAchievement(@Param("memberNo") Long memberNo, @Param("questNo") Long questNo);
+
+    Boolean existsByQuestAndMember(Quest quest, Member member);
 
     @Query(value = """
         SELECT *

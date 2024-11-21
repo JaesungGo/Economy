@@ -30,6 +30,7 @@
         "core-js": "3.36.0",
         "date-fns": "^4.1.0",
         "dropzone": "6.0.0-beta.2",
+        "flatpickr": "^4.6.13",
         "jsqr": "^1.4.0",
         "moment": "^2.30.1",
         "pinia": "^2.2.6",
