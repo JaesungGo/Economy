@@ -3,7 +3,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import moment from 'moment';
 import { ref, onMounted } from 'vue';
-import questApi from '@/api/questApi';
+import questApi from '@/api/achieveQuestApi';
 import Swal from 'sweetalert2';
 
 // 완료된 퀘스트 상태
