@@ -54,46 +54,46 @@ const startInterestCount = () => {
 
 // 팁 관련
 const tips = [
-    { 
-        tip: "물 절약 실천",
-        description: "양치컵 사용하기로 하루 12L 절약!"
+    {
+        tip: '물 절약 실천',
+        description: '양치컵 사용하기로 하루 12L 절약!',
     },
     {
-        tip: "전기 절약",
-        description: "사용하지 않는 콘센트 뽑기로 대기전력 차단"
+        tip: '전기 절약',
+        description: '사용하지 않는 콘센트 뽑기로 대기전력 차단',
     },
     {
-        tip: "수도꼭지 절수",
-        description: "절수형 수도꼭지로 교체하면 30% 절약"
+        tip: '수도꼭지 절수',
+        description: '절수형 수도꼭지로 교체하면 30% 절약',
     },
     {
-        tip: "냉장고 관리",
-        description: "냉장실 60%, 냉동실 70% 채우기가 최적"
+        tip: '냉장고 관리',
+        description: '냉장실 60%, 냉동실 70% 채우기가 최적',
     },
     {
-        tip: "빨래 모아하기",
-        description: "세탁물 한번에 모아서 하면 물 80L 절약"
+        tip: '빨래 모아하기',
+        description: '세탁물 한번에 모아서 하면 물 80L 절약',
     },
     {
-        tip: "친환경 장바구니",
-        description: "비닐봉지 대신 장바구니 사용하기"
+        tip: '친환경 장바구니',
+        description: '비닐봉지 대신 장바구니 사용하기',
     },
     {
-        tip: "LED 전구 교체",
-        description: "일반 전구보다 최대 90% 전기 절약"
+        tip: 'LED 전구 교체',
+        description: '일반 전구보다 최대 90% 전기 절약',
     },
     {
-        tip: "적정 온도 유지",
-        description: "여름 26도, 겨울 20도가 최적 온도"
+        tip: '적정 온도 유지',
+        description: '여름 26도, 겨울 20도가 최적 온도',
     },
     {
-        tip: "물 재활용하기",
-        description: "세탁 헹굼물로 화장실 청소하기"
+        tip: '물 재활용하기',
+        description: '세탁 헹굼물로 화장실 청소하기',
     },
     {
-        tip: "친환경 이동",
-        description: "가까운 거리는 자전거나 도보 이용하기"
-    }
+        tip: '친환경 이동',
+        description: '가까운 거리는 자전거나 도보 이용하기',
+    },
 ];
 
 const getRandomTip = () => {

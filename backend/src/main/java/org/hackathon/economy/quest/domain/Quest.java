@@ -15,7 +15,7 @@ public class Quest {
     @GeneratedValue
     private Long questNo;
     @Column(nullable = false)
-    private Integer questType;
+    private Integer questType; // "0": 일간 , "1": 주간, "2": 월간
     @Column(nullable = false)
     private String questContent;
     @Column(nullable = false)

@@ -1,5 +1,3 @@
-package org.hackathon.economy.quest.controller;
-
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.hackathon.economy.account.domain.Account;
@@ -48,5 +46,16 @@ public class QuestController {
     @GetMapping("/active/monthly")
     public ResponseEntity<List<Quest>> getActiveMonthlyQuests() {
         return ResponseEntity.ok(questService.getActiveMonthlyQuests());
+    }
+  
+  @PostMapping("/process")
+    public ResponseEntity<String> processQuestAchievements(@RequestBody Long memberNo) {
+        try {
+            questAuthService.processQuestAchievements(memberNo);
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("error" + e.getMessage());
+        }
     }
 }

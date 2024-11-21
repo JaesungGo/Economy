@@ -39,4 +39,17 @@ public class MemberRepository {
             em.remove(member);  // 엔티티 삭제
         }
     }
+
+    public void updateGrade(Long grade, Long memberNo) {
+        em.createQuery(
+                        "UPDATE Member m SET m.memberGrade = :grade WHERE m.memberNo = :memberNo")
+                .setParameter("grade", grade)
+                .setParameter("memberNo", memberNo)
+                .executeUpdate();
+    }
+
+    public Member update(Member member) {
+        return em.merge(member);
+    }
+
 }
