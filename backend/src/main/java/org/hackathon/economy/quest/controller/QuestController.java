@@ -24,30 +24,29 @@ import java.util.List;
 public class QuestController {
 
     private final QuestService questService;
-    private final AccountService accountService;
 
     // 진행 중인 퀘스트 전체 조회
     @GetMapping("/active")
     public ResponseEntity<List<Quest>> getActiveQuests() {
-        return questService.getActiveQuests();
+        return ResponseEntity.ok(questService.getActiveQuests());
     }
 
     // 진행 중인 일일 퀘스트 조회
     @GetMapping("/active/daily")
     public ResponseEntity<List<Quest>> getActiveDailyQuests() {
-        return questService.getActiveDailyQuests();
+        return ResponseEntity.ok(questService.getActiveDailyQuests());
     }
 
     // 진행 중인 주간 퀘스트 조회
     @GetMapping("/active/weekly")
     public ResponseEntity<List<Quest>> getActiveWeelyQuests() {
-        return questService.getActiveWeeklyQuests();
+        return ResponseEntity.ok(questService.getActiveWeeklyQuests());
     }
 
 
     // 진행 중인 월간 퀘스트 조회
     @GetMapping("/active/monthly")
     public ResponseEntity<List<Quest>> getActiveMonthlyQuests() {
-        return questService.getActiveMonthlyQuests();
+        return ResponseEntity.ok(questService.getActiveMonthlyQuests());
     }
 }
