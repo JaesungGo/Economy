@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "green_transactions")
 public class GreenTransaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long transactionNo;
     private LocalDateTime transactionTime;
     private String serviceProvider;

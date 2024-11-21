@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class QuizSubmissionLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name= "log_id", nullable = false)
     private Long logId;
 

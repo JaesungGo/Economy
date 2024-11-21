@@ -17,7 +17,7 @@ import java.util.List;
 public class Quiz {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name="quiz_pk")
     private Long quizPk;
 

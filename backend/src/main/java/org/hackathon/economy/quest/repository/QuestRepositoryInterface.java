@@ -12,6 +12,4 @@ public interface QuestRepositoryInterface extends JpaRepository<Quest, Long> {
     //List<Quest> findQuestsByIsActiveNotAndQuestTypeOrderByQuestFrequencyAsc(int questType);
     List<Quest> findByIsActiveAndIsQr(boolean isActive, boolean isQr);
     List<Quest> findQuestsByIsActiveAndQuestTypeOrderByQuestFrequencyAsc(boolean isActive, int questType);
-
-    List<Quest> findByIsActiveAndIsQr(boolean isActive, boolean isQr);
 }

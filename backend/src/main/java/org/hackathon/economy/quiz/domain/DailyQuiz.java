@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "daily_quiz")
 public class DailyQuiz {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name="daily_quiz_id")
     private Long dailyQuizId;
 

@@ -12,7 +12,7 @@ import lombok.Setter;
 public class QuizOption {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "option_pk") // 매핑 이름 명시
     private Long optionPk;
 
