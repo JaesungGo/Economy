@@ -6,7 +6,12 @@ import Carousel from './components/Carousel.vue';
 
 import TodayQuest from './components/TodayQuest.vue';
 
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import memberApi from '@/api/memberApi';
+
+const memberObject = ref({
+  memberName: ''  // 초기값 설정
+});
 
 const tips = [
     { 
@@ -57,10 +62,27 @@ const getRandomTip = () => {
     return tips[seed];
 };
 
-const dailyTip = ref(getRandomTip());
+const dailyTip =ref(getRandomTip());
+
+const myMember = computed(() => memberObject.value);
+
+const load = async () => {
+  try {
+    const memberData = await memberApi.getMember();
+    memberObject.value = {
+      memberName: memberData.name || memberData.memberName // name 또는 memberName 필드 사용
+    };
+    console.log('memberObject: ', memberObject.value);
+    console.log('member name: ', myMember.value.memberName);
+    
+  } catch (error) {
+    console.error('Error finding account: ', error);
+  }
+};
 
 onMounted(() => {
     dailyTip.value = getRandomTip();
+    load(); // 컴포넌트가 마운트될 때 회원 이름 가져오기
 });
 </script>
 <template>
@@ -109,7 +131,7 @@ onMounted(() => {
                     <!-- 가장 많이 완료한 퀘스트 알림 -->
                     <div class="col-lg-3 col-md-6 col-12">
                         <mini-statistics-card
-                            title="김예은 님은"
+                            :title="myMember.memberName ? `${myMember.memberName} 님은` : '회원님은'"
                             value="수도세 절약"
                             description="을(를) 가장 많이 수행하셨습니다!"
                             :icon="{
@@ -121,7 +143,8 @@ onMounted(() => {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-7 mb-lg">
+                    <div class="col-lg-5
+                     mb-lg">
                         <!-- line chart -->
                         <div class="card z-index-2">
                             <gradient-line-chart
@@ -141,7 +164,8 @@ onMounted(() => {
                             />
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-7
+                    ">
                         <carousel />
                     </div>
                 </div>
