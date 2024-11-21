@@ -1,13 +1,15 @@
 package org.hackathon.economy.quest.repository;
 
- import org.hackathon.economy.quest.domain.Quest;
- import org.springframework.data.jpa.repository.JpaRepository;
- import org.springframework.data.jpa.repository.Query;
- import org.springframework.stereotype.Repository;
+import org.hackathon.economy.account.domain.DailyInterest;
+import org.hackathon.economy.quest.domain.Quest;
+import org.springframework.data.jpa.repository.JpaRepository;
 
- import java.util.List;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
- @Repository
- public interface QuestRepositoryInterface extends JpaRepository<Quest, Long> {
-     List<Quest> findByIsActiveAndIsQr(boolean isActive, boolean isQr);
- }
+public interface QuestRepositoryInterface extends JpaRepository<Quest, Long> {
+    //List<Quest> findQuestsByIsActiveNotAndQuestTypeOrderByQuestFrequencyAsc(int questType);
+
+    List<Quest> findQuestsByIsActiveAndQuestTypeOrderByQuestFrequencyAsc(boolean isActive, int questType);
+}
