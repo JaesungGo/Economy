@@ -1,21 +1,32 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import dailyInterestApi from '@/api/dailyInterestApi'; // API 호출 모듈 import
+import { ref, onMounted, watch } from 'vue';
+import dailyInterestApi from '@/api/dailyInterestApi';
 
-// 상태 관리
-const totalInterest = ref(''); // 오늘까지 받은 총 이자
+// 상태 변수
+const totalInterest = ref(0); // 오늘까지 받은 총 이자
 const selectedYear = ref(new Date().getFullYear()); // 기본값: 현재 연도
 const interestHistory = ref({}); // 연도별 이자 데이터
 const filteredData = ref([]); // 선택된 연도의 필터링된 데이터
 
 // 월별 데이터를 연도별로 그룹화
 const formatMonthlyData = (monthlyData) => {
+  console.log('formatMonthlyData - monthlyData:', monthlyData);
   return monthlyData.reduce((acc, item) => {
-    const year = new Date(item.todayDate).getFullYear(); // API 응답의 날짜 필드에서 연도 추출
-    const month = new Date(item.todayDate).getMonth() + 1; // 월 추출 (0부터 시작하므로 +1)
+    // 적절한 필드명을 사용
+    const dateStr = item.todayDate || item.date;
+    const amount = item.monthlyInterest + item.todayInterest;
 
-    if (!acc[year]) acc[year] = []; // 해당 연도가 없으면 초기화
-    acc[year].push({ month, amount: item.monthlyInterest }); // 월과 이자 금액 추가
+    const dateObj = new Date(dateStr);
+    if (isNaN(dateObj)) {
+      console.error('Invalid date:', dateStr);
+      return acc;
+    }
+
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1;
+
+    if (!acc[year]) acc[year] = [];
+    acc[year].push({ month, amount });
 
     return acc;
   }, {});
@@ -23,32 +34,45 @@ const formatMonthlyData = (monthlyData) => {
 
 // 선택된 연도의 이자 내역 필터링
 const filterInterestData = () => {
-  filteredData.value = interestHistory.value[selectedYear.value] || [];
+  const yearData = interestHistory.value[selectedYear.value] || [];
+  // 최근 달이 위로 오도록 정렬
+  filteredData.value = yearData.sort((a, b) => b.month - a.month);
+  console.log('filteredData.value:', filteredData.value);
 };
 
-// 데이터 가져오기
+// API 호출: 누적 이자 및 월별 내역 가져오기
 const fetchInterestData = async () => {
   try {
-    // API 호출: 총 이자와 월별 데이터를 병렬로 가져오기
     const [total, monthlyData] = await Promise.all([
       dailyInterestApi.getTotal(), // 총 이자 API 호출
       dailyInterestApi.getMonthly(), // 월별 이자 API 호출
     ]);
 
+    // monthlyData 구조 확인
+    console.log('monthlyData:', monthlyData);
+
     // 데이터 설정
     totalInterest.value = total; // 총 이자
-    interestHistory.value = formatMonthlyData(monthlyData); // 연도별 데이터로 정리
+    interestHistory.value = formatMonthlyData(monthlyData); // 연도별 데이터 정리
 
-    // 초기 필터링 실행
+    // interestHistory 구조 확인
+    console.log('interestHistory:', interestHistory.value);
+
+    // 초기 필터링
     filterInterestData();
   } catch (error) {
-    console.error('이자 데이터를 가져오는 중 오류 발생:', error);
+    console.error('Error fetching interest data:', error);
   }
 };
 
 // 컴포넌트 로드시 데이터 가져오기
-onMounted(() => {
-  fetchInterestData();
+onMounted(async () => {
+  await fetchInterestData();
+});
+
+// selectedYear 변경 시 필터링된 데이터 업데이트
+watch(selectedYear, () => {
+  filterInterestData();
 });
 </script>
 
@@ -57,17 +81,18 @@ onMounted(() => {
     <!-- 상단 이자 정보 -->
     <div class="highlight-section text-center">
       <p class="subtitle">오늘까지 받은 이자 <span class="emoji">🌟</span></p>
-      <h1 class="total-amount">{{ totalInterest }}원</h1>
+      <h1 class="total-amount">
+        {{ totalInterest ? totalInterest.toLocaleString() : 'N/A' }}원
+      </h1>
     </div>
 
-    <!-- 연도 선택 캘린더 -->
+    <!-- 연도 선택 입력 -->
     <div class="year-selector text-center">
       <label for="year-select">연도 선택:</label>
       <input
         id="year-select"
         type="number"
-        v-model="selectedYear"
-        @change="dailyMonthlyInterestObject"
+        v-model.number="selectedYear"
         min="2000"
         max="2024"
         placeholder="연도를 입력하세요"
@@ -77,7 +102,7 @@ onMounted(() => {
     <!-- 테이블 영역 -->
     <div class="interest-table-container">
       <h3 class="year-title">{{ selectedYear }}년</h3>
-      <table class="interest-table" v-if="dailyMonthlyInterestObject.length > 0">
+      <table class="interest-table" v-if="filteredData.length > 0">
         <thead>
           <tr>
             <th>월</th>
@@ -85,9 +110,9 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(entry, index) in dailyMonthlyInterestObject" :key="index">
-            <td>{{ entry.todayDate.slice(5, 7) }}월</td>
-            <td>{{ entry.monthlyInterest +  entry.todayInterest}}원</td>
+          <tr v-for="(entry, index) in filteredData" :key="index">
+            <td>{{ entry.month }}월</td>
+            <td>{{ entry.amount }}원</td>
           </tr>
         </tbody>
       </table>
@@ -95,82 +120,6 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import dailyInterestApi from '@/api/dailyInterestApi';
-
-// 상태 변수
-const dailyMonthlyInterestObject = ref([]);
-//const myDailyMonthlyInterest = computed(() => dailyMonthlyInterestObject.value);
-
-
-// const totalInterest = ref(0); // 오늘까지 받은 총 이자
-// const selectedYear = ref(new Date().getFullYear()); // 기본값: 현재 연도
-// const interestHistory = ref({}); // 연도별 이자 데이터
-// const filteredData = ref([]); // 선택된 연도의 필터링된 데이터
-
-// // 월별 데이터를 연도별로 그룹화
-// const formatMonthlyData = (monthlyData) => {
-//   return monthlyData.reduce((acc, item) => {
-//     const year = new Date(item.date).getFullYear(); // 연도 추출
-//     const month = new Date(item.date).getMonth() + 1; // 월 추출 (0부터 시작하므로 +1)
-
-//     if (!acc[year]) acc[year] = []; // 해당 연도가 없으면 초기화
-//     acc[year].push({ month, amount: item.amount });
-
-//     return acc;
-//   }, {});
-// };
-
-// // 선택된 연도의 이자 내역 필터링
-// const filterInterestData = () => {
-//   filteredData.value = interestHistory.value[selectedYear.value] || [];
-// };
-
-// // API 호출: 누적 이자 및 월별 내역 가져오기
-// const fetchInterestData = async () => {
-//   try {
-//     const [total, monthlyData] = await Promise.all([
-//       dailyInterestApi.getTotal(),
-//       dailyInterestApi.getMonthly(),
-//     ]);
-
-//     // 데이터 설정
-//     totalInterest.value = total; // 총 이자
-//     interestHistory.value = formatMonthlyData(monthlyData); // 연도별 데이터 정리
-
-//     // 초기 필터링
-//     filterInterestData();
-//   } catch (error) {
-//     console.error('Error fetching interest data:', error);
-//   }
-// };
-
-// // 컴포넌트 로드시 데이터 가져오기
-// onMounted(async () => {
-//   await fetchInterestData();
-// });
-
-// // selectedYear 변경 시 필터링된 데이터 업데이트
-// watch(selectedYear, () => {
-//   filterInterestData();
-// });
-
-const load = async () => {
-  try {
-    const dailyMonthlyInterestData = await dailyInterestApi.getMonthly();
-    dailyMonthlyInterestObject.value = dailyMonthlyInterestData;
-    console.log('dailyMonthlyInterestObject: ', dailyMonthlyInterestObject.value);
-    //console.log('myDailyTotalInterest: ', myDailyMonthlyInterest);
-  } catch (error) {
-    console.error('Error finding account: ', error);
-  }
-};
-
-load();
-</script>
-
 
 <style scoped>
 /* 전체 컨테이너 */
@@ -217,6 +166,7 @@ load();
 
 /* 테이블 컨테이너 */
 .interest-table-container {
+  margin-top: 3rem;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
