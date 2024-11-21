@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class DailyQuiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="daily_quizid")
+    @Column(name="daily_quiz_id")
     private Long dailyQuizId;
 
     @OneToOne(fetch = FetchType.LAZY)

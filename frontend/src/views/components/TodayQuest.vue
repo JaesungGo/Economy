@@ -25,7 +25,6 @@ const currentQuestNo = ref(null);
 
 //퀘스트 타입 이미지 맵
 const questTypeImages = {
-    0: require('@/assets/img/dailyQuest.png'), // 일간 퀘스트 이미지
     1: require('@/assets/img/weeklyQuest.png'), // 주간 퀘스트 이미지
     2: require('@/assets/img/monthlyQuest.png'), // 월간 퀘스트 이미지
     default: require('@/assets/img/grade0.png'), // 기본 이미지
@@ -38,9 +37,6 @@ const fetchQuests = async (type) => {
         if (type === null) {
             // 전체 퀘스트
             data = await todayQuestApi.getTotalToday();
-        } else if (type === 0) {
-            // 일일 퀘스트
-            data = await todayQuestApi.getDailyToday();
         } else if (type === 1) {
             // 주간 퀘스트
             data = await todayQuestApi.getWeeklyToday();
@@ -269,9 +265,7 @@ onUnmounted(() => {
                 >
                     전체
                 </button>
-                <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 0 }" @click="toggleQuestType(0)">
-                    일일
-                </button>
+
                 <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 1 }" @click="toggleQuestType(1)">
                     주간
                 </button>

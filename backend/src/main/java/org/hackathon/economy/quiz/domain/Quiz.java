@@ -33,15 +33,6 @@ public class Quiz {
     @Column(nullable = false, name="quiz_type")
     private String quizType;
 
-    @Column(nullable = false, name="quiz_cumulated")
-    private Integer quizCumulated = 0;
-
-    @Column(nullable = false, name="quiz_created_at")
-    private Timestamp quizCreatedAt;
-
-    @Column(nullable = false, name="quiz_updated_at")
-    private Timestamp quizUpdatedAt;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quest_no")
     @JsonIgnore
