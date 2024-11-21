@@ -28,4 +28,6 @@ public class Quest {
     private Boolean isQr;
     @Column(nullable = false)
     private Boolean isActive;
+    @Column(nullable = false)
+    private Integer questFrequency;
 }
