@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onUnmounted, onMounted, computed } from 'vue';
-// import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import jsQR from 'jsqr';
 import todayQuestApi from '@/api/todayQuestApi';
 import memberApi from '@/api/memberApi';
+import cardApi from '@/api/cardApi';
 
 const quests = ref([]);
 const selectedQuestType = ref(null);
+const successCounts = ref({}); // 성공 횟수 데이터를 저장
 
 const videoRef = ref(null);
 const canvasRef = ref(null);
@@ -52,7 +53,9 @@ const fetchQuests = async (type) => {
 };
 
 // 선택된 타입에 따른 퀘스트 필터링
-const filteredQuests = computed(() => quests.value);
+const filteredQuests = computed(() => {
+    return quests.value; // 선택된 타입에 따라 이미 필터링된 데이터 사용
+});
 
 // 퀘스트 타입 변경 및 데이터 로드
 const toggleQuestType = async (type) => {
@@ -106,7 +109,9 @@ const scanQRCode = () => {
 
     const video = videoRef.value;
     const canvas = canvasRef.value;
-    const context = canvas.getContext('2d', { willReadFrequently: true });
+    const context = canvas.getContext('2d', {
+        willReadFrequently: true,
+    });
 
     // 비디오가 준비되지 않았으면 다시 시도
     if (video.readyState !== video.HAVE_ENOUGH_DATA) {
@@ -218,6 +223,17 @@ const handleQuestAchieve = async (questContent, questNo, isQr) => {
     }
 };
 
+// 성공 횟수 데이터 가져오기
+const fetchSuccessCounts = async () => {
+    try {
+        const counts = await cardApi.getCount(); // getCount 호출
+        console.log('Success Counts:', counts); // 가져온 데이터를 콘솔에 출력
+        successCounts.value = counts; // 데이터를 상태에 저장
+    } catch (error) {
+        console.error('Error fetching success counts:', error);
+    }
+};
+
 // 카메라 테스트 시 코드
 // const handleQuestAchieve = async (questContent) => {
 //     try {
@@ -244,7 +260,8 @@ const handleQuestAchieve = async (questContent, questNo, isQr) => {
 // };
 
 onMounted(() => {
-    fetchQuests(null);
+    fetchQuests(null); // 전체 퀘스트 데이터 가져오기
+    fetchSuccessCounts(); // 성공 횟수 데이터 가져오기
 });
 
 onUnmounted(() => {
@@ -255,21 +272,35 @@ onUnmounted(() => {
 <template>
     <div class="card">
         <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-            <h6>오늘의 퀘스트</h6>
+            <h6>진행중인 퀘스트</h6>
             <!-- 퀘스트 타입 필터링 버튼 -->
             <div class="btn-group">
                 <button
                     class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover"
-                    :class="{ 'btn-success text-white': selectedQuestType === null }"
+                    :class="{
+                        'btn-success text-white': selectedQuestType === null,
+                    }"
                     @click="toggleQuestType(null)"
                 >
                     전체
                 </button>
 
-                <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 1 }" @click="toggleQuestType(1)">
+                <button
+                    class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover"
+                    :class="{
+                        'btn-success text-white': selectedQuestType === 1,
+                    }"
+                    @click="toggleQuestType(1)"
+                >
                     주간
                 </button>
-                <button class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover" :class="{ 'btn-success text-white': selectedQuestType === 2 }" @click="toggleQuestType(2)">
+                <button
+                    class="btn btn-outline-secondary btn-xs py-1 px-3 custom-hover"
+                    :class="{
+                        'btn-success text-white': selectedQuestType === 2,
+                    }"
+                    @click="toggleQuestType(2)"
+                >
                     월간
                 </button>
             </div>
@@ -282,6 +313,7 @@ onUnmounted(() => {
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">퀘스트</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">타입</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">포인트</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">성공 횟수/전체 횟수</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                         </tr>
                     </thead>
@@ -290,12 +322,12 @@ onUnmounted(() => {
                             <td>
                                 <div class="d-flex px-2 py-1">
                                     <div>
-                                        <!-- 퀘스트 종류에 따른 이미지 -->
                                         <img :src="questTypeImages[quest.questType] || questTypeImages.default" class="avatar avatar-sm me-3" alt="quest" />
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">
-                                        <!-- 퀘스트 내용 -->
-                                        <h6 class="mb-0 text-sm">{{ quest.questContent }}</h6>
+                                        <h6 class="mb-0 text-sm">
+                                            {{ quest.questContent }}
+                                        </h6>
                                     </div>
                                 </div>
                             </td>
@@ -305,14 +337,20 @@ onUnmounted(() => {
                                 </p>
                             </td>
                             <td class="align-middle text-center">
-                                <span class="text-secondary text-xs font-weight-bold">{{ quest.questPoint }}P</span>
+                                <span class="text-secondary text-xs font-weight-bold"> {{ quest.questPoint }}P </span>
+                            </td>
+                            <td class="align-middle text-center">
+                                <span class="text-secondary text-xs font-weight-bold">
+                                    {{ successCounts[quest.questNo] || 0 }} /
+                                    {{ quest.questCount }}
+                                </span>
                             </td>
                             <td class="align-middle text-center text-sm">
                                 <button class="badge bg-gradient-success border-0" @click="handleQuestAchieve(quest.questContent, quest.questNo, quest.isQr)">인증</button>
                             </td>
                         </tr>
                         <tr v-if="filteredQuests.length === 0">
-                            <td colspan="4" class="text-center">해당 퀘스트가 없습니다.</td>
+                            <td colspan="5" class="text-center">해당 퀘스트가 없습니다.</td>
                         </tr>
                     </tbody>
                 </table>
