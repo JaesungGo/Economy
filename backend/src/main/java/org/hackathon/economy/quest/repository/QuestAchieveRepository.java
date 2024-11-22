@@ -9,13 +9,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long> {
 
     @Query(value = """
         SELECT COUNT(*)
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
           AND quest_no = :questNo
           AND achieveDateTime BETWEEN (NOW() - INTERVAL 30 SECOND) AND NOW()
@@ -25,15 +26,23 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
     Boolean existsByQuestAndMember(Quest quest, Member member);
 
     @Query(value = """
-        SELECT *
-        FROM QUEST_ACHIEVE
+        SELECT COUNT(*)
+        FROM quest_achieve
         WHERE member_no = :memberNo
+          AND quest_no = :questNo
     """, nativeQuery = true)
-    List<QuestAchieve> getTotal(@Param("memberNo") Long memberNo);
+    Integer countAchievements(@Param("memberNo") Long memberNo, @Param("questNo") Long questNo);
+
+    @Query(value = """
+    SELECT q.quest
+    FROM QuestAchieve q
+    WHERE q.member = :member
+""")
+    List<Optional<Quest>> getTotal(@Param("member") Member member);
 
     @Query(value = """
         SELECT *
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
         AND DATE_FORMAT(achieveDateTime, "%Y-%m-%d") = CURDATE()
     """, nativeQuery = true)
@@ -41,7 +50,7 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
 
     @Query(value = """
         SELECT *
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
         AND 
           date_format(achieveDateTime,'%Y-%m-%d')
@@ -54,7 +63,7 @@ public interface QuestAchieveRepository extends JpaRepository<QuestAchieve, Long
 
     @Query(value = """
         SELECT *
-        FROM QUEST_ACHIEVE
+        FROM quest_achieve
         WHERE member_no = :memberNo
         AND 
           date_format(achieveDateTime,'%Y-%m-%d')
