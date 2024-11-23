@@ -11,7 +11,7 @@ const store = useStore();
                         ©
                         {{ new Date().getFullYear() }}, made with <i class="fa fa-heart"></i> by
                         <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">ECOnomy</a>
-                        for a better web.
+                        for a better world.
                     </div>
                 </div>
                 <div class="col-lg-6">
